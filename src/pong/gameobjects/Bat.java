@@ -1,6 +1,5 @@
 package pong.gameobjects;
 
-import generic.Physics;
 import generic.gameobjects.GameObject;
 
 public class Bat extends GameObject{
@@ -22,15 +21,16 @@ public class Bat extends GameObject{
 
 	@Override
 	public void update() {
-		
-		if(Physics.checkCollisions(this, ball)){
-			ball.reverseX(getCenterY());
-		}
-		
 		y += velocity_y;
 	}
 	
 	public void move(float mag){
 		velocity_y = SPEED * mag;
+	}
+
+	@Override
+	public void onCollision(GameObject go) {
+		// TODO Auto-generated method stub
+		
 	}
 }

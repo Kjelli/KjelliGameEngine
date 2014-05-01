@@ -39,4 +39,10 @@ public class Ball extends GameObject{
 		velocity_y *= -1;
 	}
 
+	@Override
+	public void onCollision(GameObject go) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

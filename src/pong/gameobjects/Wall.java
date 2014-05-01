@@ -1,6 +1,5 @@
 package pong.gameobjects;
 
-import generic.Physics;
 import generic.gameobjects.GameObject;
 
 public class Wall extends GameObject{
@@ -19,9 +18,11 @@ public class Wall extends GameObject{
 	
 	@Override
 	public void update() {
-			
-			if(Physics.checkCollisions(this, ball)){
-				ball.reverseY();
-			}
+	}
+
+	@Override
+	public void onCollision(GameObject go) {
+		// TODO Auto-generated method stub
+		
 	}
 }
