@@ -1,36 +1,36 @@
 package pong.gameobjects;
 
-import generic.gameobjects.GameObject;
+import generic.Collidable;
+import generic.Physics;
+import generic.gameobjects.AbstractObject;
 
-public class Bat extends GameObject{
+public class Bat extends AbstractObject implements Collidable {
 	public static final int WIDTH = 16;
 	public static final int HEIGHT = WIDTH * 7;
 	public static final float SPEED = 4f;
-	
-	private Ball ball;
-	
-	public Bat(float x, float y, Ball ball){
+
+	public Bat(float x, float y) {
 		this.x = x;
 		this.y = y;
-		
+
 		width = WIDTH;
 		height = HEIGHT;
-		
-		this.ball = ball;
+
 	}
 
 	@Override
 	public void update() {
+		Physics.checkCollision(this);
 		y += velocity_y;
+
 	}
-	
-	public void move(float mag){
+
+	public void move(float mag) {
 		velocity_y = SPEED * mag;
 	}
 
 	@Override
-	public void onCollision(GameObject go) {
-		// TODO Auto-generated method stub
-		
+	public void onCollide(Collidable other) {
+		y -= velocity_y;
 	}
 }

@@ -57,10 +57,23 @@ public class Draw {
 		glPopMatrix();
 	}
 
+	public static void rect(float x, float y, float width, float height) {
+		rect(x, y, width, height, 0, Draw.DEFAULT_COLOR);
+	}
+	
+	public static void rect(float x, float y, float width, float height, float rot) {
+		rect(x, y, width, height, rot, Draw.DEFAULT_COLOR);
+	}
+	
+	public static void rect(float x, float y, float width, float height, Color color) {
+		rect(x, y, width, height, 0, color);
+	}
+
 	public static void rect(float x, float y, float width, float height,
-			float rot) {
+			float rot, Color color) {
 		glPushMatrix();
 		{
+			glColor3f(color.r, color.g, color.b);
 			glTranslatef(x, y, 0);
 			glRotatef(rot, 0, 0, 0);
 
@@ -74,10 +87,6 @@ public class Draw {
 			glEnd();
 		}
 		glPopMatrix();
-	}
-
-	public static void rect(float x, float y, float width, float height) {
-		rect(x, y, width, height, 5);
 	}
 
 }

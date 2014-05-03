@@ -1,8 +1,9 @@
 package pong.gameobjects;
 
-import generic.gameobjects.GameObject;
+import generic.Collidable;
+import generic.gameobjects.AbstractObject;
 
-public class Wall extends GameObject{
+public class Wall extends AbstractObject implements Collidable{
 	
 	public static final int DEFAULT_SIZE = 16;
 	
@@ -21,8 +22,6 @@ public class Wall extends GameObject{
 	}
 
 	@Override
-	public void onCollision(GameObject go) {
-		// TODO Auto-generated method stub
-		
+	public void onCollide(Collidable other) {
 	}
 }

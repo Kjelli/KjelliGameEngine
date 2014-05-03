@@ -1,5 +1,6 @@
 package generic;
 
+import generic.gameobjects.AbstractObject;
 import generic.gameobjects.GameObject;
 
 import java.util.ArrayList;
@@ -10,10 +11,11 @@ import quadtrees.quadtree.QuadTree;
 
 public class Physics {
 
-	private static QuadTree<GameObject> quadtree;
+	public static QuadTree<Collidable> quadtree;
 
-	public static void addObjects(ArrayList<GameObject> others) {
-		quadtree = new QuadTree(0,0,Display.getWidth(),0,Display.getHeight());
+	public static void addObjects(ArrayList<Collidable> others) {
+		quadtree = new QuadTree<Collidable>(0, 0, Display.getWidth(), 0,
+				Display.getHeight());
 		quadtree.insert(others);
 	}
 
@@ -22,20 +24,24 @@ public class Physics {
 			quadtree.clear();
 	}
 
-	public static void checkCollisions(GameObject object) {
-		ArrayList<GameObject> others = new ArrayList<>();
+	public static void checkCollision(Collidable object) {
+		ArrayList<Collidable> others = new ArrayList<>();
 		quadtree.retrieve(others, object);
 		for (GameObject other : others) {
 			if (other.equals(object))
 				continue;
+			if (!(other instanceof Collidable)) {
+				continue;
+			}
 			if (object.intersects(other)) {
-				object.onCollision(other);
-				other.onCollision(object);
+				Collidable col1 = (Collidable) object;
+				Collidable col2 = (Collidable) other;
+				col1.onCollide(col2);
 			}
 		}
 	}
 
-	public static void revalidate(GameObject gameObject) {
+	public static void revalidate(AbstractObject gameObject) {
 	}
 
 }

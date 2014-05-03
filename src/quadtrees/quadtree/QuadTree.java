@@ -1,12 +1,12 @@
 package quadtrees.quadtree;
 
+import generic.Collidable;
 import generic.Draw;
-import generic.gameobjects.GameObject;
 
 import java.util.ArrayList;
 
-public class QuadTree<E extends GameObject> {
-	public static final int MAX_CAPACITY = 3;
+public class QuadTree<E extends Collidable> {
+	public static final int MAX_CAPACITY = 5;
 	public static final int MAX_DEPTH = 5;
 
 	int level;
@@ -21,6 +21,7 @@ public class QuadTree<E extends GameObject> {
 	QuadTree<E>[] nodes;
 	ArrayList<E> objects;
 
+	@SuppressWarnings("unchecked")
 	public QuadTree(int level, int borderLeft, int borderRight,
 			int borderBottom, int borderTop) {
 		this.level = level;
@@ -143,7 +144,8 @@ public class QuadTree<E extends GameObject> {
 		Draw.rect(borderLeft, borderBottom, width, height);
 		for (E object : objects)
 			Draw.line(borderLeft + width / 2, borderBottom + height / 2,
-					object.getCenterX(), object.getCenterY());
+					object.getX() + object.getWidth() / 2, object.getY()
+							+ object.getHeight() / 2);
 		if (nodes[0] != null) {
 			for (int i = 0; i < nodes.length; i++) {
 				nodes[i].render();
@@ -163,7 +165,7 @@ public class QuadTree<E extends GameObject> {
 	}
 
 	public void insert(ArrayList<E> others) {
-		for(E e : others){
+		for (E e : others) {
 			insert(e);
 		}
 	}
