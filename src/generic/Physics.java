@@ -12,17 +12,11 @@ import quadtree.QuadTree;
 
 public class Physics {
 
-	public static QuadTree<Collidable> quadtree;
+	public static QuadTree<Collidable> quadtree = new QuadTree<Collidable>(0,
+			0, Display.getWidth(), 0, Display.getHeight());;
 
 	public static void addObjects(ArrayList<Collidable> others) {
-		quadtree = new QuadTree<Collidable>(0, 0, Display.getWidth(), 0,
-				Display.getHeight());
 		quadtree.insert(others);
-	}
-
-	public static void clear() {
-		if (quadtree != null)
-			quadtree.clear();
 	}
 
 	public static void checkCollisions(ArrayList<Collidable> objects) {

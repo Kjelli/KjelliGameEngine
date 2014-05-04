@@ -121,11 +121,11 @@ public class QuadTree<E extends Collidable> {
 		int yMid = borderBottom + height / 2;
 		int xMid = borderLeft + width / 2;
 
-		boolean topQuadrant = (e.getY() + e.getHeight() > yMid);
-		boolean bottomQuadrant = (e.getY() < yMid);
+		boolean topQuadrant = (e.getY() + e.getHeight() >= yMid);
+		boolean bottomQuadrant = (e.getY() <= yMid);
 
-		boolean leftQuadrant = (e.getX() < xMid);
-		boolean rightQuadrant = (e.getX() + e.getWidth() > xMid);
+		boolean leftQuadrant = (e.getX() <= xMid);
+		boolean rightQuadrant = (e.getX() + e.getWidth() >= xMid);
 
 		if (topQuadrant) {
 			if (leftQuadrant)
@@ -210,5 +210,8 @@ public class QuadTree<E extends Collidable> {
 		for (E e : others) {
 			insert(e);
 		}
+	}
+
+	public void validate(Collidable c) {
 	}
 }

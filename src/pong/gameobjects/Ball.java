@@ -15,7 +15,6 @@ public class Ball extends AbstractObject implements Collidable {
 	public static final float DAMPING = 0.05f;
 
 	public double angle = Math.PI;
-	public float speed = 1.0f;
 
 	public Ball(float x, float y) {
 		this.x = x;
@@ -23,8 +22,8 @@ public class Ball extends AbstractObject implements Collidable {
 		this.width = SIZE;
 		this.height = SIZE;
 
-		velocity_x = -MIN_SPEED_X;
-		velocity_y = 0;
+		angle = - Math.PI;
+		speed = 1.0f;
 	}
 
 	@Override
@@ -69,8 +68,9 @@ public class Ball extends AbstractObject implements Collidable {
 			float ylength = getCenterY() - other.getCenterY();
 
 			angle = Math.atan2(ylength, xlength);
-
-			speed += 0.04;
+			
+			x += velocity_x;
+			y += velocity_y;
 
 		}
 		if (other instanceof Wall) {

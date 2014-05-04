@@ -28,17 +28,16 @@ public class World {
 			if (object.isVisible())
 				object.draw();
 		}
-		Physics.quadtree.render();
+		//Physics.quadtree.render();
 
 	}
 
 	public void update() {
-		Physics.clear();
+		Physics.quadtree.clear();
 		Physics.addObjects(getCollidables());
 		for (GameObject gameObject : objects) {
 			gameObject.update();
 		}
-		System.out.println(Physics.quadtree);
 	}
 
 	private ArrayList<Collidable> getCollidables() {

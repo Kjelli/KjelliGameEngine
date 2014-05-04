@@ -9,6 +9,7 @@ public abstract class AbstractObject implements GameObject {
 	protected float y;
 	protected double velocity_x;
 	protected double velocity_y;
+	protected float speed;
 
 	protected Color color = Draw.DEFAULT_COLOR;
 
@@ -71,7 +72,19 @@ public abstract class AbstractObject implements GameObject {
 		return x + width / 2;
 	}
 
-	boolean valueInRange(float value, float min, float max) {
+	public double getVelocityX() {
+		return velocity_x;
+	}
+
+	public double getVelocityY() {
+		return velocity_y;
+	}
+
+	public float getSpeed() {
+		return speed;
+	}
+
+	private boolean valueInRange(float value, float min, float max) {
 		return (value >= min) && (value <= max);
 	}
 

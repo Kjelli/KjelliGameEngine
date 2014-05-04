@@ -66,9 +66,9 @@ public class Pong implements Game {
 			player.move(-1);
 
 		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE) && cooldown == 0) {
-			cooldown = 10;
-			Ball newBall = new Ball(Display.getWidth() / 2,
-					Display.getHeight() / 2);
+			cooldown = 100;
+			Ball newBall = new Ball(Display.getWidth() / 2, Display.getHeight()
+					/ 2 - Ball.SIZE / 2);
 			newBall.setVisible(true);
 			world.add(newBall);
 		}

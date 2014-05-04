@@ -3,9 +3,6 @@ package generic.gameobjects;
 
 public interface GameObject {
 
-	public void setX(float x);
-	public void setY(float y);
-
 	public float getX();
 	public float getY();
 	
@@ -14,6 +11,10 @@ public interface GameObject {
 
 	public float getWidth();
 	public float getHeight();
+	
+	public double getVelocityX();
+	public double getVelocityY();
+	public float getSpeed();
 	
 	public boolean isVisible();
 
