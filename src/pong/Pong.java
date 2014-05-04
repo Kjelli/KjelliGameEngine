@@ -1,6 +1,8 @@
 package pong;
 
-import generic.*;
+import generic.Game;
+import generic.Main;
+import generic.World;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
@@ -10,17 +12,17 @@ import pong.gameobjects.*;
 public class Pong implements Game {
 
 	public static World world;
-	//public static Screen screen;
-	
+	// public static Screen screen;
+
 	public static PlayerBat player;
 	public static EnemyBat enemy;
-	public static Ball ball;
+	private int cooldown = 0;
 
 	@Override
 	public void init() {
 		world = new World();
 
-		ball = new Ball(Display.getWidth() / 2, Display.getHeight() / 2
+		Ball ball = new Ball(Display.getWidth() / 2, Display.getHeight() / 2
 				- Ball.SIZE / 2);
 		ball.setVisible(true);
 
@@ -59,16 +61,23 @@ public class Pong implements Game {
 				|| Keyboard.isKeyDown(Keyboard.KEY_UP))
 			player.move(1);
 
-		else if (Keyboard.isKeyDown(Keyboard.KEY_S)
+		if (Keyboard.isKeyDown(Keyboard.KEY_S)
 				|| Keyboard.isKeyDown(Keyboard.KEY_DOWN))
 			player.move(-1);
 
-		else
-			player.move(0);
+		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE) && cooldown == 0) {
+			cooldown = 10;
+			Ball newBall = new Ball(Display.getWidth() / 2,
+					Display.getHeight() / 2);
+			newBall.setVisible(true);
+			world.add(newBall);
+		}
 	}
 
 	@Override
 	public void update() {
+		if (cooldown > 0)
+			cooldown--;
 		world.update();
 	}
 

@@ -22,6 +22,7 @@ public class Bat extends AbstractObject implements Collidable {
 	public void update() {
 		Physics.checkCollision(this);
 		y += velocity_y;
+		velocity_y = 0;
 
 	}
 
@@ -31,6 +32,17 @@ public class Bat extends AbstractObject implements Collidable {
 
 	@Override
 	public void onCollide(Collidable other) {
-		y -= velocity_y;
+		if (other instanceof Wall) {
+			if (other.getCenterY() < this.getCenterY())
+				velocity_y += SPEED * 1;
+			else
+				velocity_y -= SPEED * 1;
+		}
 	}
+
+	@Override
+	public String toString() {
+		return "bat";
+	}
+
 }

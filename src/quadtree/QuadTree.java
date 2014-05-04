@@ -1,13 +1,22 @@
-package quadtrees.quadtree;
+package quadtree;
 
 import generic.Collidable;
 import generic.Draw;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+
+import org.newdawn.slick.Color;
 
 public class QuadTree<E extends Collidable> {
-	public static final int MAX_CAPACITY = 5;
+	public static final int MAX_CAPACITY = 3;
 	public static final int MAX_DEPTH = 5;
+
+	public static final int Q1 = 1;
+	public static final int Q2 = 2;
+	public static final int Q3 = 4;
+	public static final int Q4 = 8;
 
 	int level;
 	int borderTop;
@@ -41,8 +50,15 @@ public class QuadTree<E extends Collidable> {
 		if (nodes[0] != null) {
 			int index = pickIndex(e);
 
-			if (index != -1) {
-				nodes[index].insert(e);
+			if (index != 0) {
+				if ((index & Q1) > 0)
+					nodes[0].insert(e);
+				if ((index & Q2) > 0)
+					nodes[1].insert(e);
+				if ((index & Q3) > 0)
+					nodes[2].insert(e);
+				if ((index & Q4) > 0)
+					nodes[3].insert(e);
 				return;
 			}
 		}
@@ -57,9 +73,16 @@ public class QuadTree<E extends Collidable> {
 			while (i < objects.size()) {
 				E ee = objects.get(i);
 				int index = pickIndex(ee);
-				if (index != -1) {
+				if (index != 0) {
 					objects.remove(ee);
-					nodes[index].insert(ee);
+					if ((index & Q1) > 0)
+						nodes[0].insert(ee);
+					if ((index & Q2) > 0)
+						nodes[1].insert(ee);
+					if ((index & Q3) > 0)
+						nodes[2].insert(ee);
+					if ((index & Q4) > 0)
+						nodes[3].insert(ee);
 				} else {
 					i++;
 				}
@@ -79,7 +102,6 @@ public class QuadTree<E extends Collidable> {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	public void divide() {
 
 		nodes[0] = new QuadTree<E>(level + 1, borderLeft, borderLeft + width
@@ -93,43 +115,46 @@ public class QuadTree<E extends Collidable> {
 				borderLeft + width, borderBottom, borderBottom + height / 2);
 	}
 
-	/*
-	 * (0,0) is upper left corner using awt.Rectangle, lower left using OpenGL
-	 * fucking confusing
-	 */
-
 	private int pickIndex(E e) {
-		int index = -1;
+		int index = 0;
 
 		int yMid = borderBottom + height / 2;
 		int xMid = borderLeft + width / 2;
 
-		boolean topQuadrant = (e.getY() > yMid);
-		boolean bottomQuadrant = (e.getY() + e.getHeight() < yMid);
+		boolean topQuadrant = (e.getY() + e.getHeight() > yMid);
+		boolean bottomQuadrant = (e.getY() < yMid);
 
-		boolean leftQuadrant = (e.getX() + e.getWidth() < xMid);
-		boolean rightQuadrant = (e.getX() > xMid);
+		boolean leftQuadrant = (e.getX() < xMid);
+		boolean rightQuadrant = (e.getX() + e.getWidth() > xMid);
 
 		if (topQuadrant) {
 			if (leftQuadrant)
-				index = 0;
-			else if (rightQuadrant)
-				index = 1;
+				index += 1;
+			if (rightQuadrant)
+				index += 2;
 		}
 		if (bottomQuadrant) {
 			if (leftQuadrant)
-				index = 2;
-			else if (rightQuadrant)
-				index = 3;
+				index += 4;
+			if (rightQuadrant)
+				index += 8;
 		}
 
 		return index;
 	}
 
-	public ArrayList<E> retrieve(ArrayList<E> returnObjects, E e) {
+	public HashSet<E> retrieve(HashSet<E> returnObjects, E e) {
 		int index = pickIndex(e);
-		if (index != -1 && nodes[0] != null)
-			nodes[index].retrieve(returnObjects, e);
+		if (nodes[0] != null) {
+			if ((index & Q1) > 0)
+				nodes[0].retrieve(returnObjects, e);
+			if ((index & Q2) > 0)
+				nodes[1].retrieve(returnObjects, e);
+			if ((index & Q3) > 0)
+				nodes[2].retrieve(returnObjects, e);
+			if ((index & Q4) > 0)
+				nodes[3].retrieve(returnObjects, e);
+		}
 
 		returnObjects.addAll(objects);
 
@@ -145,7 +170,7 @@ public class QuadTree<E extends Collidable> {
 		for (E object : objects)
 			Draw.line(borderLeft + width / 2, borderBottom + height / 2,
 					object.getX() + object.getWidth() / 2, object.getY()
-							+ object.getHeight() / 2);
+							+ object.getHeight() / 2, Color.blue);
 		if (nodes[0] != null) {
 			for (int i = 0; i < nodes.length; i++) {
 				nodes[i].render();
@@ -153,14 +178,31 @@ public class QuadTree<E extends Collidable> {
 		}
 	}
 
+	public HashSet<Collidable> getObjects(HashSet<Collidable> returnObjects) {
+		if (nodes[0] != null)
+			for (int i = 0; i < 4; i++)
+				nodes[i].getObjects(returnObjects);
+
+		returnObjects.addAll(objects);
+
+		return returnObjects;
+	}
+
 	public String toString() {
 		StringBuilder sb = new StringBuilder("");
-		if (!objects.isEmpty()) {
-			for (int i = 0; i < objects.size() - 1; i++) {
-				sb.append(objects.get(i).toString() + ", ");
-			}
-			sb.append(objects.get(objects.size() - 1).toString());
+		HashSet<Collidable> uniques = new HashSet<>();
+		getObjects(uniques);
+
+		Iterator<Collidable> it = uniques.iterator();
+
+		while (it.hasNext()) {
+			Collidable c = it.next();
+			if (it.hasNext())
+				sb.append(c + ", ");
+			else
+				sb.append(c);
 		}
+
 		return sb.toString();
 	}
 

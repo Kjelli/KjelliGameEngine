@@ -14,8 +14,8 @@ public class Ball extends AbstractObject implements Collidable {
 	public static final float MAX_SPEED_Y = 8f;
 	public static final float DAMPING = 0.05f;
 
-	public static double angle = Math.PI;
-	public static float speed = 1.0f;
+	public double angle = Math.PI;
+	public float speed = 1.0f;
 
 	public Ball(float x, float y) {
 		this.x = x;
@@ -64,8 +64,7 @@ public class Ball extends AbstractObject implements Collidable {
 
 	@Override
 	public void onCollide(Collidable other) {
-
-		if (other instanceof Bat) {
+		if (other instanceof Bat || other instanceof Ball) {
 			float xlength = getCenterX() - other.getCenterX();
 			float ylength = getCenterY() - other.getCenterY();
 
@@ -77,5 +76,10 @@ public class Ball extends AbstractObject implements Collidable {
 		if (other instanceof Wall) {
 			angle = 2 * Math.PI - angle;
 		}
+	}
+
+	@Override
+	public String toString() {
+		return "ball";
 	}
 }
