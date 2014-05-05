@@ -1,6 +1,6 @@
-package generic;
+package no.kjelli.generic;
 
-import generic.gameobjects.GameObject;
+import no.kjelli.generic.gameobjects.GameObject;
 
 public interface Collidable extends GameObject{
 	public void onCollide(Collidable other);

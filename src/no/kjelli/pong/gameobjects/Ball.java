@@ -1,16 +1,16 @@
-package pong.gameobjects;
+package no.kjelli.pong.gameobjects;
 
-import generic.Collidable;
-import generic.Physics;
-import generic.gameobjects.AbstractObject;
+import no.kjelli.generic.Collidable;
+import no.kjelli.generic.Physics;
+import no.kjelli.generic.gameobjects.AbstractObject;
 
 import org.lwjgl.opengl.Display;
 
 public class Ball extends AbstractObject implements Collidable {
 
 	public static final int SIZE = 16;
-	public static final float MIN_SPEED_X = 2f;
-	public static final float MAX_SPEED_X = 3f;
+	public static final float MIN_SPEED_X = 1f;
+	public static final float MAX_SPEED_X = 5f;
 	public static final float MAX_SPEED_Y = 8f;
 	public static final float DAMPING = 0.05f;
 
@@ -22,8 +22,8 @@ public class Ball extends AbstractObject implements Collidable {
 		this.width = SIZE;
 		this.height = SIZE;
 
-		angle = - Math.PI;
-		speed = 1.0f;
+		angle = -Math.PI;
+		speed = 2.0f;
 	}
 
 	@Override
@@ -49,12 +49,7 @@ public class Ball extends AbstractObject implements Collidable {
 			velocity_y = -MAX_SPEED_Y;
 
 		if (x + width < 0 || x > Display.getWidth()) {
-			x = Display.getWidth() / 2;
-			y = Display.getHeight() / 2 - height / 2;
-			velocity_x = -MAX_SPEED_X;
-			velocity_y = 0;
-			speed = 1;
-			angle = Math.PI;
+			destroy();
 		}
 
 		x += velocity_x;
@@ -68,9 +63,10 @@ public class Ball extends AbstractObject implements Collidable {
 			float ylength = getCenterY() - other.getCenterY();
 
 			angle = Math.atan2(ylength, xlength);
-			
+
 			x += velocity_x;
 			y += velocity_y;
+			speed += 0.04f;
 
 		}
 		if (other instanceof Wall) {

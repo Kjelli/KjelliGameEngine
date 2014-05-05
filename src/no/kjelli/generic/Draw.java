@@ -1,4 +1,4 @@
-package generic;
+package no.kjelli.generic;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -51,8 +51,8 @@ public class Draw {
 
 		glPushMatrix();
 		{
-			glTranslatef(x, y, 0);
 			glColor3f(color.r, color.g, color.b);
+			glTranslatef(x, y, 0);
 			glBegin(GL_LINE_STRIP);
 			{
 				glVertex2d(0, 0);

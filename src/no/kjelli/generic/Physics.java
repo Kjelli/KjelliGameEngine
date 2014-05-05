@@ -1,19 +1,19 @@
-package generic;
-
-import generic.gameobjects.AbstractObject;
-import generic.gameobjects.GameObject;
+package no.kjelli.generic;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 
-import org.lwjgl.opengl.Display;
-
-import quadtree.QuadTree;
+import no.kjelli.generic.gameobjects.AbstractObject;
+import no.kjelli.generic.gameobjects.GameObject;
+import no.kjelli.quadtree.QuadTree;
 
 public class Physics {
 
-	public static QuadTree<Collidable> quadtree = new QuadTree<Collidable>(0,
-			0, Display.getWidth(), 0, Display.getHeight());;
+	public static QuadTree<Collidable> quadtree;
+
+	public static void init() {
+		quadtree = new QuadTree<Collidable>(0, 0, World.width, 0, World.height);
+	}
 
 	public static void addObjects(ArrayList<Collidable> others) {
 		quadtree.insert(others);

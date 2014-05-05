@@ -1,4 +1,4 @@
-package generic;
+package no.kjelli.generic;
 
 
 public interface Game {

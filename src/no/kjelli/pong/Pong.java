@@ -1,26 +1,27 @@
-package pong;
+package no.kjelli.pong;
 
-import generic.Game;
-import generic.Main;
-import generic.World;
+import no.kjelli.generic.*;
+import no.kjelli.generic.main.Main;
+import no.kjelli.pong.gameobjects.*;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 
-import pong.gameobjects.*;
-
 public class Pong implements Game {
 
-	public static World world;
-	// public static Screen screen;
+	public static Screen screen;
 
 	public static PlayerBat player;
 	public static EnemyBat enemy;
+
 	private int cooldown = 0;
 
 	@Override
 	public void init() {
-		world = new World();
+		Physics.init();
+		screen = new Screen(Display.getWidth(), Display.getHeight());
+		World.setWidth(Display.getWidth());
+		World.setHeight(Display.getHeight());
 
 		Ball ball = new Ball(Display.getWidth() / 2, Display.getHeight() / 2
 				- Ball.SIZE / 2);
@@ -42,17 +43,17 @@ public class Pong implements Game {
 				Display.getWidth(), Wall.DEFAULT_SIZE, ball);
 		upperWall.setVisible(true);
 
-		world.add(ball);
-		world.add(player);
-		world.add(enemy);
-		world.add(upperWall);
-		world.add(lowerWall);
+		World.add(ball);
+		World.add(player);
+		World.add(enemy);
+		World.add(upperWall);
+		World.add(lowerWall);
 
 	}
 
 	@Override
 	public void render() {
-		world.render();
+		screen.render();
 	}
 
 	@Override
@@ -70,7 +71,7 @@ public class Pong implements Game {
 			Ball newBall = new Ball(Display.getWidth() / 2, Display.getHeight()
 					/ 2 - Ball.SIZE / 2);
 			newBall.setVisible(true);
-			world.add(newBall);
+			World.add(newBall);
 		}
 	}
 
@@ -78,7 +79,7 @@ public class Pong implements Game {
 	public void update() {
 		if (cooldown > 0)
 			cooldown--;
-		world.update();
+		World.update();
 	}
 
 	public static void main(String[] args) {

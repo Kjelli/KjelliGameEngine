@@ -1,7 +1,7 @@
-package pong.gameobjects;
+package no.kjelli.pong.gameobjects;
 
-import generic.Collidable;
-import generic.gameobjects.AbstractObject;
+import no.kjelli.generic.Collidable;
+import no.kjelli.generic.gameobjects.AbstractObject;
 
 public class Wall extends AbstractObject implements Collidable {
 

@@ -1,4 +1,4 @@
-package pong.gameobjects;
+package no.kjelli.pong.gameobjects;
 
 public class PlayerBat extends Bat{
 

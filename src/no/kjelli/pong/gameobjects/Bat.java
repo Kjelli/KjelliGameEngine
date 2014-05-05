@@ -1,13 +1,13 @@
-package pong.gameobjects;
+package no.kjelli.pong.gameobjects;
 
-import generic.Collidable;
-import generic.Physics;
-import generic.gameobjects.AbstractObject;
+import no.kjelli.generic.Collidable;
+import no.kjelli.generic.Physics;
+import no.kjelli.generic.gameobjects.AbstractObject;
 
 public class Bat extends AbstractObject implements Collidable {
 	public static final int WIDTH = 16;
 	public static final int HEIGHT = WIDTH * 7;
-	public static final float SPEED = 4f;
+	public static final float SPEED = 3f;
 
 	public Bat(float x, float y) {
 		this.x = x;
@@ -26,8 +26,8 @@ public class Bat extends AbstractObject implements Collidable {
 
 	}
 
-	public void move(float mag) {
-		velocity_y = SPEED * mag;
+	public void move(double d) {
+		velocity_y = SPEED * d;
 	}
 
 	@Override

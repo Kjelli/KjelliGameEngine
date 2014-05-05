@@ -1,6 +1,7 @@
-package generic;
+package no.kjelli.generic.main;
 
 import static org.lwjgl.opengl.GL11.*;
+import no.kjelli.generic.Game;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
@@ -30,7 +31,7 @@ public class Main {
 			Display.create();
 			Keyboard.create();
 		} catch (LWJGLException e) {
-			System.out.println("SWAG: " + e.getMessage());
+			System.out.println("Error: " + e.getMessage());
 		}
 	}
 
@@ -74,7 +75,7 @@ public class Main {
 		game.render();
 
 		Display.update();
-		Display.sync(120);
+		Display.sync(60);
 	}
 
 	private static void cleanUp() {

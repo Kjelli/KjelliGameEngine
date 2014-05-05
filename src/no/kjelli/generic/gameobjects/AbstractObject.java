@@ -1,10 +1,10 @@
-package generic.gameobjects;
+package no.kjelli.generic.gameobjects;
 
-import generic.Draw;
+import no.kjelli.generic.*;
 
 import org.newdawn.slick.Color;
 
-public abstract class AbstractObject implements GameObject {
+public abstract class AbstractObject implements GameObject, Drawable {
 	protected float x;
 	protected float y;
 	protected double velocity_x;
@@ -21,7 +21,8 @@ public abstract class AbstractObject implements GameObject {
 	public abstract void update();
 
 	public void draw() {
-		Draw.fillRect(x, y, width, height, color);
+		if (Screen.contains(this))
+			Draw.fillRect(x, y, width, height, color);
 	}
 
 	public float getX() {
@@ -98,6 +99,11 @@ public abstract class AbstractObject implements GameObject {
 				|| valueInRange(other.getY(), getY(), getY() + getHeight());
 
 		return xOverlap && yOverlap;
+	}
+
+	public void destroy() {
+		setVisible(false);
+		World.remove(this);
 	}
 
 }
