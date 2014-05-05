@@ -94,6 +94,21 @@ public abstract class AbstractObject implements GameObject, Drawable {
 		return color;
 	}
 
+	public void nudge(Collision collision) {
+		System.out.println("NUDGE");
+		int direction = collision.getImpactDirection();
+
+		if ((direction & Collision.ABOVE) > 0)
+			setY(y - 1);
+		if ((direction & Collision.BELOW) > 0)
+			setY(y + 1);
+		if ((direction & Collision.LEFT) > 0)
+			setX(x + 1);
+		if ((direction & Collision.RIGHT) > 0)
+			setX(x - 1);
+
+	}
+
 	protected Collision move() {
 		xStep += velocity_x;
 		yStep += velocity_y;
@@ -105,6 +120,7 @@ public abstract class AbstractObject implements GameObject, Drawable {
 				Collision check = Physics.checkCollision((Collidable) this);
 				if (check != null) {
 					x--;
+					xStep = 0;
 					return check;
 				}
 			}
@@ -116,6 +132,7 @@ public abstract class AbstractObject implements GameObject, Drawable {
 				Collision check = Physics.checkCollision((Collidable) this);
 				if (check != null) {
 					x++;
+					xStep = 0;
 					return check;
 				}
 			}
@@ -127,6 +144,7 @@ public abstract class AbstractObject implements GameObject, Drawable {
 				Collision check = Physics.checkCollision((Collidable) this);
 				if (check != null) {
 					y--;
+					yStep = 0;
 					return check;
 				}
 			}
@@ -138,6 +156,7 @@ public abstract class AbstractObject implements GameObject, Drawable {
 				Collision check = Physics.checkCollision((Collidable) this);
 				if (check != null) {
 					y++;
+					yStep = 0;
 					return check;
 				}
 			}
@@ -187,22 +206,6 @@ public abstract class AbstractObject implements GameObject, Drawable {
 		else
 			yadd = 0;
 		return yadd;
-	}
-
-	public boolean intersects2(GameObject other) {
-
-		boolean xOverlap = valueInRange((float) (getX() + getXDirection()),
-				other.getX(), other.getX() + other.getWidth())
-				|| valueInRange(other.getX(),
-						(float) (getX() + getXDirection()), getX() + getWidth());
-
-		boolean yOverlap = valueInRange((float) (getY() + getYDirection()),
-				other.getY(), other.getY() + other.getHeight())
-				|| valueInRange(other.getY(),
-						(float) (getY() + getYDirection()), getY()
-								+ getHeight());
-
-		return xOverlap && yOverlap;
 	}
 
 	public void destroy() {

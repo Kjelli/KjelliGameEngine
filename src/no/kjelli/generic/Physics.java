@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 import no.kjelli.generic.gameobjects.AbstractObject;
-import no.kjelli.generic.gameobjects.GameObject;
 import no.kjelli.quadtree.QuadTree;
 
 public class Physics {
@@ -26,17 +25,12 @@ public class Physics {
 		for (Collidable other : others) {
 			if (other.equals(object))
 				continue;
-			if (!(other instanceof Collidable)) {
-				continue;
-			}
-			
-			
+
 			if (object.intersects(other)) {
 				Collidable col1 = (Collidable) object;
 				Collidable col2 = (Collidable) other;
 
 				Collision collision = new Collision(col1, col2);
-				System.out.println(collision);
 				return collision;
 			}
 		}

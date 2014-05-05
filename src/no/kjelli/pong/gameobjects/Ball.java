@@ -1,6 +1,8 @@
 package no.kjelli.pong.gameobjects;
 
-import no.kjelli.generic.*;
+import no.kjelli.generic.Collidable;
+import no.kjelli.generic.Collision;
+import no.kjelli.generic.World;
 import no.kjelli.generic.gameobjects.AbstractObject;
 import no.kjelli.generic.sound.SoundPlayer;
 
@@ -21,7 +23,7 @@ public class Ball extends AbstractObject implements Collidable {
 		this.height = SIZE;
 
 		angle = -Math.PI;
-		speed = 5.0f;
+		speed = 4.0f;
 	}
 
 	@Override
@@ -50,7 +52,6 @@ public class Ball extends AbstractObject implements Collidable {
 		}
 
 		Collision collision = move();
-
 		if (collision == null)
 			return;
 
@@ -73,13 +74,8 @@ public class Ball extends AbstractObject implements Collidable {
 				angle = Math.atan2(velocity_y, velocity_x);
 			}
 		}
-
-		SoundPlayer.play("bounce", 1 + (float)(Math.abs(velocity_x) / MAX_SPEED_X));
-	}
-
-	@Override
-	public void onCollide(Collision collision) {
-
+		SoundPlayer.play("bounce",
+				1 + (float) (Math.abs(velocity_x) / MAX_SPEED_X));
 	}
 
 	private void bounce(Collidable other) {

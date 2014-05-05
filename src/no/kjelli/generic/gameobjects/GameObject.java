@@ -7,7 +7,7 @@ public interface GameObject extends Drawable {
 	public float getX();
 
 	public float getY();
-	
+
 	public int getXDirection();
 
 	public int getYDirection();
@@ -29,9 +29,6 @@ public interface GameObject extends Drawable {
 	public boolean isVisible();
 
 	public boolean intersects(GameObject other);
-
-	// TODO: remove om den ikke funker
-	public boolean intersects2(GameObject other);
 
 	public boolean contains(float x, float y);
 

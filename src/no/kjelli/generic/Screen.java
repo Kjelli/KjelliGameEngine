@@ -1,10 +1,9 @@
 package no.kjelli.generic;
 
 import static org.lwjgl.opengl.GL11.glClearColor;
+import no.kjelli.generic.gameobjects.GameObject;
 
 import org.newdawn.slick.Color;
-
-import no.kjelli.generic.gameobjects.GameObject;
 
 public class Screen {
 
@@ -90,13 +89,13 @@ public class Screen {
 		glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b,
 				backgroundColor.a);
 	}
-	
-	public static void shake(int duration, int magnitude){
-		if(duration < 0){
+
+	public static void shake(int duration, int magnitude) {
+		if (duration < 0) {
 			System.err.println("Duration can't be less than 0 !");
 			return;
 		}
-		
+
 		shakeTimer = duration;
 		shakeMagnitude = magnitude;
 	}
@@ -106,8 +105,7 @@ public class Screen {
 			offsetX = (int) (2 * Math.random() * shakeMagnitude - shakeMagnitude);
 			offsetY = (int) (2 * Math.random() * shakeMagnitude - shakeMagnitude);
 			shakeTimer--;
-		}
-		else if(offsetX != 0 || offsetY != 0){
+		} else if (offsetX != 0 || offsetY != 0) {
 			offsetX = 0;
 			offsetY = 0;
 		}

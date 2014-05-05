@@ -11,7 +11,7 @@ import org.newdawn.slick.Color;
 
 public class QuadTree<E extends Collidable> {
 	public static final int MAX_CAPACITY = 10;
-	public static final int MAX_DEPTH = 5;
+	public static final int MAX_DEPTH = 3;
 
 	public static final int Q1 = 1;
 	public static final int Q2 = 2;
