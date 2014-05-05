@@ -6,12 +6,18 @@ import no.kjelli.generic.gameobjects.GameObject;
 
 public class World {
 
-	public static int width;
-	public static int height;
+	private static int width;
+	private static int height;
 
 	private static ArrayList<GameObject> removeQueue = new ArrayList<>();
 	private static ArrayList<GameObject> addQueue = new ArrayList<>();
 	private static ArrayList<GameObject> objects = new ArrayList<>();
+
+	public static void init(int width, int height) {
+		setWidth(width);
+		setHeight(height);
+
+	}
 
 	public static ArrayList<GameObject> getObjects() {
 		return objects;
@@ -34,9 +40,8 @@ public class World {
 			if (object.isVisible())
 				object.draw();
 		}
-		// Physics.quadtree.render();
 
-	}
+	}               
 
 	public static void update() {
 
@@ -68,10 +73,23 @@ public class World {
 	}
 
 	public static void setWidth(int width) {
+		if (width <= 0)
+			throw new IllegalArgumentException("Width cannot be <= 0!");
 		World.width = width;
 	}
 
 	public static void setHeight(int height) {
+		if (height <= 0)
+			throw new IllegalArgumentException("Height cannot be <= 0!");
 		World.height = height;
 	}
+
+	public static int getWidth() {
+		return width;
+	}
+
+	public static int getHeight() {
+		return height;
+	}
+
 }

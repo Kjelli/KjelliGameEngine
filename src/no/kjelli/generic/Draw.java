@@ -27,7 +27,7 @@ public class Draw {
 		glPushMatrix();
 		{
 			glColor3f(color.r, color.g, color.b);
-			glTranslatef(x, y, 0);
+			glTranslatef(Screen.getX() + x, Screen.getY() + y, 0);
 			glRotatef(rot, 0, 0, 1);
 
 			glBegin(GL_QUADS);
@@ -52,7 +52,7 @@ public class Draw {
 		glPushMatrix();
 		{
 			glColor3f(color.r, color.g, color.b);
-			glTranslatef(x, y, 0);
+			glTranslatef(Screen.getX() + x, Screen.getY() + y, 0);
 			glBegin(GL_LINE_STRIP);
 			{
 				glVertex2d(0, 0);
@@ -82,7 +82,7 @@ public class Draw {
 		glPushMatrix();
 		{
 			glColor3f(color.r, color.g, color.b);
-			glTranslatef(x, y, 0);
+			glTranslatef(Screen.getX() + x, Screen.getY() + y, 0);
 			glRotatef(rot, 0, 0, 0);
 
 			glBegin(GL_LINE_LOOP);

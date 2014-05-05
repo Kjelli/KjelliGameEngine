@@ -7,6 +7,9 @@ import org.newdawn.slick.Color;
 public abstract class AbstractObject implements GameObject, Drawable {
 	protected float x;
 	protected float y;
+	protected float xStep;
+	protected float yStep;
+
 	protected double velocity_x;
 	protected double velocity_y;
 	protected float speed;
@@ -21,8 +24,10 @@ public abstract class AbstractObject implements GameObject, Drawable {
 	public abstract void update();
 
 	public void draw() {
-		if (Screen.contains(this))
+		if (Screen.contains(this)) {
 			Draw.fillRect(x, y, width, height, color);
+			Draw.rect(x, y, width, height, Color.cyan);
+		}
 	}
 
 	public float getX() {
@@ -85,18 +90,117 @@ public abstract class AbstractObject implements GameObject, Drawable {
 		return speed;
 	}
 
+	public Color getColor() {
+		return color;
+	}
+
+	protected Collision move() {
+		xStep += velocity_x;
+		yStep += velocity_y;
+
+		while (xStep >= 1) {
+			xStep--;
+			x++;
+			if (this instanceof Collidable) {
+				Collision check = Physics.checkCollision((Collidable) this);
+				if (check != null) {
+					x--;
+					return check;
+				}
+			}
+		}
+		while (xStep <= -1) {
+			xStep++;
+			x--;
+			if (this instanceof Collidable) {
+				Collision check = Physics.checkCollision((Collidable) this);
+				if (check != null) {
+					x++;
+					return check;
+				}
+			}
+		}
+		while (yStep >= 1) {
+			yStep--;
+			y++;
+			if (this instanceof Collidable) {
+				Collision check = Physics.checkCollision((Collidable) this);
+				if (check != null) {
+					y--;
+					return check;
+				}
+			}
+		}
+		while (yStep <= -1) {
+			yStep++;
+			y--;
+			if (this instanceof Collidable) {
+				Collision check = Physics.checkCollision((Collidable) this);
+				if (check != null) {
+					y++;
+					return check;
+				}
+			}
+		}
+		return null;
+	}
+
 	private boolean valueInRange(float value, float min, float max) {
 		return (value >= min) && (value <= max);
 	}
 
+	public boolean contains(float x, float y) {
+		boolean xContains = valueInRange(x, getX(), getX() + getWidth());
+		boolean yContains = valueInRange(y, getY(), getY() + getHeight());
+		return xContains && yContains;
+	}
+
 	public boolean intersects(GameObject other) {
-		boolean xOverlap = valueInRange(this.x, other.getX(), other.getX()
+		boolean xOverlap = valueInRange(getX(), other.getX(), other.getX()
 				+ other.getWidth())
 				|| valueInRange(other.getX(), getX(), getX() + getWidth());
 
-		boolean yOverlap = valueInRange(this.y, other.getY(), other.getY()
+		boolean yOverlap = valueInRange(getY(), other.getY(), other.getY()
 				+ other.getHeight())
 				|| valueInRange(other.getY(), getY(), getY() + getHeight());
+
+		return xOverlap && yOverlap;
+	}
+
+	public int getXDirection() {
+		int xadd;
+		if (getVelocityX() > 0)
+			xadd = 1;
+		else if (getVelocityX() < 0)
+			xadd = -1;
+		else
+			xadd = 0;
+		return xadd;
+	}
+
+	public int getYDirection() {
+		int yadd;
+		if (getVelocityY() > 0)
+			yadd = 1;
+		else if (getVelocityY() < 0)
+			yadd = -1;
+		else
+			yadd = 0;
+		return yadd;
+	}
+
+	public boolean intersects2(GameObject other) {
+
+		boolean xOverlap = valueInRange((float) (getX() + getXDirection()),
+				other.getX(), other.getX() + other.getWidth())
+				|| valueInRange(other.getX(),
+						(float) (getX() + getXDirection()), getX() + getWidth());
+
+		boolean yOverlap = valueInRange((float) (getY() + getYDirection()),
+				other.getY(), other.getY() + other.getHeight())
+				|| valueInRange(other.getY(),
+						(float) (getY() + getYDirection()), getY()
+								+ getHeight());
 
 		return xOverlap && yOverlap;
 	}

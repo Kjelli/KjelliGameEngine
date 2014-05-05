@@ -1,21 +1,41 @@
 package no.kjelli.generic;
 
+import static org.lwjgl.opengl.GL11.glClearColor;
+
+import org.newdawn.slick.Color;
+
 import no.kjelli.generic.gameobjects.GameObject;
 
 public class Screen {
 
-	public static int x;
-	public static int y;
-	public static int width;
-	public static int height;
+	private static int x;
+	private static int y;
+	private static int width;
+	private static int height;
+	private static Color backgroundColor;
 
-	public Screen(int width, int height) {
-		Screen.width = width;
-		Screen.height = height;
+	private static int shakeTimer;
+	private static int shakeMagnitude;
+	private static int offsetX;
+	private static int offsetY;
+
+	public static void init(int x, int y, int width, int height) {
+		init(x, y, width, height, Color.black);
 	}
 
-	public void render() {
+	public static void init(int x, int y, int width, int height,
+			Color backgroundColor) {
+		Screen.x = x;
+		Screen.y = y;
+		Screen.width = width;
+		Screen.height = height;
+		setBackgroundColor(backgroundColor);
+	}
+
+	public static void render() {
 		World.render();
+		Draw.rect(x, y, width, height, Color.white);
+		Physics.quadtree.render();
 	}
 
 	public static boolean contains(GameObject object) {
@@ -28,5 +48,68 @@ public class Screen {
 		boolean inYBounds = (y < Screen.height && y + height > 0);
 
 		return inXBounds && inYBounds;
+	}
+
+	public static int getX() {
+		return x + offsetX;
+	}
+
+	public static void setX(int x) {
+		Screen.x = x;
+	}
+
+	public static int getY() {
+		return y + offsetY;
+	}
+
+	public static void setY(int y) {
+		Screen.y = y;
+	}
+
+	public static int getWidth() {
+		return width;
+	}
+
+	public static void setWidth(int width) {
+		Screen.width = width;
+	}
+
+	public static int getHeight() {
+		return height;
+	}
+
+	public static void setHeight(int height) {
+		Screen.height = height;
+	}
+
+	public static Color getBackgroundColor() {
+		return backgroundColor;
+	}
+
+	public static void setBackgroundColor(Color backgroundColor) {
+		glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b,
+				backgroundColor.a);
+	}
+	
+	public static void shake(int duration, int magnitude){
+		if(duration < 0){
+			System.err.println("Duration can't be less than 0 !");
+			return;
+		}
+		
+		shakeTimer = duration;
+		shakeMagnitude = magnitude;
+	}
+
+	public static void update() {
+		if (shakeTimer > 0) {
+			offsetX = (int) (2 * Math.random() * shakeMagnitude - shakeMagnitude);
+			offsetY = (int) (2 * Math.random() * shakeMagnitude - shakeMagnitude);
+			shakeTimer--;
+		}
+		else if(offsetX != 0 || offsetY != 0){
+			offsetX = 0;
+			offsetY = 0;
+		}
 	}
 }

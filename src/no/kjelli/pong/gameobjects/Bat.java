@@ -1,7 +1,6 @@
 package no.kjelli.pong.gameobjects;
 
-import no.kjelli.generic.Collidable;
-import no.kjelli.generic.Physics;
+import no.kjelli.generic.*;
 import no.kjelli.generic.gameobjects.AbstractObject;
 
 public class Bat extends AbstractObject implements Collidable {
@@ -20,20 +19,20 @@ public class Bat extends AbstractObject implements Collidable {
 
 	@Override
 	public void update() {
-		Physics.checkCollision(this);
-		y += velocity_y;
+		move();
 		velocity_y = 0;
-
 	}
 
 	public void move(double d) {
 		velocity_y = SPEED * d;
+
 	}
 
 	@Override
-	public void onCollide(Collidable other) {
-		if (other instanceof Wall) {
-			if (other.getCenterY() < this.getCenterY())
+	public void onCollide(Collision collision) {
+		Collidable target = collision.getTarget();
+		if (target instanceof Wall) {
+			if (target.getCenterY() < this.getCenterY())
 				velocity_y += SPEED * 1;
 			else
 				velocity_y -= SPEED * 1;

@@ -1,16 +1,14 @@
 package no.kjelli.pong.gameobjects;
 
-import no.kjelli.generic.Collidable;
-import no.kjelli.generic.Physics;
+import no.kjelli.generic.*;
 import no.kjelli.generic.gameobjects.AbstractObject;
-
-import org.lwjgl.opengl.Display;
+import no.kjelli.generic.sound.SoundPlayer;
 
 public class Ball extends AbstractObject implements Collidable {
 
 	public static final int SIZE = 16;
 	public static final float MIN_SPEED_X = 1f;
-	public static final float MAX_SPEED_X = 5f;
+	public static final float MAX_SPEED_X = 40f;
 	public static final float MAX_SPEED_Y = 8f;
 	public static final float DAMPING = 0.05f;
 
@@ -23,12 +21,11 @@ public class Ball extends AbstractObject implements Collidable {
 		this.height = SIZE;
 
 		angle = -Math.PI;
-		speed = 2.0f;
+		speed = 5.0f;
 	}
 
 	@Override
 	public void update() {
-		Physics.checkCollision(this);
 
 		velocity_x = Math.cos(angle) * speed;
 		velocity_y = Math.sin(angle) * speed;
@@ -48,30 +45,49 @@ public class Ball extends AbstractObject implements Collidable {
 		if (velocity_y < -MAX_SPEED_Y)
 			velocity_y = -MAX_SPEED_Y;
 
-		if (x + width < 0 || x > Display.getWidth()) {
+		if (x + width < 0 || x > World.getWidth()) {
 			destroy();
 		}
 
-		x += velocity_x;
-		y += velocity_y;
+		Collision collision = move();
+
+		if (collision == null)
+			return;
+
+		Collidable target = collision.getTarget();
+		if (target instanceof Bat || target instanceof Ball) {
+			bounce(target);
+		}
+		if (target instanceof Bat)
+			this.color = ((Bat) target).getColor();
+
+		if (target instanceof Wall) {
+			int direction = collision.getImpactDirection();
+
+			if ((direction & (Collision.ABOVE | Collision.BELOW)) > 0) {
+				velocity_y *= -1;
+				angle = Math.atan2(velocity_y, velocity_x);
+			}
+			if ((direction & (Collision.LEFT | Collision.RIGHT)) > 0) {
+				velocity_x *= -1;
+				angle = Math.atan2(velocity_y, velocity_x);
+			}
+		}
+
+		SoundPlayer.play("bounce", 1 + (float)(Math.abs(velocity_x) / MAX_SPEED_X));
 	}
 
 	@Override
-	public void onCollide(Collidable other) {
-		if (other instanceof Bat || other instanceof Ball) {
-			float xlength = getCenterX() - other.getCenterX();
-			float ylength = getCenterY() - other.getCenterY();
+	public void onCollide(Collision collision) {
 
-			angle = Math.atan2(ylength, xlength);
+	}
 
-			x += velocity_x;
-			y += velocity_y;
-			speed += 0.04f;
+	private void bounce(Collidable other) {
+		float xlength = getCenterX() - other.getCenterX();
+		float ylength = getCenterY() - other.getCenterY();
 
-		}
-		if (other instanceof Wall) {
-			angle = 2 * Math.PI - angle;
-		}
+		angle = Math.atan2(ylength, xlength);
+		speed += 0.04f;
 	}
 
 	@Override

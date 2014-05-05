@@ -1,11 +1,15 @@
 package no.kjelli.pong;
 
+import java.io.IOException;
+
 import no.kjelli.generic.*;
 import no.kjelli.generic.main.Main;
+import no.kjelli.generic.sound.SoundPlayer;
 import no.kjelli.pong.gameobjects.*;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
+import org.newdawn.slick.Color;
 
 public class Pong implements Game {
 
@@ -18,11 +22,14 @@ public class Pong implements Game {
 
 	@Override
 	public void init() {
+		loadSounds();
+		Screen.init(0, 0, Display.getWidth(), Display.getHeight());
+		World.init(Display.getWidth(), Display.getHeight());
 		Physics.init();
-		screen = new Screen(Display.getWidth(), Display.getHeight());
-		World.setWidth(Display.getWidth());
-		World.setHeight(Display.getHeight());
+		initGameObjects();
+	}
 
+	private void initGameObjects() {
 		Ball ball = new Ball(Display.getWidth() / 2, Display.getHeight() / 2
 				- Ball.SIZE / 2);
 		ball.setVisible(true);
@@ -35,25 +42,41 @@ public class Pong implements Game {
 				Display.getHeight() / 2 - Bat.HEIGHT / 2);
 		enemy.setVisible(true);
 
-		Wall lowerWall = new Wall(0, 0, Display.getWidth(), Wall.DEFAULT_SIZE,
-				ball);
+		Wall lowerWall = new Wall(0, 0, Display.getWidth(), Wall.DEFAULT_SIZE);
 		lowerWall.setVisible(true);
 
+		Wall midWall = new Wall(0, 0, Wall.DEFAULT_SIZE, Display.getHeight());
+		midWall.setVisible(true);
+
+		Wall midWall2 = new Wall(Display.getWidth() - Wall.DEFAULT_SIZE, 0,
+				Wall.DEFAULT_SIZE, Display.getHeight());
+		midWall2.setVisible(true);
+
 		Wall upperWall = new Wall(0, Display.getHeight() - Wall.DEFAULT_SIZE,
-				Display.getWidth(), Wall.DEFAULT_SIZE, ball);
+				Display.getWidth(), Wall.DEFAULT_SIZE);
 		upperWall.setVisible(true);
 
 		World.add(ball);
 		World.add(player);
-		World.add(enemy);
+		//World.add(enemy);
 		World.add(upperWall);
+		World.add(midWall);
+		World.add(midWall2);
 		World.add(lowerWall);
+	}
 
+	@Override
+	public void loadSounds() {
+		try {
+			SoundPlayer.load("res\\bounce.wav");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public void render() {
-		screen.render();
+		Screen.render();
 	}
 
 	@Override
@@ -67,7 +90,7 @@ public class Pong implements Game {
 			player.move(-1);
 
 		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE) && cooldown == 0) {
-			cooldown = 100;
+			cooldown = 10;
 			Ball newBall = new Ball(Display.getWidth() / 2, Display.getHeight()
 					/ 2 - Ball.SIZE / 2);
 			newBall.setVisible(true);
@@ -80,6 +103,7 @@ public class Pong implements Game {
 		if (cooldown > 0)
 			cooldown--;
 		World.update();
+		Screen.update();
 	}
 
 	public static void main(String[] args) {

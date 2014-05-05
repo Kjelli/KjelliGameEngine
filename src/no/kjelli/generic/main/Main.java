@@ -2,9 +2,11 @@ package no.kjelli.generic.main;
 
 import static org.lwjgl.opengl.GL11.*;
 import no.kjelli.generic.Game;
+import no.kjelli.generic.sound.SoundPlayer;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.openal.AL;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 
@@ -14,8 +16,8 @@ public class Main {
 
 	public Main(Game game) {
 		Main.game = game;
-
 		initDisplay();
+		initKeyboard();
 		initGL();
 
 		initGame();
@@ -24,12 +26,19 @@ public class Main {
 		cleanUp();
 	}
 
+	private static void initKeyboard() {
+		try {
+			Keyboard.create();
+		} catch (LWJGLException e) {
+			e.printStackTrace();
+		}
+	}
+
 	private static void initDisplay() {
 		try {
 			Display.setDisplayMode(new DisplayMode(800, 600));
 			Display.setVSyncEnabled(true);
 			Display.create();
-			Keyboard.create();
 		} catch (LWJGLException e) {
 			System.out.println("Error: " + e.getMessage());
 		}
@@ -65,6 +74,7 @@ public class Main {
 	}
 
 	private static void update() {
+		SoundPlayer.update();
 		game.update();
 	}
 
@@ -81,6 +91,7 @@ public class Main {
 	private static void cleanUp() {
 		Display.destroy();
 		Keyboard.destroy();
+		AL.destroy();
 	}
 
 }

@@ -1,20 +1,18 @@
 package no.kjelli.pong.gameobjects;
 
 import no.kjelli.generic.Collidable;
+import no.kjelli.generic.Collision;
 import no.kjelli.generic.gameobjects.AbstractObject;
 
 public class Wall extends AbstractObject implements Collidable {
 
 	public static final int DEFAULT_SIZE = 16;
 
-	private Ball ball;
-
-	public Wall(float x, float y, float width, float height, Ball ball) {
+	public Wall(float x, float y, float width, float height) {
 		this.x = x;
 		this.y = y;
 		this.width = width;
 		this.height = height;
-		this.ball = ball;
 	}
 
 	@Override
@@ -22,7 +20,7 @@ public class Wall extends AbstractObject implements Collidable {
 	}
 
 	@Override
-	public void onCollide(Collidable other) {
+	public void onCollide(Collision collision) {
 	}
 
 	@Override

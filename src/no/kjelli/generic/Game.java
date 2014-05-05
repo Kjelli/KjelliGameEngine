@@ -4,6 +4,8 @@ package no.kjelli.generic;
 public interface Game {
 	
 	public void init();
+	
+	public void loadSounds();
 
 	public void render();
 
