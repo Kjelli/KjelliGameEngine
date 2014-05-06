@@ -10,7 +10,7 @@ import no.kjelli.generic.Draw;
 import org.newdawn.slick.Color;
 
 public class QuadTree<E extends Collidable> {
-	public static final int MAX_CAPACITY = 10;
+	public static final int MAX_CAPACITY = 5;
 	public static final int MAX_DEPTH = 3;
 
 	public static final int Q1 = 1;
@@ -121,11 +121,11 @@ public class QuadTree<E extends Collidable> {
 		int yMid = borderBottom + height / 2;
 		int xMid = borderLeft + width / 2;
 
-		boolean topQuadrant = (e.getY() + e.getYDirection() + e.getHeight() >= yMid);
-		boolean bottomQuadrant = (e.getY() + e.getYDirection() <= yMid);
+		boolean topQuadrant = (e.getY() + e.getVelocityY() + e.getHeight() >= yMid);
+		boolean bottomQuadrant = (e.getY() + e.getVelocityY() <= yMid);
 
-		boolean leftQuadrant = (e.getX() + e.getXDirection() <= xMid);
-		boolean rightQuadrant = (e.getX() + e.getXDirection() + e.getWidth() >= xMid);
+		boolean leftQuadrant = (e.getX() + e.getVelocityX() <= xMid);
+		boolean rightQuadrant = (e.getX() + e.getVelocityX() + e.getWidth() >= xMid);
 
 		if (topQuadrant) {
 			if (leftQuadrant)

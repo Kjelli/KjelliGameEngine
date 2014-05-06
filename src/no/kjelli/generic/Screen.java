@@ -34,7 +34,7 @@ public class Screen {
 	public static void render() {
 		World.render();
 		Draw.rect(x, y, width, height, Color.white);
-		Physics.quadtree.render();
+		// Physics.quadtree.render();
 	}
 
 	public static boolean contains(GameObject object) {

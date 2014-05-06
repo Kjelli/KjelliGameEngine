@@ -111,7 +111,6 @@ public abstract class AbstractObject implements GameObject, Drawable {
 
 	protected Collision move() {
 		xStep += velocity_x;
-		yStep += velocity_y;
 
 		while (xStep >= 1) {
 			xStep--;
@@ -119,7 +118,8 @@ public abstract class AbstractObject implements GameObject, Drawable {
 			if (this instanceof Collidable) {
 				Collision check = Physics.checkCollision((Collidable) this);
 				if (check != null) {
-					x--;
+					if ((check.getImpactDirection() & Collision.RIGHT) > 0)
+						x--;
 					xStep = 0;
 					return check;
 				}
@@ -131,19 +131,22 @@ public abstract class AbstractObject implements GameObject, Drawable {
 			if (this instanceof Collidable) {
 				Collision check = Physics.checkCollision((Collidable) this);
 				if (check != null) {
-					x++;
+					if ((check.getImpactDirection() & Collision.LEFT) > 0)
+						x++;
 					xStep = 0;
 					return check;
 				}
 			}
 		}
+		yStep += velocity_y;
 		while (yStep >= 1) {
 			yStep--;
 			y++;
 			if (this instanceof Collidable) {
 				Collision check = Physics.checkCollision((Collidable) this);
 				if (check != null) {
-					y--;
+					if ((check.getImpactDirection() & Collision.ABOVE) > 0)
+						y--;
 					yStep = 0;
 					return check;
 				}
@@ -155,7 +158,8 @@ public abstract class AbstractObject implements GameObject, Drawable {
 			if (this instanceof Collidable) {
 				Collision check = Physics.checkCollision((Collidable) this);
 				if (check != null) {
-					y++;
+					if ((check.getImpactDirection() & Collision.BELOW) > 0)
+						y++;
 					yStep = 0;
 					return check;
 				}
@@ -189,9 +193,9 @@ public abstract class AbstractObject implements GameObject, Drawable {
 	public int getXDirection() {
 		int xadd;
 		if (getVelocityX() > 0)
-			xadd = 1;
+			xadd = 5;
 		else if (getVelocityX() < 0)
-			xadd = -1;
+			xadd = -5;
 		else
 			xadd = 0;
 		return xadd;
@@ -200,9 +204,9 @@ public abstract class AbstractObject implements GameObject, Drawable {
 	public int getYDirection() {
 		int yadd;
 		if (getVelocityY() > 0)
-			yadd = 1;
+			yadd = 5;
 		else if (getVelocityY() < 0)
-			yadd = -1;
+			yadd = -5;
 		else
 			yadd = 0;
 		return yadd;

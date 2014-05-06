@@ -8,9 +8,9 @@ import no.kjelli.generic.sound.SoundPlayer;
 
 public class Ball extends AbstractObject implements Collidable {
 
-	public static final int SIZE = 16;
+	public static final int SIZE = 8;
 	public static final float MIN_SPEED_X = 1f;
-	public static final float MAX_SPEED_X = 40f;
+	public static final float MAX_SPEED_X = 5f;
 	public static final float MAX_SPEED_Y = 8f;
 	public static final float DAMPING = 0.05f;
 
@@ -23,7 +23,7 @@ public class Ball extends AbstractObject implements Collidable {
 		this.height = SIZE;
 
 		angle = -Math.PI;
-		speed = 4.0f;
+		speed = 0.5f;
 	}
 
 	@Override
@@ -83,7 +83,7 @@ public class Ball extends AbstractObject implements Collidable {
 		float ylength = getCenterY() - other.getCenterY();
 
 		angle = Math.atan2(ylength, xlength);
-		speed += 0.04f;
+		speed += 0.4f;
 	}
 
 	@Override
