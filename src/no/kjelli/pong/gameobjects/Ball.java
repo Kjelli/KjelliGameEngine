@@ -3,10 +3,11 @@ package no.kjelli.pong.gameobjects;
 import no.kjelli.generic.Collidable;
 import no.kjelli.generic.Collision;
 import no.kjelli.generic.World;
+import no.kjelli.generic.gameobjects.AbstractCollidable;
 import no.kjelli.generic.gameobjects.AbstractObject;
 import no.kjelli.generic.sound.SoundPlayer;
 
-public class Ball extends AbstractObject implements Collidable {
+public class Ball extends AbstractCollidable {
 
 	public static final int SIZE = 8;
 	public static final float MIN_SPEED_X = 1f;

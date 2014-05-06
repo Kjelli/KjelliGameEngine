@@ -109,65 +109,6 @@ public abstract class AbstractObject implements GameObject, Drawable {
 
 	}
 
-	protected Collision move() {
-		xStep += velocity_x;
-
-		while (xStep >= 1) {
-			xStep--;
-			x++;
-			if (this instanceof Collidable) {
-				Collision check = Physics.checkCollision((Collidable) this);
-				if (check != null) {
-					if ((check.getImpactDirection() & Collision.RIGHT) > 0)
-						x--;
-					xStep = 0;
-					return check;
-				}
-			}
-		}
-		while (xStep <= -1) {
-			xStep++;
-			x--;
-			if (this instanceof Collidable) {
-				Collision check = Physics.checkCollision((Collidable) this);
-				if (check != null) {
-					if ((check.getImpactDirection() & Collision.LEFT) > 0)
-						x++;
-					xStep = 0;
-					return check;
-				}
-			}
-		}
-		yStep += velocity_y;
-		while (yStep >= 1) {
-			yStep--;
-			y++;
-			if (this instanceof Collidable) {
-				Collision check = Physics.checkCollision((Collidable) this);
-				if (check != null) {
-					if ((check.getImpactDirection() & Collision.ABOVE) > 0)
-						y--;
-					yStep = 0;
-					return check;
-				}
-			}
-		}
-		while (yStep <= -1) {
-			yStep++;
-			y--;
-			if (this instanceof Collidable) {
-				Collision check = Physics.checkCollision((Collidable) this);
-				if (check != null) {
-					if ((check.getImpactDirection() & Collision.BELOW) > 0)
-						y++;
-					yStep = 0;
-					return check;
-				}
-			}
-		}
-		return null;
-	}
-
 	private boolean valueInRange(float value, float min, float max) {
 		return (value >= min) && (value <= max);
 	}

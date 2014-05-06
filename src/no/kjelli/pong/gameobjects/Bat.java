@@ -2,9 +2,10 @@ package no.kjelli.pong.gameobjects;
 
 import no.kjelli.generic.Collidable;
 import no.kjelli.generic.Collision;
+import no.kjelli.generic.gameobjects.AbstractCollidable;
 import no.kjelli.generic.gameobjects.AbstractObject;
 
-public class Bat extends AbstractObject implements Collidable {
+public class Bat extends AbstractCollidable {
 	public static final int WIDTH = 16;
 	public static final int HEIGHT = WIDTH * 7;
 	public static final float SPEED = 3f;
