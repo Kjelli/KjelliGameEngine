@@ -26,7 +26,7 @@ public class Draw {
 
 		glPushMatrix();
 		{
-			glColor3f(color.r, color.g, color.b);
+			glColor3f(color.r,color.g,color.b);
 			glTranslatef(Screen.getX() + x, Screen.getY() + y, 0);
 			glRotatef(rot, 0, 0, 1);
 
@@ -42,6 +42,45 @@ public class Draw {
 		glPopMatrix();
 	}
 
+	public static void texture(Drawable drawable){
+		texture(drawable,0);
+	}
+	
+	public static void texture(Drawable drawable, float rot) {
+		if (drawable.getTexture() == null) {
+			System.err.println("No texture loaded! [" + drawable + "]");
+			return;
+		}
+		float x = drawable.getX();
+		float y = drawable.getY();
+		float width = drawable.getWidth();
+		float height = drawable.getHeight();
+		glPushMatrix();
+		{
+			//TODO: Why does the textures disappear
+			glBindTexture(GL_TEXTURE_2D,drawable.getTexture().getTextureID());
+			glTranslatef(Screen.getX() + x, Screen.getY() + y, 0);
+			glRotatef(rot, 0, 0, 1);
+
+			glBegin(GL_QUADS);
+			{
+				glTexCoord2f(0,0);
+				glVertex2f(0, 0);
+				glTexCoord2f(1,0);
+				glVertex2f(width, 0);
+				glTexCoord2f(1,1);
+				glVertex2f(width, height);
+				glTexCoord2f(0,1);
+				glVertex2f(0, height);
+			}
+			glEnd();
+			
+			glBindTexture(GL_TEXTURE_2D,0);
+		}
+		glPopMatrix();
+
+	}
+
 	public static void line(float x, float y, float destX, float destY) {
 		line(x, y, destX, destY, DEFAULT_COLOR);
 	}
@@ -51,7 +90,7 @@ public class Draw {
 
 		glPushMatrix();
 		{
-			glColor3f(color.r, color.g, color.b);
+			glColor3f(color.r,color.g,color.b);
 			glTranslatef(Screen.getX() + x, Screen.getY() + y, 0);
 			glBegin(GL_LINE_STRIP);
 			{
@@ -81,7 +120,7 @@ public class Draw {
 			float rot, Color color) {
 		glPushMatrix();
 		{
-			glColor3f(color.r, color.g, color.b);
+			glColor3f(color.r,color.g,color.b);
 			glTranslatef(Screen.getX() + x, Screen.getY() + y, 0);
 			glRotatef(rot, 0, 0, 0);
 

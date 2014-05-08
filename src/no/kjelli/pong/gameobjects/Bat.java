@@ -7,7 +7,7 @@ import no.kjelli.generic.gameobjects.AbstractObject;
 
 public class Bat extends AbstractCollidable {
 	public static final int WIDTH = 16;
-	public static final int HEIGHT = WIDTH * 7;
+	public static final int HEIGHT = 128;
 	public static final float SPEED = 3f;
 
 	public Bat(float x, float y) {
@@ -16,22 +16,15 @@ public class Bat extends AbstractCollidable {
 
 		width = WIDTH;
 		height = HEIGHT;
+		
+		loadTexture("res\\bat.jpg");
 
 	}
 
 	@Override
 	public void update() {
-		Collision collision = move();
+		move();
 		velocity_y = 0;
-		if (collision == null)
-			return;
-		Collidable target = collision.getTarget();
-		if (target instanceof Wall) {
-			if (target.getCenterY() < this.getCenterY())
-				velocity_y += SPEED * 1;
-			else
-				velocity_y -= SPEED * 1;
-		}
 	}
 
 	public void move(double d) {

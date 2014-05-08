@@ -1,8 +1,13 @@
 package no.kjelli.generic.gameobjects;
 
+import java.io.IOException;
+
 import no.kjelli.generic.*;
 
 import org.newdawn.slick.Color;
+import org.newdawn.slick.opengl.Texture;
+import org.newdawn.slick.opengl.TextureLoader;
+import org.newdawn.slick.util.ResourceLoader;
 
 public abstract class AbstractObject implements GameObject, Drawable {
 	protected float x;
@@ -15,6 +20,7 @@ public abstract class AbstractObject implements GameObject, Drawable {
 	protected float speed;
 
 	protected Color color = Draw.DEFAULT_COLOR;
+	protected Texture texture;
 
 	protected float width;
 	protected float height;
@@ -25,8 +31,12 @@ public abstract class AbstractObject implements GameObject, Drawable {
 
 	public void draw() {
 		if (Screen.contains(this)) {
-			Draw.fillRect(x, y, width, height, color);
-			Draw.rect(x, y, width, height, Color.cyan);
+			if (texture == null) {
+				System.out.println("DRAWING RECT");
+				Draw.fillRect(x, y, width, height, color);
+				return;
+			}
+			Draw.texture(this);
 		}
 	}
 
@@ -94,21 +104,6 @@ public abstract class AbstractObject implements GameObject, Drawable {
 		return color;
 	}
 
-	public void nudge(Collision collision) {
-		System.out.println("NUDGE");
-		int direction = collision.getImpactDirection();
-
-		if ((direction & Collision.ABOVE) > 0)
-			setY(y - 1);
-		if ((direction & Collision.BELOW) > 0)
-			setY(y + 1);
-		if ((direction & Collision.LEFT) > 0)
-			setX(x + 1);
-		if ((direction & Collision.RIGHT) > 0)
-			setX(x - 1);
-
-	}
-
 	private boolean valueInRange(float value, float min, float max) {
 		return (value >= min) && (value <= max);
 	}
@@ -153,9 +148,27 @@ public abstract class AbstractObject implements GameObject, Drawable {
 		return yadd;
 	}
 
+	public void loadTexture(String filename) {
+		String[] elements = filename.split("[\\\\.]");
+		String format = elements[elements.length - 1].toUpperCase();
+
+		try {
+			texture = TextureLoader.getTexture(format,
+					ResourceLoader.getResourceAsStream(filename));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public Texture getTexture() {
+		return texture;
+	}
+
 	public void destroy() {
 		setVisible(false);
 		World.remove(this);
+		if(texture != null)
+			texture.release();
 	}
 
 }

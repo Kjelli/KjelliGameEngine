@@ -1,7 +1,5 @@
 package no.kjelli.pong.gameobjects;
 
-import org.newdawn.slick.Color;
-
 import no.kjelli.generic.World;
 import no.kjelli.generic.gameobjects.GameObject;
 
@@ -11,7 +9,6 @@ public class EnemyBat extends Bat {
 
 	public EnemyBat(float x, float y) {
 		super(x, y);
-		color = Color.red;
 	}
 
 	@Override

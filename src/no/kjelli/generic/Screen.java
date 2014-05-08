@@ -1,6 +1,6 @@
 package no.kjelli.generic;
 
-import static org.lwjgl.opengl.GL11.glClearColor;
+import static org.lwjgl.opengl.GL11.*;
 import no.kjelli.generic.gameobjects.GameObject;
 
 import org.newdawn.slick.Color;
@@ -32,9 +32,10 @@ public class Screen {
 	}
 
 	public static void render() {
+		glClear(GL_COLOR_BUFFER_BIT);
 		World.render();
 		Draw.rect(x, y, width, height, Color.white);
-		// Physics.quadtree.render();
+		//Physics.quadtree.render();
 	}
 
 	public static boolean contains(GameObject object) {

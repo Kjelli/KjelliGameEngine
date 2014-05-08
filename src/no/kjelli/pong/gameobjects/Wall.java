@@ -12,6 +12,8 @@ public class Wall extends AbstractObject implements Collidable {
 		this.y = y;
 		this.width = width;
 		this.height = height;
+		
+		loadTexture("res\\ball.jpg");
 	}
 
 	@Override

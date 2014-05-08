@@ -36,7 +36,7 @@ public class Main {
 
 	private static void initDisplay() {
 		try {
-			Display.setDisplayMode(new DisplayMode(800, 600));
+			Display.setDisplayMode(new DisplayMode(640, 480));
 			Display.setVSyncEnabled(true);
 			Display.create();
 		} catch (LWJGLException e) {
@@ -49,10 +49,12 @@ public class Main {
 		glLoadIdentity();
 		glOrtho(0, Display.getWidth(), 0, Display.getHeight(), -1, 1);
 		glMatrixMode(GL_MODELVIEW);
-
-		glClearColor(0, 0, 0, 1);
-
+		
 		glDisable(GL_DEPTH_TEST);
+		glEnable(GL_TEXTURE_2D);
+		glEnable(GL_BLEND);
+
+
 	}
 
 	private static void initGame() {
