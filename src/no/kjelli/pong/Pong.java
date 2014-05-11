@@ -13,9 +13,6 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 
 public class Pong implements Game {
-
-	public static Screen screen;
-
 	public static PlayerBat player;
 	public static EnemyBat enemy;
 
@@ -103,10 +100,13 @@ public class Pong implements Game {
 	@Override
 	public void update() {
 		ticks++;
-		if (cooldown > 0)
-			cooldown--;
+
 		World.update();
 		Screen.update();
+
+		if (cooldown > 0)
+			cooldown--;
+
 	}
 
 	public static void main(String[] args) {

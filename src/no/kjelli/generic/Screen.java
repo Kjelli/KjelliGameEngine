@@ -13,6 +13,7 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Cursor;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.Display;
 import org.lwjgl.util.Rectangle;
 import org.newdawn.slick.Color;
 
@@ -62,12 +63,6 @@ public class Screen {
 		glClear(GL_COLOR_BUFFER_BIT);
 		World.render();
 		Draw.rect(x + 1, y, width - 1, height - 1, Color.white);
-		for (Clickable c : mouseOverEventObjects) {
-			GameObject go = (GameObject) c;
-			Draw.rect(go.getCenterX() - go.getWidth() / 2,
-					go.getCenterY() - go.getHeight() / 2, go.getWidth(),
-					go.getHeight());
-		}
 	}
 
 	public static boolean contains(GameObject object) {
@@ -159,6 +154,10 @@ public class Screen {
 
 	public static boolean isCursorVisible() {
 		return (Mouse.getNativeCursor() == null);
+	}
+
+	public static boolean hasFocus() {
+		return Display.isActive();
 	}
 
 	public static void update() {

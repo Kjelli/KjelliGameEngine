@@ -1,20 +1,11 @@
 package no.kjelli.generic.gameobjects;
 
-import org.lwjgl.util.Rectangle;
 
 public interface GameObject extends Drawable {
-
-	public float getX();
-
-	public float getY();
 
 	public float getCenterX();
 
 	public float getCenterY();
-
-	public float getWidth();
-
-	public float getHeight();
 
 	public double getVelocityX();
 
@@ -23,8 +14,6 @@ public interface GameObject extends Drawable {
 	public float getSpeed();
 
 	public boolean isVisible();
-
-	public Rectangle getBounds();
 
 	public boolean intersects(GameObject other);
 
