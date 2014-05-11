@@ -4,7 +4,6 @@ import no.kjelli.generic.Collidable;
 import no.kjelli.generic.Collision;
 import no.kjelli.generic.World;
 import no.kjelli.generic.gameobjects.AbstractCollidable;
-import no.kjelli.generic.gameobjects.AbstractObject;
 import no.kjelli.generic.sound.SoundPlayer;
 
 public class Ball extends AbstractCollidable {
@@ -25,7 +24,8 @@ public class Ball extends AbstractCollidable {
 
 		angle = -Math.PI;
 		speed = 2f;
-		
+		color.a = 0.5f;
+
 		loadTexture("res\\ball.jpg");
 	}
 
@@ -54,19 +54,36 @@ public class Ball extends AbstractCollidable {
 			destroy();
 		}
 
-		Collision collision = move();
-		if (collision == null)
-			return;
+		move();
+	}
 
+	private void bounce(Collidable other) {
+		float xlength = getCenterX() - other.getCenterX();
+		float ylength = getCenterY() - other.getCenterY();
+
+		angle = Math.atan2(ylength, xlength);
+		speed += 0.04f;
+	}
+
+	@Override
+	public String toString() {
+		return "ball";
+	}
+
+	public void onCollision(Collision collision) {
 		Collidable target = collision.getTarget();
 		if (target instanceof Bat || target instanceof Ball) {
+			stop(collision.getImpactDirection());
 			bounce(target);
 		}
-		if (target instanceof Bat)
+		if (target instanceof Bat) {
+			stop(collision.getImpactDirection());
 			this.color = ((Bat) target).getColor();
+		}
 
 		if (target instanceof Wall) {
 			int direction = collision.getImpactDirection();
+			stop(direction);
 
 			if ((direction & (Collision.ABOVE | Collision.BELOW)) > 0) {
 				velocity_y *= -1;
@@ -79,18 +96,5 @@ public class Ball extends AbstractCollidable {
 		}
 		SoundPlayer.play("bounce",
 				1 + (float) (Math.abs(velocity_x) / MAX_SPEED_X));
-	}
-
-	private void bounce(Collidable other) {
-		float xlength = getCenterX() - other.getCenterX();
-		float ylength = getCenterY() - other.getCenterY();
-
-		angle = Math.atan2(ylength, xlength);
-		speed += 0.4f;
-	}
-
-	@Override
-	public String toString() {
-		return "ball";
 	}
 }

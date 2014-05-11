@@ -1,6 +1,7 @@
 package no.kjelli.pong.gameobjects;
 
 import no.kjelli.generic.Collidable;
+import no.kjelli.generic.Collision;
 import no.kjelli.generic.gameobjects.AbstractObject;
 
 public class Wall extends AbstractObject implements Collidable {
@@ -12,7 +13,7 @@ public class Wall extends AbstractObject implements Collidable {
 		this.y = y;
 		this.width = width;
 		this.height = height;
-		
+
 		loadTexture("res\\ball.jpg");
 	}
 
@@ -23,5 +24,9 @@ public class Wall extends AbstractObject implements Collidable {
 	@Override
 	public String toString() {
 		return "wall";
+	}
+
+	@Override
+	public void onCollision(Collision collision) {
 	}
 }

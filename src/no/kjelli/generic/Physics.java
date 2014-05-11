@@ -26,11 +26,12 @@ public class Physics {
 				continue;
 
 			if (object.intersects(other)) {
-				Collision collision = new Collision(object, other);
-				return collision;
+				Collision collision1 = new Collision(object, other);
+				Collision collision2 = new Collision(other, object);
+				object.onCollision(collision1);
+				other.onCollision(collision2);
 			}
 		}
 		return null;
 	}
-
 }

@@ -17,6 +17,8 @@ public class Pong implements Game {
 	public static PlayerBat player;
 	public static EnemyBat enemy;
 
+	public static long ticks = 0;
+
 	private int cooldown = 0;
 
 	@Override
@@ -59,8 +61,8 @@ public class Pong implements Game {
 		World.add(player);
 		World.add(enemy);
 		World.add(upperWall);
-		//World.add(midWall);
-		//World.add(midWall2);
+		// World.add(midWall);
+		// World.add(midWall2);
 		World.add(lowerWall);
 	}
 
@@ -99,6 +101,7 @@ public class Pong implements Game {
 
 	@Override
 	public void update() {
+		ticks++;
 		if (cooldown > 0)
 			cooldown--;
 		World.update();
