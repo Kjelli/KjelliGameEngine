@@ -15,9 +15,10 @@ public class Main {
 
 	private static Game game;
 
-	public Main(Game game) {
+	public Main(Game game, String title, int width, int height) {
 		Main.game = game;
-		initDisplay();
+		initDisplay(width, height);
+		Display.setTitle(title);
 		initInput();
 		initGL();
 
@@ -36,9 +37,9 @@ public class Main {
 		}
 	}
 
-	private static void initDisplay() {
+	private static void initDisplay(int width, int height) {
 		try {
-			Display.setDisplayMode(new DisplayMode(800, 600));
+			Display.setDisplayMode(new DisplayMode(width, height));
 			Display.setVSyncEnabled(true);
 			Display.create();
 		} catch (LWJGLException e) {

@@ -1,16 +1,13 @@
 package no.kjelli.generic.gameobjects;
 
-import java.io.IOException;
-
 import no.kjelli.generic.Draw;
 import no.kjelli.generic.Screen;
 import no.kjelli.generic.World;
+import no.kjelli.generic.gfx.Drawable;
 
 import org.lwjgl.util.Rectangle;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.opengl.Texture;
-import org.newdawn.slick.opengl.TextureLoader;
-import org.newdawn.slick.util.ResourceLoader;
 
 public abstract class AbstractObject implements GameObject, Drawable {
 	protected float x;
@@ -26,9 +23,15 @@ public abstract class AbstractObject implements GameObject, Drawable {
 	protected float width;
 	protected float height;
 
+	private int layer;
 	protected boolean isVisible;
 
 	public abstract void update();
+
+	public void move() {
+		x += velocity_x;
+		y += velocity_y;
+	}
 
 	public void draw() {
 		if (Screen.contains(this)) {
@@ -131,20 +134,20 @@ public abstract class AbstractObject implements GameObject, Drawable {
 		return xOverlap && yOverlap;
 	}
 
-	public void loadTexture(String filename) {
-		String[] elements = filename.split("[\\\\.]");
-		String format = elements[elements.length - 1].toUpperCase();
-
-		try {
-			texture = TextureLoader.getTexture(format,
-					ResourceLoader.getResourceAsStream(filename));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
 	public Texture getTexture() {
 		return texture;
+	}
+
+	public void setLayer(int layer) {
+		if (layer != World.BACKGROUND && layer != World.FOREGROUND) {
+			System.err.println("INVALID LAYER");
+			return;
+		}
+		this.layer = layer;
+	}
+
+	public int getLayer() {
+		return layer;
 	}
 
 	public void destroy() {
@@ -153,6 +156,15 @@ public abstract class AbstractObject implements GameObject, Drawable {
 		if (texture != null) {
 			texture = null;
 		}
+	}
+
+	@Override
+	public int compareTo(GameObject that) {
+		return Integer.compare(this.layer, that.getLayer());
+	}
+
+	public void setTexture(Texture texture) {
+		this.texture = texture;
 	}
 
 }

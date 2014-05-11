@@ -8,11 +8,19 @@ import no.kjelli.generic.World;
 import no.kjelli.generic.main.Main;
 import no.kjelli.generic.sound.SoundPlayer;
 import no.kjelli.pong.gameobjects.*;
+import no.kjelli.pong.gui.StartButton;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 
 public class Pong implements Game {
+
+	public static enum STATE {
+		INTRO, MENU, LOADING, PLAYING;
+	}
+
+	public static STATE state;
+
 	public static PlayerBat player;
 	public static EnemyBat enemy;
 
@@ -23,10 +31,21 @@ public class Pong implements Game {
 	@Override
 	public void init() {
 		loadSounds();
-		initGameObjects();
+		initIntro();
 	}
 
-	private void initGameObjects() {
+	public static void initIntro() {
+		state = STATE.INTRO;
+		StartButton startButton = new StartButton(Screen.getWidth() / 2
+				- StartButton.WIDTH / 2, Screen.getHeight() / 2
+				- StartButton.HEIGHT / 2);
+		startButton.setVisible(true);
+		Screen.add(startButton);
+	}
+
+	public static void initGame() {
+		World.clear();
+		state = STATE.PLAYING;
 		Ball ball = new Ball(Display.getWidth() / 2, Display.getHeight() / 2
 				- Ball.SIZE / 2);
 		ball.setVisible(true);
@@ -53,13 +72,13 @@ public class Pong implements Game {
 				Display.getWidth(), Wall.DEFAULT_SIZE);
 		upperWall.setVisible(true);
 
-		World.add(ball);
-		World.add(player);
-		World.add(enemy);
-		World.add(upperWall);
-		// World.add(midWall);
-		// World.add(midWall2);
-		World.add(lowerWall);
+		World.add(ball, World.FOREGROUND);
+		World.add(player, World.FOREGROUND);
+		World.add(enemy, World.FOREGROUND);
+		World.add(upperWall, World.FOREGROUND);
+		// World.add(midWall,World.FOREGROUND);
+		// World.add(midWall2,World.FOREGROUND);
+		World.add(lowerWall, World.FOREGROUND);
 	}
 
 	@Override
@@ -80,20 +99,33 @@ public class Pong implements Game {
 
 	@Override
 	public void getInput() {
-		if (Keyboard.isKeyDown(Keyboard.KEY_W)
-				|| Keyboard.isKeyDown(Keyboard.KEY_UP))
-			player.move(1);
+		switch (state) {
+		case INTRO:
+			break;
+		case LOADING:
+			break;
+		case MENU:
+			break;
+		case PLAYING:
+			if (Keyboard.isKeyDown(Keyboard.KEY_W)
+					|| Keyboard.isKeyDown(Keyboard.KEY_UP))
+				player.move(1);
 
-		if (Keyboard.isKeyDown(Keyboard.KEY_S)
-				|| Keyboard.isKeyDown(Keyboard.KEY_DOWN))
-			player.move(-1);
+			if (Keyboard.isKeyDown(Keyboard.KEY_S)
+					|| Keyboard.isKeyDown(Keyboard.KEY_DOWN))
+				player.move(-1);
 
-		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE) && cooldown == 0) {
-			cooldown = 10;
-			Ball newBall = new Ball(Display.getWidth() / 2, Display.getHeight()
-					/ 2 - Ball.SIZE / 2);
-			newBall.setVisible(true);
-			World.add(newBall);
+			if (Keyboard.isKeyDown(Keyboard.KEY_SPACE) && cooldown == 0) {
+				cooldown = 10;
+				Ball newBall = new Ball(Display.getWidth() / 2,
+						Display.getHeight() / 2 - Ball.SIZE / 2);
+				newBall.setVisible(true);
+				World.add(newBall, World.FOREGROUND);
+				break;
+			}
+		default:
+			break;
+
 		}
 	}
 
@@ -110,7 +142,7 @@ public class Pong implements Game {
 	}
 
 	public static void main(String[] args) {
-		new Main(new Pong());
+		new Main(new Pong(), "Pong - by Kjelli", 640, 480);
 	}
 
 }

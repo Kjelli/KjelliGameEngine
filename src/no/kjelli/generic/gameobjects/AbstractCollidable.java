@@ -21,7 +21,8 @@ public abstract class AbstractCollidable extends AbstractObject implements
 
 	}
 
-	protected void move() {
+	@Override
+	public void move() {
 		colLeft = false;
 		colRight = false;
 		xStep();

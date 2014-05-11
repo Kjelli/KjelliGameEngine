@@ -1,7 +1,7 @@
 package no.kjelli.generic;
 
 import static org.lwjgl.opengl.GL11.*;
-import no.kjelli.generic.gameobjects.Drawable;
+import no.kjelli.generic.gfx.Drawable;
 
 import org.newdawn.slick.Color;
 
@@ -28,8 +28,8 @@ public class Draw {
 		glPushMatrix();
 		{
 			glColor3f(color.r, color.g, color.b);
-			glTranslatef(Screen.getX() + x, Screen.getY() + y, 0);
-			glRotatef(rot, 0, 0, 1);
+			glTranslatef(x - Screen.getX(), y - Screen.getY(), 0);
+			glRotatef(rot, 0, 0, 0);
 
 			glBegin(GL_QUADS);
 			{
@@ -44,39 +44,57 @@ public class Draw {
 	}
 
 	public static void texture(Drawable drawable) {
-		texture(drawable, 0, 1.0f);
+		texture(drawable, 1.0f, 1, false);
 	}
 
-	public static void texture(Drawable drawable, float rot) {
-		texture(drawable, rot, 1.0f);
+	public static void texture(Drawable drawable, float alpha) {
+		texture(drawable, alpha, 1, false);
 	}
 
-	public static void texture(Drawable drawable, float rot, float alpha) {
+	public static void texture(Drawable drawable, boolean isGUIComponent) {
+		texture(drawable, 1.0f, 1, isGUIComponent);
+	}
+
+	public static void texture(Drawable drawable, float alpha,
+			boolean isGUIComponent) {
+		texture(drawable, alpha, 1, isGUIComponent);
+	}
+
+	public static void texture(Drawable drawable, float alpha, float rot,
+			boolean isGUIComponent) {
 		if (drawable.getTexture() == null) {
 			System.err.println("No texture loaded! [" + drawable + "]");
 			return;
 		}
-		float x = drawable.getX();
-		float y = drawable.getY();
+		float x;
+		float y;
+		if (isGUIComponent) {
+			x = drawable.getX() + Screen.getX();
+			y = drawable.getY() + Screen.getY();
+		} else {
+			x = drawable.getX();
+			y = drawable.getY();
+		}
 		float width = drawable.getWidth();
 		float height = drawable.getHeight();
 		glPushMatrix();
 		{
 			glColor4f(1, 1, 1, Screen.getTransparency() * alpha);
 			glBindTexture(GL_TEXTURE_2D, drawable.getTexture().getTextureID());
-			glTranslatef(Screen.getX() + x, Screen.getY() + y, 0);
-			glRotatef(rot, 0, 0, 1);
+			glTranslatef(x - Screen.getX(), y - Screen.getY(), 0);
+			glRotatef(rot, 0, 0, 0);
 
 			glBegin(GL_QUADS);
 			{
-				glTexCoord2f(0, 0);
-				glVertex2f(0, 0);
-				glTexCoord2f(1, 0);
-				glVertex2f(width, 0);
-				glTexCoord2f(1, 1);
-				glVertex2f(width, height);
 				glTexCoord2f(0, 1);
+				glVertex2f(0, 0);
+				glTexCoord2f(1, 1);
+				glVertex2f(width, 0);
+				glTexCoord2f(1, 0);
+				glVertex2f(width, height);
+				glTexCoord2f(0, 0);
 				glVertex2f(0, height);
+
 			}
 			glEnd();
 
@@ -96,7 +114,7 @@ public class Draw {
 		glPushMatrix();
 		{
 			glColor4f(color.r, color.g, color.b, color.a);
-			glTranslatef(Screen.getX() + x, Screen.getY() + y, 0);
+			glTranslatef(x - Screen.getX(), y - Screen.getY(), 0);
 			glBegin(GL_LINE_STRIP);
 			{
 				glVertex2d(0, 0);
@@ -126,7 +144,7 @@ public class Draw {
 		glPushMatrix();
 		{
 			glColor4f(color.r, color.g, color.b, color.a);
-			glTranslatef(Screen.getX() + x, Screen.getY() + y, 0);
+			glTranslatef(x - Screen.getX(), y - Screen.getY(), 0);
 			glRotatef(rot, 0, 0, 0);
 
 			glBegin(GL_LINE_LOOP);
