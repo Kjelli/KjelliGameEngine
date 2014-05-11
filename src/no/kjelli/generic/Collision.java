@@ -1,5 +1,7 @@
 package no.kjelli.generic;
 
+import no.kjelli.generic.gameobjects.Collidable;
+
 public class Collision {
 	public static final int ABOVE = 1;
 	public static final int BELOW = 2;

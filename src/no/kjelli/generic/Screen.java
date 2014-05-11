@@ -38,7 +38,7 @@ public class Screen {
 	public static void render() {
 		glClear(GL_COLOR_BUFFER_BIT);
 		World.render();
-		Draw.rect(x, y, width, height, Color.white);
+		Draw.rect(x + 1, y, width - 1, height - 1, Color.white);
 		// Physics.quadtree.render();
 	}
 

@@ -70,6 +70,8 @@ public class Pong implements Game {
 	public void loadSounds() {
 		try {
 			SoundPlayer.load("res\\bounce.wav");
+			SoundPlayer.load("res\\win.wav");
+			SoundPlayer.load("res\\lose.wav");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -1,9 +1,9 @@
 package no.kjelli.pong.gameobjects;
 
-import no.kjelli.generic.Collidable;
 import no.kjelli.generic.Collision;
 import no.kjelli.generic.World;
 import no.kjelli.generic.gameobjects.AbstractCollidable;
+import no.kjelli.generic.gameobjects.Collidable;
 import no.kjelli.generic.sound.SoundPlayer;
 
 public class Ball extends AbstractCollidable {
@@ -50,8 +50,13 @@ public class Ball extends AbstractCollidable {
 		if (velocity_y < -MAX_SPEED_Y)
 			velocity_y = -MAX_SPEED_Y;
 
-		if (x + width < 0 || x > World.getWidth()) {
+		if (x + width < 0) {
 			destroy();
+			SoundPlayer.play("lose");
+		}
+		if (x > World.getWidth()) {
+			destroy();
+			SoundPlayer.play("win");
 		}
 
 		move();

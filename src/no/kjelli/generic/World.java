@@ -2,6 +2,7 @@ package no.kjelli.generic;
 
 import java.util.ArrayList;
 
+import no.kjelli.generic.gameobjects.Collidable;
 import no.kjelli.generic.gameobjects.GameObject;
 
 public class World {

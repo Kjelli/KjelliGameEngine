@@ -1,6 +1,7 @@
 package no.kjelli.generic;
 
 import static org.lwjgl.opengl.GL11.*;
+import no.kjelli.generic.gameobjects.Drawable;
 
 import org.newdawn.slick.Color;
 

@@ -1,6 +1,5 @@
 package no.kjelli.generic.gameobjects;
 
-import no.kjelli.generic.Collidable;
 import no.kjelli.generic.Collision;
 import no.kjelli.generic.Physics;
 

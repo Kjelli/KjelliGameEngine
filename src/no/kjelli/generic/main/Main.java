@@ -36,7 +36,7 @@ public class Main {
 
 	private static void initDisplay() {
 		try {
-			Display.setDisplayMode(new DisplayMode(640, 480));
+			Display.setDisplayMode(new DisplayMode(800, 600));
 			Display.setVSyncEnabled(true);
 			Display.create();
 		} catch (LWJGLException e) {

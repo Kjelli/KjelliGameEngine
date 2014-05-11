@@ -3,6 +3,7 @@ package no.kjelli.generic;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+import no.kjelli.generic.gameobjects.Collidable;
 import no.kjelli.quadtree.QuadTree;
 
 public class Physics {

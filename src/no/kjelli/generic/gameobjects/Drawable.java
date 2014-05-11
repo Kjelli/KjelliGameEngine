@@ -1,4 +1,4 @@
-package no.kjelli.generic;
+package no.kjelli.generic.gameobjects;
 
 import org.newdawn.slick.opengl.Texture;
 

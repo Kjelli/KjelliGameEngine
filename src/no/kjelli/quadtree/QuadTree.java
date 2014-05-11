@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 
-import no.kjelli.generic.Collidable;
 import no.kjelli.generic.Draw;
+import no.kjelli.generic.gameobjects.Collidable;
 
 import org.newdawn.slick.Color;
 

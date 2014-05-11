@@ -1,16 +1,10 @@
 package no.kjelli.generic.gameobjects;
 
-import no.kjelli.generic.Drawable;
-
 public interface GameObject extends Drawable {
 
 	public float getX();
 
 	public float getY();
-
-	public int getXDirection();
-
-	public int getYDirection();
 
 	public float getCenterX();
 

@@ -4,13 +4,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 
-import org.newdawn.slick.openal.*;
+import org.newdawn.slick.openal.Audio;
+import org.newdawn.slick.openal.AudioLoader;
 import org.newdawn.slick.util.ResourceLoader;
 
 public class SoundPlayer {
 
 	private static final int COOLDOWN_MAX = 3;
-	private static int cooldown;
+	private static int play_cooldown;
 
 	private static HashMap<String, Audio> sounds = new HashMap<>();
 
@@ -39,16 +40,16 @@ public class SoundPlayer {
 			System.err.println("Sound not found or loaded!");
 			return;
 		}
-		
-		if(cooldown > 0)
+
+		if (play_cooldown > 0)
 			return;
-		
+
 		sounds.get(soundName).playAsSoundEffect(pitch, gain, false);
-		cooldown = COOLDOWN_MAX;
+		play_cooldown = COOLDOWN_MAX;
 	}
 
 	public static void update() {
-		if (cooldown > 0)
-			cooldown--;
+		if (play_cooldown > 0)
+			play_cooldown--;
 	}
 }

@@ -1,8 +1,8 @@
 package no.kjelli.pong.gameobjects;
 
-import no.kjelli.generic.Collidable;
 import no.kjelli.generic.Collision;
 import no.kjelli.generic.gameobjects.AbstractCollidable;
+import no.kjelli.generic.gameobjects.Collidable;
 
 public class Bat extends AbstractCollidable {
 	public static final int WIDTH = 16;

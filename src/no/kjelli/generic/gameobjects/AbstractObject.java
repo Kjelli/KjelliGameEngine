@@ -2,7 +2,9 @@ package no.kjelli.generic.gameobjects;
 
 import java.io.IOException;
 
-import no.kjelli.generic.*;
+import no.kjelli.generic.Draw;
+import no.kjelli.generic.Screen;
+import no.kjelli.generic.World;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.opengl.Texture;
@@ -12,8 +14,6 @@ import org.newdawn.slick.util.ResourceLoader;
 public abstract class AbstractObject implements GameObject, Drawable {
 	protected float x;
 	protected float y;
-	protected float xStep;
-	protected float yStep;
 
 	protected double velocity_x;
 	protected double velocity_y;
@@ -32,7 +32,6 @@ public abstract class AbstractObject implements GameObject, Drawable {
 	public void draw() {
 		if (Screen.contains(this)) {
 			if (texture == null) {
-				System.out.println("DRAWING RECT");
 				Draw.fillRect(x, y, width, height, color);
 				return;
 			}
@@ -124,28 +123,6 @@ public abstract class AbstractObject implements GameObject, Drawable {
 				|| valueInRange(other.getY(), getY(), getY() + getHeight());
 
 		return xOverlap && yOverlap;
-	}
-
-	public int getXDirection() {
-		int xadd;
-		if (getVelocityX() > 0)
-			xadd = 5;
-		else if (getVelocityX() < 0)
-			xadd = -5;
-		else
-			xadd = 0;
-		return xadd;
-	}
-
-	public int getYDirection() {
-		int yadd;
-		if (getVelocityY() > 0)
-			yadd = 5;
-		else if (getVelocityY() < 0)
-			yadd = -5;
-		else
-			yadd = 0;
-		return yadd;
 	}
 
 	public void loadTexture(String filename) {
