@@ -2,7 +2,9 @@ package no.kjelli.pong;
 
 import java.io.IOException;
 
-import no.kjelli.generic.*;
+import no.kjelli.generic.Game;
+import no.kjelli.generic.Screen;
+import no.kjelli.generic.World;
 import no.kjelli.generic.main.Main;
 import no.kjelli.generic.sound.SoundPlayer;
 import no.kjelli.pong.gameobjects.*;
@@ -24,9 +26,6 @@ public class Pong implements Game {
 	@Override
 	public void init() {
 		loadSounds();
-		Screen.init(0, 0, Display.getWidth(), Display.getHeight());
-		World.init(Display.getWidth(), Display.getHeight());
-		Physics.init();
 		initGameObjects();
 	}
 

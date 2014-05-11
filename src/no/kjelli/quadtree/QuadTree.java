@@ -5,11 +5,12 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 import no.kjelli.generic.Draw;
-import no.kjelli.generic.gameobjects.Collidable;
+import no.kjelli.generic.gameobjects.GameObject;
 
+import org.lwjgl.util.Rectangle;
 import org.newdawn.slick.Color;
 
-public class QuadTree<E extends Collidable> {
+public class QuadTree<E extends GameObject> {
 	public static final int MAX_CAPACITY = 5;
 	public static final int MAX_DEPTH = 5;
 
@@ -143,6 +144,26 @@ public class QuadTree<E extends Collidable> {
 		return index;
 	}
 
+	public boolean intersects(Rectangle bounds) {
+		return (new Rectangle(borderLeft, borderBottom, borderRight
+				- borderLeft, borderTop - borderBottom).intersects(bounds));
+	}
+
+	public HashSet<E> retrieve(HashSet<E> returnObjects, Rectangle bounds) {
+		if (nodes[0] == null) {
+			for (E e : objects)
+				if (bounds.intersects(e.getBounds()))
+					returnObjects.add(e);
+		}
+		if (nodes[0] != null) {
+			for (int i = 0; i < 4; i++) {
+				if (nodes[i].intersects(bounds))
+					nodes[i].retrieve(returnObjects, bounds);
+			}
+		}
+		return returnObjects;
+	}
+
 	public HashSet<E> retrieve(HashSet<E> returnObjects, E e) {
 		int index = pickIndex(e);
 		if (nodes[0] != null) {
@@ -177,7 +198,7 @@ public class QuadTree<E extends Collidable> {
 		}
 	}
 
-	public HashSet<Collidable> getObjects(HashSet<Collidable> returnObjects) {
+	public HashSet<E> getObjects(HashSet<E> returnObjects) {
 		if (nodes[0] != null)
 			for (int i = 0; i < 4; i++)
 				nodes[i].getObjects(returnObjects);
@@ -189,17 +210,17 @@ public class QuadTree<E extends Collidable> {
 
 	public String toString() {
 		StringBuilder sb = new StringBuilder("");
-		HashSet<Collidable> uniques = new HashSet<>();
+		HashSet<E> uniques = new HashSet<>();
 		getObjects(uniques);
 
-		Iterator<Collidable> it = uniques.iterator();
+		Iterator<E> it = uniques.iterator();
 
 		while (it.hasNext()) {
-			Collidable c = it.next();
+			E e = it.next();
 			if (it.hasNext())
-				sb.append(c + ", ");
+				sb.append(e + ", ");
 			else
-				sb.append(c);
+				sb.append(e);
 		}
 
 		return sb.toString();
@@ -209,8 +230,5 @@ public class QuadTree<E extends Collidable> {
 		for (E e : others) {
 			insert(e);
 		}
-	}
-
-	public void validate(Collidable c) {
 	}
 }

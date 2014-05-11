@@ -6,6 +6,7 @@ import no.kjelli.generic.Draw;
 import no.kjelli.generic.Screen;
 import no.kjelli.generic.World;
 
+import org.lwjgl.util.Rectangle;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
@@ -111,6 +112,11 @@ public abstract class AbstractObject implements GameObject, Drawable {
 		boolean xContains = valueInRange(x, getX(), getX() + getWidth());
 		boolean yContains = valueInRange(y, getY(), getY() + getHeight());
 		return xContains && yContains;
+	}
+
+	public Rectangle getBounds() {
+		return new Rectangle((int) getX(), (int) getY(), (int) getWidth(),
+				(int) getHeight());
 	}
 
 	public boolean intersects(GameObject other) {

@@ -102,4 +102,5 @@ public class Ball extends AbstractCollidable {
 		SoundPlayer.play("bounce",
 				1 + (float) (Math.abs(velocity_x) / MAX_SPEED_X));
 	}
+
 }

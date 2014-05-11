@@ -42,5 +42,4 @@ public class Bat extends AbstractCollidable {
 		if (target instanceof Wall)
 			stop(collision.getImpactDirection());
 	}
-
 }

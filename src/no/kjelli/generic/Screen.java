@@ -3,11 +3,22 @@ package no.kjelli.generic;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glClearColor;
+
+import java.util.HashSet;
+
+import no.kjelli.generic.gameobjects.Clickable;
 import no.kjelli.generic.gameobjects.GameObject;
 
+import org.lwjgl.BufferUtils;
+import org.lwjgl.LWJGLException;
+import org.lwjgl.input.Cursor;
+import org.lwjgl.input.Mouse;
+import org.lwjgl.util.Rectangle;
 import org.newdawn.slick.Color;
 
 public class Screen {
+
+	public static final int MOUSE_LEFT = 0, MOUSE_RIGHT = 1;
 
 	private static int x;
 	private static int y;
@@ -21,6 +32,9 @@ public class Screen {
 	private static int offsetY;
 	private static float alpha;
 
+	private static Cursor blankCursor;
+	private static HashSet<Clickable> mouseOverEventObjects;
+
 	public static void init(int x, int y, int width, int height) {
 		init(x, y, width, height, Color.black);
 	}
@@ -33,13 +47,27 @@ public class Screen {
 		Screen.height = height;
 		setBackgroundColor(backgroundColor);
 		setTransparency(1.0f);
+
+		mouseOverEventObjects = new HashSet<>();
+
+		try {
+			blankCursor = new Cursor(1, 1, 0, 0, 1,
+					BufferUtils.createIntBuffer(1), null);
+		} catch (LWJGLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static void render() {
 		glClear(GL_COLOR_BUFFER_BIT);
 		World.render();
 		Draw.rect(x + 1, y, width - 1, height - 1, Color.white);
-		// Physics.quadtree.render();
+		for (Clickable c : mouseOverEventObjects) {
+			GameObject go = (GameObject) c;
+			Draw.rect(go.getCenterX() - go.getWidth() / 2,
+					go.getCenterY() - go.getHeight() / 2, go.getWidth(),
+					go.getHeight());
+		}
 	}
 
 	public static boolean contains(GameObject object) {
@@ -117,7 +145,24 @@ public class Screen {
 		shakeMagnitude = magnitude;
 	}
 
+	public static void showCursor(boolean visible) {
+		if (Mouse.isInsideWindow())
+			try {
+				if (visible)
+					Mouse.setNativeCursor(null);
+				else
+					Mouse.setNativeCursor(blankCursor);
+			} catch (LWJGLException e) {
+				e.printStackTrace();
+			}
+	}
+
+	public static boolean isCursorVisible() {
+		return (Mouse.getNativeCursor() == null);
+	}
+
 	public static void update() {
+		Mouse.poll();
 		if (shakeTimer > 0) {
 			offsetX = (int) (2 * Math.random() * shakeMagnitude - shakeMagnitude);
 			offsetY = (int) (2 * Math.random() * shakeMagnitude - shakeMagnitude);
@@ -125,6 +170,42 @@ public class Screen {
 		} else if (offsetX != 0 || offsetY != 0) {
 			offsetX = 0;
 			offsetY = 0;
+		}
+		while (Mouse.next()) {
+			HashSet<GameObject> returnObjects = new HashSet<>();
+			World.retrieve(returnObjects,
+					new Rectangle(Mouse.getX() - 1, Mouse.getY() - 1, 2, 2));
+			if (returnObjects.isEmpty())
+				releaseMouseOverObjects();
+			for (GameObject obj : returnObjects) {
+				if (obj instanceof Clickable) {
+					Clickable src = (Clickable) obj;
+					releaseMouseOverObjects();
+					if (Mouse.getEventButton() != -1) {
+						int button = Mouse.getEventButton();
+						if (Mouse.getEventButtonState())
+							src.onMousePressed(button);
+						else
+							src.onMouseReleased(button);
+					}
+					if (obj.contains(Mouse.getX(), Mouse.getY())) {
+						if (!mouseOverEventObjects.contains(src)) {
+							mouseOverEventObjects.add(src);
+							src.onEnter();
+						}
+					}
+				}
+			}
+		}
+
+	}
+
+	public static void releaseMouseOverObjects() {
+		for (Clickable c : mouseOverEventObjects) {
+			if (!((GameObject) c).contains(Mouse.getX(), Mouse.getY())) {
+				mouseOverEventObjects.remove(c);
+				c.onExit();
+			}
 		}
 	}
 }

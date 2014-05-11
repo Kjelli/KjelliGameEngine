@@ -1,9 +1,11 @@
 package no.kjelli.generic;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
-import no.kjelli.generic.gameobjects.Collidable;
 import no.kjelli.generic.gameobjects.GameObject;
+
+import org.lwjgl.util.Rectangle;
 
 public class World {
 
@@ -42,7 +44,7 @@ public class World {
 				object.draw();
 		}
 
-	}               
+	}
 
 	public static void update() {
 
@@ -57,20 +59,15 @@ public class World {
 		removeQueue.clear();
 
 		Physics.quadtree.clear();
-		Physics.addObjects(getCollidables());
+		Physics.addObjects(objects);
 		for (GameObject gameObject : objects) {
 			gameObject.update();
 		}
 	}
 
-	private static ArrayList<Collidable> getCollidables() {
-		ArrayList<Collidable> collidables = new ArrayList<>();
-		for (GameObject e : objects) {
-			if (e instanceof Collidable) {
-				collidables.add((Collidable) e);
-			}
-		}
-		return collidables;
+	public static HashSet<GameObject> retrieve(
+			HashSet<GameObject> returnObjects, Rectangle bounds) {
+		return Physics.quadtree.retrieve(returnObjects, bounds);
 	}
 
 	public static void setWidth(int width) {
