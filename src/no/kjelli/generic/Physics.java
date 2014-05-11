@@ -3,7 +3,6 @@ package no.kjelli.generic;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-import no.kjelli.generic.gameobjects.AbstractObject;
 import no.kjelli.quadtree.QuadTree;
 
 public class Physics {
@@ -19,7 +18,7 @@ public class Physics {
 		quadtree.insert(others);
 	}
 
-	public static Collision checkCollision(Collidable object) {
+	public static Collision getCollisions(Collidable object) {
 		HashSet<Collidable> others = new HashSet<>();
 		quadtree.retrieve(others, object);
 		for (Collidable other : others) {
@@ -27,17 +26,11 @@ public class Physics {
 				continue;
 
 			if (object.intersects(other)) {
-				Collidable col1 = (Collidable) object;
-				Collidable col2 = (Collidable) other;
-
-				Collision collision = new Collision(col1, col2);
+				Collision collision = new Collision(object, other);
 				return collision;
 			}
 		}
 		return null;
-	}
-
-	public static void revalidate(AbstractObject gameObject) {
 	}
 
 }

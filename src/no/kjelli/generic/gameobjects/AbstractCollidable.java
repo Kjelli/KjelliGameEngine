@@ -9,18 +9,25 @@ public abstract class AbstractCollidable extends AbstractObject implements
 	protected float xStep;
 	protected float yStep;
 
-	public void validate() {
-		Physics.revalidate(this);
+	protected Collision move() {
+		Collision xC = xStep();
+		if (xC != null)
+			return xC;
+
+		Collision yC = yStep();
+		if (yC != null)
+			return yC;
+
+		return null;
 	}
 
-	protected Collision move() {
-
+	private Collision xStep() {
 		xStep += velocity_x;
 
 		while (xStep >= 1) {
 			xStep--;
 			x++;
-			Collision check = Physics.checkCollision((Collidable) this);
+			Collision check = Physics.getCollisions((Collidable) this);
 			if (check != null) {
 				if ((check.getImpactDirection() & Collision.RIGHT) > 0)
 					x--;
@@ -32,7 +39,7 @@ public abstract class AbstractCollidable extends AbstractObject implements
 		while (xStep <= -1) {
 			xStep++;
 			x--;
-			Collision check = Physics.checkCollision((Collidable) this);
+			Collision check = Physics.getCollisions((Collidable) this);
 			if (check != null) {
 				if ((check.getImpactDirection() & Collision.LEFT) > 0)
 					x++;
@@ -41,13 +48,16 @@ public abstract class AbstractCollidable extends AbstractObject implements
 
 			}
 		}
+		return null;
+	}
 
+	public Collision yStep() {
 		yStep += velocity_y;
 
 		while (yStep >= 1) {
 			yStep--;
 			y++;
-			Collision check = Physics.checkCollision((Collidable) this);
+			Collision check = Physics.getCollisions((Collidable) this);
 			if (check != null) {
 				if ((check.getImpactDirection() & Collision.ABOVE) > 0)
 					y--;
@@ -59,7 +69,7 @@ public abstract class AbstractCollidable extends AbstractObject implements
 		while (yStep <= -1) {
 			yStep++;
 			y--;
-			Collision check = Physics.checkCollision((Collidable) this);
+			Collision check = Physics.getCollisions((Collidable) this);
 			if (check != null) {
 				if ((check.getImpactDirection() & Collision.BELOW) > 0)
 					y++;
@@ -68,7 +78,6 @@ public abstract class AbstractCollidable extends AbstractObject implements
 
 			}
 		}
-		validate();
 
 		return null;
 	}

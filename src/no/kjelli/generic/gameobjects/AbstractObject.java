@@ -167,8 +167,9 @@ public abstract class AbstractObject implements GameObject, Drawable {
 	public void destroy() {
 		setVisible(false);
 		World.remove(this);
-		if(texture != null)
-			texture.release();
+		if (texture != null) {
+			texture = null;
+		}
 	}
 
 }
