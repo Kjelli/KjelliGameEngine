@@ -35,7 +35,7 @@ public class Ball extends AbstractCollidable {
 		if (tgt instanceof Paddle) {
 			stop(collision.getImpactDirection());
 			if (collision.getImpactDirection() == Collision.BELOW)
-				velocity_y *= -1.022;
+				velocity_y *= -1.018;
 			velocity_x = velocity_x * 0.5f + (getCenterX() - tgt.getCenterX())
 					* DAMPING;
 			acceleration_x = -(float) tgt.getVelocityX() * 0.005f;
