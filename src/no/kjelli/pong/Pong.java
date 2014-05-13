@@ -3,8 +3,8 @@ package no.kjelli.pong;
 import java.io.IOException;
 
 import no.kjelli.generic.Game;
-import no.kjelli.generic.Screen;
 import no.kjelli.generic.World;
+import no.kjelli.generic.gfx.Screen;
 import no.kjelli.generic.main.Main;
 import no.kjelli.generic.sound.SoundPlayer;
 import no.kjelli.pong.gameobjects.*;
@@ -142,7 +142,7 @@ public class Pong implements Game {
 	}
 
 	public static void main(String[] args) {
-		new Main(new Pong(), "Pong - by Kjelli", 640, 480);
+		new Main(new Pong(), "Pong - by Kjelli", 640, 480, false);
 	}
 
 }

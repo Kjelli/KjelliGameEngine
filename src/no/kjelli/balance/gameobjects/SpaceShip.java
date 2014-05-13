@@ -1,8 +1,8 @@
 package no.kjelli.balance.gameobjects;
 
 import no.kjelli.generic.Collision;
-import no.kjelli.generic.Screen;
 import no.kjelli.generic.gameobjects.AbstractCollidable;
+import no.kjelli.generic.gfx.Screen;
 
 public class SpaceShip extends AbstractCollidable {
 

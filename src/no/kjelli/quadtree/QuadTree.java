@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 
-import no.kjelli.generic.Draw;
 import no.kjelli.generic.gameobjects.GameObject;
+import no.kjelli.generic.gfx.Draw;
 
 import org.lwjgl.util.Rectangle;
 import org.newdawn.slick.Color;

@@ -1,4 +1,4 @@
-package no.kjelli.generic;
+package no.kjelli.generic.gfx;
 
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.glClear;
@@ -7,9 +7,9 @@ import static org.lwjgl.opengl.GL11.glClearColor;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+import no.kjelli.generic.World;
 import no.kjelli.generic.gameobjects.Clickable;
 import no.kjelli.generic.gameobjects.GameObject;
-import no.kjelli.generic.gfx.Drawable;
 import no.kjelli.generic.gui.GUIComponent;
 
 import org.lwjgl.BufferUtils;
@@ -158,7 +158,7 @@ public class Screen {
 		World.render();
 		renderGUI();
 		// Physics.quadtree.render();
-		Draw.rect(x + 1, y, width - 1, height - 1, Color.white);
+		Draw.rect(x, y, width - 1, height - 1, Color.white);
 	}
 
 	private static void renderGUI() {

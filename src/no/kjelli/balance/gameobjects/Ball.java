@@ -10,7 +10,7 @@ import no.kjelli.generic.sound.SoundPlayer;
 import org.newdawn.slick.opengl.Texture;
 
 public class Ball extends AbstractCollidable {
-	public static final int SIZE = 8;
+	public static final int SIZE = 16;
 	private static final float DAMPING = 0.15f;
 	private float acceleration_x;
 
@@ -47,6 +47,16 @@ public class Ball extends AbstractCollidable {
 			acceleration_x *= -1;
 			SoundPlayer.play("bounce");
 		}
+		
+		if (tgt instanceof HoopEdge) {
+			int direction = collision.getImpactDirection();
+			stop(direction);
+			if(direction == Collision.ABOVE || direction == Collision.BELOW)
+				velocity_y *= -1;
+			if(direction == Collision.LEFT || direction == Collision.RIGHT)
+				velocity_x *= -1;
+			SoundPlayer.play("bounce");
+		}
 
 	}
 
@@ -55,6 +65,11 @@ public class Ball extends AbstractCollidable {
 		velocity_y -= Balance.gravity;
 		velocity_x += acceleration_x;
 		move();
+		
+		if(y < 0){
+			SoundPlayer.play("lose");
+			destroy();
+		}
 
 	}
 }

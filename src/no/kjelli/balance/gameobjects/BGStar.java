@@ -1,5 +1,7 @@
 package no.kjelli.balance.gameobjects;
 
+import org.newdawn.slick.Color;
+
 import no.kjelli.balance.Balance;
 import no.kjelli.generic.gameobjects.AbstractObject;
 
@@ -13,14 +15,15 @@ public class BGStar extends AbstractObject {
 		// texture = Textures.load("res\\bgstar" + type + ".jpg");
 		velocity_y = -(Math.random() * 1.5 + 0.5);
 		velocity_x = 0;
+		color = Color.white;
 	}
 
 	private void determineColor() {
-		color.r = (float) Math.abs(Math.sin((float) Balance.ticks / 7200
+		this.color.r = (float) Math.abs(Math.sin((float) Balance.ticks / 7200
 				* Math.PI));
-		color.g = (float) Math.abs(Math.sin((float) (Balance.ticks + 1200)
+		this.color.g = (float) Math.abs(Math.sin((float) (Balance.ticks + 1200)
 				/ 3600 * Math.PI));
-		color.b = (float) Math.abs(Math.sin((float) (Balance.ticks + 2400)
+		this.color.b = (float) Math.abs(Math.sin((float) (Balance.ticks + 2400)
 				/ 3600 * Math.PI));
 	}
 

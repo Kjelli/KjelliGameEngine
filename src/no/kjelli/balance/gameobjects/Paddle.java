@@ -7,7 +7,8 @@ import no.kjelli.generic.gfx.Textures;
 import no.kjelli.generic.sound.SoundPlayer;
 
 public class Paddle extends AbstractCollidable {
-	public static final int WIDTH = 64, HEIGHT = 8;
+	public static final int WIDTH = 128, HEIGHT = 16;
+	public static final int SINGLE_PLAYER = 0, PLAYER_ONE = 1, PLAYER_TWO = 2;
 	public int playerID;
 
 	public Paddle(float x, float y, int playerID) {
@@ -23,6 +24,8 @@ public class Paddle extends AbstractCollidable {
 		case 2:
 			texture = Textures.load("res\\paddle_yellow.jpg");
 			break;
+		default:
+			texture = Textures.load("res\\paddle.jpg");
 		}
 	}
 
@@ -34,7 +37,6 @@ public class Paddle extends AbstractCollidable {
 		}
 		if (tgt instanceof Paddle) {
 			stop(collision.getImpactDirection());
-			velocity_x *= -1;
 			SoundPlayer.play("bounce");
 		}
 	}

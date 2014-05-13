@@ -1,7 +1,6 @@
-package no.kjelli.generic;
+package no.kjelli.generic.gfx;
 
 import static org.lwjgl.opengl.GL11.*;
-import no.kjelli.generic.gfx.Drawable;
 
 import org.newdawn.slick.Color;
 

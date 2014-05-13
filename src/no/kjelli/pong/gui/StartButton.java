@@ -1,7 +1,7 @@
 package no.kjelli.pong.gui;
 
-import no.kjelli.generic.Screen;
 import no.kjelli.generic.gameobjects.Clickable;
+import no.kjelli.generic.gfx.Screen;
 import no.kjelli.generic.gfx.Textures;
 import no.kjelli.generic.gui.AbstractComponent;
 import no.kjelli.pong.Pong;

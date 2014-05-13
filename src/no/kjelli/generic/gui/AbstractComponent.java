@@ -1,7 +1,7 @@
 package no.kjelli.generic.gui;
 
-import no.kjelli.generic.Draw;
-import no.kjelli.generic.Screen;
+import no.kjelli.generic.gfx.Draw;
+import no.kjelli.generic.gfx.Screen;
 
 import org.lwjgl.util.Rectangle;
 import org.newdawn.slick.Color;
