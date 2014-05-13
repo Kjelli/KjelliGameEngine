@@ -4,6 +4,8 @@ import java.io.IOException;
 
 import no.kjelli.balance.gameobjects.*;
 import no.kjelli.balance.gui.StartButton;
+import no.kjelli.balance.level.Level;
+import no.kjelli.balance.level.LevelEnum;
 import no.kjelli.generic.Game;
 import no.kjelli.generic.World;
 import no.kjelli.generic.gfx.Screen;
@@ -18,13 +20,19 @@ public class Balance implements Game {
 		INTRO, MENU, LOADING, PLAYING;
 	}
 
+	public static final double GRAVITY_INITIAL = 0.048;
+
 	public static long ticks = 0;
 	public static STATE state;
 
 	public static double gravity = 0.048;
 
+	public static Level level;
+
 	public static Paddle player_two;
 	public static Paddle player_one;
+
+	public static int hoopsLeft;
 
 	@Override
 	public void init() {
@@ -47,6 +55,7 @@ public class Balance implements Game {
 		initBackground();
 		state = STATE.PLAYING;
 
+		gravity = GRAVITY_INITIAL;
 		Ball ball = new Ball(Screen.getWidth() / 2 - Ball.SIZE / 2, 4
 				* Screen.getHeight() / 5 - Ball.SIZE / 2);
 		ball.setVisible(true);
@@ -55,13 +64,9 @@ public class Balance implements Game {
 				Screen.getHeight() / 6, 1);
 		player_two.setVisible(true);
 
-		player_one = new Paddle(2 * Screen.getWidth() / 3 - Paddle.WIDTH / 3,
-				Screen.getHeight() / 6, 2);
+		player_one = new Paddle(Screen.getWidth() / 2 - Paddle.WIDTH / 2,
+				Screen.getHeight() / 6, Paddle.SINGLE_PLAYER);
 		player_one.setVisible(true);
-
-		Hoop hoop1 = new Hoop(Screen.getWidth() / 2, Screen.getHeight() / 2,
-				100, Hoop.HORIZONTAL);
-		hoop1.setVisible(true);
 
 		Wall leftWall = new Wall(-Wall.SIZE, 0, Wall.SIZE, Screen.getHeight());
 		leftWall.setVisible(true);
@@ -71,15 +76,32 @@ public class Balance implements Game {
 		rightWall.setVisible(true);
 
 		World.add(player_one, World.FOREGROUND);
-		World.add(player_two, World.FOREGROUND);
-		World.add(hoop1, World.FOREGROUND);
+		// World.add(player_two, World.FOREGROUND);
 		World.add(ball, World.FOREGROUND);
 		World.add(leftWall, World.FOREGROUND);
 		World.add(rightWall, World.FOREGROUND);
+
+		loadLevel(LevelEnum.easy);
+		initSubLevel();
+	}
+
+	private static void initSubLevel() {
+		hoopsLeft = 0;
+		Hoop[] hoops = level.getCurrentSublevel().getHoops();
+		for (Hoop hoop : hoops) {
+			System.out.println(hoop.getX() + " , " + hoop.getY());
+			hoop.setVisible(true);
+			World.add(hoop);
+			hoopsLeft++;
+		}
+	}
+
+	private static void loadLevel(LevelEnum level) {
+		Balance.level = new Level(level);
 	}
 
 	private static void initBackground() {
-		for (int i = 0; i < 1200; i++) {
+		for (int i = 0; i < 500; i++) {
 			float newX = (float) (Math.random() * Screen.getWidth());
 			float newY = (float) (Math.random() * Screen.getHeight());
 			BGStar s = new BGStar(newX, newY);
@@ -115,13 +137,13 @@ public class Balance implements Game {
 			break;
 		case PLAYING:
 			if (Keyboard.isKeyDown(Keyboard.KEY_A))
-				player_two.accelerate(-1);
+				player_two.accelerate(-1.3f);
 			if (Keyboard.isKeyDown(Keyboard.KEY_D))
-				player_two.accelerate(1);
+				player_two.accelerate(1.3f);
 			if (Keyboard.isKeyDown(Keyboard.KEY_LEFT))
-				player_one.accelerate(-1);
+				player_one.accelerate(-1.3f);
 			if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT))
-				player_one.accelerate(1);
+				player_one.accelerate(1.3f);
 			break;
 		default:
 			break;
@@ -134,25 +156,38 @@ public class Balance implements Game {
 		ticks++;
 
 		if (state == STATE.PLAYING) {
-			if (World.size() < 1200) {
+			System.out.println(hoopsLeft);
+			if (hoopsLeft <= 0) {
+				level.progress();
+				initSubLevel();
+			}
+			gravity += 0.00002f;
+			if (World.size() < 500) {
 				BGStar s = new BGStar(
 						Wall.SIZE
-								+ (float) (Math.random() * Screen.getWidth() - Wall.SIZE),
+								+ (float) (Math.random() * Screen.getWidth() - 2 * Wall.SIZE),
 						Screen.getHeight() + 5);
 				s.setVisible(true);
 				World.add(s, World.BACKGROUND);
 			}
 		}
-
-		gravity += 0.00002f;
-
 		World.update();
 		Screen.update();
 
 	}
 
+	public static void lose() {
+		ticks = 0;
+		loseLife();
+		initGame();
+	}
+
+	private static void loseLife() {
+		// TODO
+	}
+
 	public static void main(String[] args) {
-		new Main(new Balance(), "Balance - by Kjelli", 1600, 1200, false);
+		new Main(new Balance(), "Balance - by Kjelli", 640, 480, false);
 	}
 
 }

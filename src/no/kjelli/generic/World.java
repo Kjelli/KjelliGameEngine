@@ -28,6 +28,10 @@ public class World {
 		return objects;
 	}
 
+	public static void add(GameObject object) {
+		add(object, FOREGROUND);
+	}
+
 	public static void add(GameObject object, int layer) {
 		if (object instanceof Drawable)
 			object.setLayer(layer);

@@ -43,11 +43,12 @@ public class Paddle extends AbstractCollidable {
 
 	@Override
 	public void update() {
-		velocity_x *= 0.8f;
+		if (velocity_x != 0)
+			velocity_x *= 0.8f;
 		move();
 	}
 
-	public void accelerate(int i) {
+	public void accelerate(float i) {
 		velocity_x += i;
 	}
 

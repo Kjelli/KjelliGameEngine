@@ -1,7 +1,9 @@
 package no.kjelli.generic.gameobjects;
 
 import no.kjelli.generic.World;
-import no.kjelli.generic.gfx.*;
+import no.kjelli.generic.gfx.Draw;
+import no.kjelli.generic.gfx.Drawable;
+import no.kjelli.generic.gfx.Screen;
 
 import org.lwjgl.util.Rectangle;
 import org.newdawn.slick.Color;
@@ -15,7 +17,7 @@ public abstract class AbstractObject implements GameObject, Drawable {
 	protected double velocity_y;
 	protected float speed;
 
-	protected Color color = Draw.DEFAULT_COLOR;
+	protected Color color = new Color(Draw.DEFAULT_COLOR);
 	protected Texture texture;
 
 	protected float width;

@@ -68,6 +68,14 @@ public class Screen {
 		}
 	}
 
+	public static void render() {
+		glClear(GL_COLOR_BUFFER_BIT);
+		World.render();
+		renderGUI();
+		Draw.rect(x, y, width - 1, height - 1, Color.white);
+		// Physics.quadtree.render();
+	}
+
 	public static void update() {
 		if (shakeTimer > 0) {
 			offsetX = (int) (2 * Math.random() * shakeMagnitude - shakeMagnitude);
@@ -151,14 +159,6 @@ public class Screen {
 
 	public static void clearGUI() {
 		removeQueue.addAll(guiComponents);
-	}
-
-	public static void render() {
-		glClear(GL_COLOR_BUFFER_BIT);
-		World.render();
-		renderGUI();
-		// Physics.quadtree.render();
-		Draw.rect(x, y, width - 1, height - 1, Color.white);
 	}
 
 	private static void renderGUI() {

@@ -1,9 +1,10 @@
 package no.kjelli.balance.gameobjects;
 
-import org.newdawn.slick.Color;
-
 import no.kjelli.balance.Balance;
 import no.kjelli.generic.gameobjects.AbstractObject;
+import no.kjelli.generic.gfx.Draw;
+
+import org.newdawn.slick.Color;
 
 public class BGStar extends AbstractObject {
 	public BGStar(float x, float y) {
@@ -13,9 +14,9 @@ public class BGStar extends AbstractObject {
 		this.width = (float) Math.pow(2, type - 1) - 1;
 		this.height = (float) Math.pow(2, type - 1) - 1;
 		// texture = Textures.load("res\\bgstar" + type + ".jpg");
-		velocity_y = -(Math.random() * 1.5 + 0.5);
+		velocity_y = -(Math.random() * 1.5 + Balance.gravity);
 		velocity_x = 0;
-		color = Color.white;
+		color = new Color(Draw.DEFAULT_COLOR);
 	}
 
 	private void determineColor() {

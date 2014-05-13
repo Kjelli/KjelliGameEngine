@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import no.kjelli.generic.gameobjects.Collidable;
 import no.kjelli.generic.gameobjects.GameObject;
 import no.kjelli.generic.gfx.Draw;
 
@@ -228,7 +229,8 @@ public class QuadTree<E extends GameObject> {
 
 	public void insert(ArrayList<E> others) {
 		for (E e : others) {
-			insert(e);
+			if (e instanceof Collidable)
+				insert(e);
 		}
 	}
 }

@@ -47,13 +47,13 @@ public class Ball extends AbstractCollidable {
 			acceleration_x *= -1;
 			SoundPlayer.play("bounce");
 		}
-		
+
 		if (tgt instanceof HoopEdge) {
 			int direction = collision.getImpactDirection();
 			stop(direction);
-			if(direction == Collision.ABOVE || direction == Collision.BELOW)
+			if (direction == Collision.ABOVE || direction == Collision.BELOW)
 				velocity_y *= -1;
-			if(direction == Collision.LEFT || direction == Collision.RIGHT)
+			if (direction == Collision.LEFT || direction == Collision.RIGHT)
 				velocity_x *= -1;
 			SoundPlayer.play("bounce");
 		}
@@ -65,10 +65,10 @@ public class Ball extends AbstractCollidable {
 		velocity_y -= Balance.gravity;
 		velocity_x += acceleration_x;
 		move();
-		
-		if(y < 0){
+
+		if (y < 0) {
 			SoundPlayer.play("lose");
-			destroy();
+			Balance.lose();
 		}
 
 	}

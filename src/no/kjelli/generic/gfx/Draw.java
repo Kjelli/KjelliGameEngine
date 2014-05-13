@@ -26,7 +26,7 @@ public class Draw {
 
 		glPushMatrix();
 		{
-			glColor3f(color.r, color.g, color.b);
+			glColor4f(color.r, color.g, color.b, color.a);
 			glTranslatef(x - Screen.getX(), y - Screen.getY(), 0);
 			glRotatef(rot, 0, 0, 0);
 
