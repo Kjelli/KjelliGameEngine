@@ -12,6 +12,7 @@ import org.newdawn.slick.opengl.Texture;
 public class Ball extends AbstractCollidable {
 	public static final int SIZE = 16;
 	private static final float DAMPING = 0.15f;
+	private static final float MAX_VELOCITY_X = 5f;
 	private float acceleration_x;
 
 	private Texture texture_white;
@@ -64,6 +65,11 @@ public class Ball extends AbstractCollidable {
 	public void update() {
 		velocity_y -= Balance.gravity;
 		velocity_x += acceleration_x;
+		if(velocity_x < -MAX_VELOCITY_X)
+			velocity_x = -MAX_VELOCITY_X;
+		else if(velocity_x > MAX_VELOCITY_X)
+			velocity_x = MAX_VELOCITY_X;
+		
 		move();
 
 		if (y < 0) {

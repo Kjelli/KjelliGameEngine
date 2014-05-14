@@ -137,13 +137,13 @@ public class Balance implements Game {
 			break;
 		case PLAYING:
 			if (Keyboard.isKeyDown(Keyboard.KEY_A))
-				player_two.accelerate(-1.3f);
+				player_two.accelerate(-1.6f);
 			if (Keyboard.isKeyDown(Keyboard.KEY_D))
-				player_two.accelerate(1.3f);
+				player_two.accelerate(1.6f);
 			if (Keyboard.isKeyDown(Keyboard.KEY_LEFT))
-				player_one.accelerate(-1.3f);
+				player_one.accelerate(-1.6f);
 			if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT))
-				player_one.accelerate(1.3f);
+				player_one.accelerate(1.6f);
 			break;
 		default:
 			break;
@@ -155,13 +155,15 @@ public class Balance implements Game {
 	public void update() {
 		ticks++;
 
-		if (state == STATE.PLAYING) {
-			System.out.println(hoopsLeft);
+		switch (state) {
+		case PLAYING:
+			gravity += 0.00002f;
+
 			if (hoopsLeft <= 0) {
 				level.progress();
 				initSubLevel();
 			}
-			gravity += 0.00002f;
+			
 			if (World.size() < 500) {
 				BGStar s = new BGStar(
 						Wall.SIZE
@@ -170,10 +172,12 @@ public class Balance implements Game {
 				s.setVisible(true);
 				World.add(s, World.BACKGROUND);
 			}
+			World.update();
+			break;
+		default:
+			break;
 		}
-		World.update();
 		Screen.update();
-
 	}
 
 	public static void lose() {
@@ -187,7 +191,7 @@ public class Balance implements Game {
 	}
 
 	public static void main(String[] args) {
-		new Main(new Balance(), "Balance - by Kjelli", 640, 480, false);
+		new Main(new Balance(), "Balance - by Kjelli", 640, 480, true);
 	}
 
 }

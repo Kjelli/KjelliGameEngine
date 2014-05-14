@@ -102,7 +102,7 @@ public class Hoop extends AbstractCollidable {
 
 	private void fadeIn() {
 		if (alpha < 1) {
-			alpha = (float) Math.sin((float) (Balance.ticks - fadestart) / 90
+			alpha = (float) Math.sin((float) (Balance.ticks - fadestart) / 30
 					* Math.PI);
 			color.a = alpha;
 			edge1.setTransparency(alpha);
