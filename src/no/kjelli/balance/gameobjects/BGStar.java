@@ -14,7 +14,7 @@ public class BGStar extends AbstractObject {
 		this.width = (float) Math.pow(2, type - 1) - 1;
 		this.height = (float) Math.pow(2, type - 1) - 1;
 		// texture = Textures.load("res\\bgstar" + type + ".jpg");
-		velocity_y = -(Math.random() * 1.5 + Balance.gravity);
+		velocity_y = -(Math.random() * 1.5 + Balance.GRAVITY);
 		velocity_x = 0;
 		color = new Color(Draw.DEFAULT_COLOR);
 	}

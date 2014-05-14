@@ -20,14 +20,13 @@ public class Balance implements Game {
 		INTRO, MENU, LOADING, PLAYING;
 	}
 
-	public static final double GRAVITY_INITIAL = 0.048;
-
 	public static long ticks = 0;
 	public static STATE state;
 
-	public static double gravity = 0.048;
+	public static final float GRAVITY = 0.048f;
 
 	public static Level level;
+	public static int sublevel_index;
 
 	public static Paddle player_two;
 	public static Paddle player_one;
@@ -41,6 +40,8 @@ public class Balance implements Game {
 	}
 
 	public static void initIntro() {
+		Screen.clearGUI();
+		World.clear();
 		state = STATE.INTRO;
 		StartButton startButton = new StartButton(Screen.getWidth() / 2
 				- StartButton.WIDTH / 2, Screen.getHeight() / 2
@@ -55,9 +56,8 @@ public class Balance implements Game {
 		initBackground();
 		state = STATE.PLAYING;
 
-		gravity = GRAVITY_INITIAL;
-		Ball ball = new Ball(Screen.getWidth() / 2 - Ball.SIZE / 2, 4
-				* Screen.getHeight() / 5 - Ball.SIZE / 2);
+		Ball ball = new Ball(Screen.getWidth() / 2 - Ball.SIZE / 2, 5
+				* Screen.getHeight() / 6 - Ball.SIZE / 2);
 		ball.setVisible(true);
 
 		player_two = new Paddle(Screen.getWidth() / 3 - Paddle.WIDTH / 3,
@@ -89,7 +89,6 @@ public class Balance implements Game {
 		hoopsLeft = 0;
 		Hoop[] hoops = level.getCurrentSublevel().getHoops();
 		for (Hoop hoop : hoops) {
-			System.out.println(hoop.getX() + " , " + hoop.getY());
 			hoop.setVisible(true);
 			World.add(hoop);
 			hoopsLeft++;
@@ -144,6 +143,8 @@ public class Balance implements Game {
 				player_one.accelerate(-1.6f);
 			if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT))
 				player_one.accelerate(1.6f);
+			if (Keyboard.isKeyDown(Keyboard.KEY_Q))
+				Screen.toggleDebugDraw();
 			break;
 		default:
 			break;
@@ -157,13 +158,15 @@ public class Balance implements Game {
 
 		switch (state) {
 		case PLAYING:
-			gravity += 0.00002f;
 
 			if (hoopsLeft <= 0) {
-				level.progress();
-				initSubLevel();
+				if (sublevel_index < level.getSublevels()) {
+					level.progress();
+					initSubLevel();
+				} else
+					initIntro();
 			}
-			
+
 			if (World.size() < 500) {
 				BGStar s = new BGStar(
 						Wall.SIZE
@@ -191,7 +194,7 @@ public class Balance implements Game {
 	}
 
 	public static void main(String[] args) {
-		new Main(new Balance(), "Balance - by Kjelli", 640, 480, true);
+		new Main(new Balance(), "Balance - by Kjelli", 640, 480, false);
 	}
 
 }

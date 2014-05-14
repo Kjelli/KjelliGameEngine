@@ -7,6 +7,7 @@ import static org.lwjgl.opengl.GL11.glClearColor;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+import no.kjelli.generic.Physics;
 import no.kjelli.generic.World;
 import no.kjelli.generic.gameobjects.Clickable;
 import no.kjelli.generic.gameobjects.GameObject;
@@ -42,6 +43,10 @@ public class Screen {
 	private static ArrayList<GUIComponent> addQueue;
 	private static ArrayList<GUIComponent> removeQueue;
 
+	private static int debug_cooldown;
+	private static final int DEBUG_COOLDOWN_MAX = 30;
+	private static boolean debug_draw = false;
+
 	public static void init(int x, int y, int width, int height) {
 		init(x, y, width, height, Color.black);
 	}
@@ -72,11 +77,22 @@ public class Screen {
 		glClear(GL_COLOR_BUFFER_BIT);
 		World.render();
 		renderGUI();
-		Draw.rect(x, y, width - 1, height - 1, Color.white);
-		// Physics.quadtree.render();
+		if (debug_draw) {
+			Draw.rect(x, y, width - 1, height - 1, Color.white);
+			Physics.quadtree.render();
+		}
+	}
+
+	public static void toggleDebugDraw() {
+		if (debug_cooldown == 0) {
+			debug_draw = !debug_draw;
+			debug_cooldown = DEBUG_COOLDOWN_MAX;
+		}
 	}
 
 	public static void update() {
+		if (debug_cooldown > 0)
+			debug_cooldown--;
 		if (shakeTimer > 0) {
 			offsetX = (int) (2 * Math.random() * shakeMagnitude - shakeMagnitude);
 			offsetY = (int) (2 * Math.random() * shakeMagnitude - shakeMagnitude);

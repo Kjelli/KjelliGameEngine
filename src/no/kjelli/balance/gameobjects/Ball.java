@@ -13,6 +13,7 @@ public class Ball extends AbstractCollidable {
 	public static final int SIZE = 16;
 	private static final float DAMPING = 0.15f;
 	private static final float MAX_VELOCITY_X = 5f;
+	private static final float MAX_VELOCITY_Y = 7f;
 	private float acceleration_x;
 
 	private Texture texture_white;
@@ -36,7 +37,7 @@ public class Ball extends AbstractCollidable {
 		if (tgt instanceof Paddle) {
 			stop(collision.getImpactDirection());
 			if (collision.getImpactDirection() == Collision.BELOW)
-				velocity_y *= -1.018;
+				velocity_y = velocity_y * -1;
 			velocity_x = velocity_x * 0.5f + (getCenterX() - tgt.getCenterX())
 					* DAMPING;
 			acceleration_x = -(float) tgt.getVelocityX() * 0.005f;
@@ -45,7 +46,7 @@ public class Ball extends AbstractCollidable {
 		if (tgt instanceof Wall) {
 			stop(collision.getImpactDirection());
 			velocity_x *= -1;
-			acceleration_x *= -1;
+			acceleration_x = 0;
 			SoundPlayer.play("bounce");
 		}
 
@@ -63,13 +64,19 @@ public class Ball extends AbstractCollidable {
 
 	@Override
 	public void update() {
-		velocity_y -= Balance.gravity;
+		velocity_y -= Balance.GRAVITY;
 		velocity_x += acceleration_x;
-		if(velocity_x < -MAX_VELOCITY_X)
+
+		if (velocity_y > MAX_VELOCITY_Y)
+			velocity_y = MAX_VELOCITY_Y;
+		else if (velocity_y < -MAX_VELOCITY_Y)
+			velocity_y = -MAX_VELOCITY_Y;
+
+		if (velocity_x < -MAX_VELOCITY_X)
 			velocity_x = -MAX_VELOCITY_X;
-		else if(velocity_x > MAX_VELOCITY_X)
+		else if (velocity_x > MAX_VELOCITY_X)
 			velocity_x = MAX_VELOCITY_X;
-		
+
 		move();
 
 		if (y < 0) {
