@@ -1,11 +1,11 @@
 package no.kjelli.pong.gameobjects;
 
 import no.kjelli.generic.Collision;
-import no.kjelli.generic.gameobjects.AbstractObject;
+import no.kjelli.generic.gameobjects.AbstractGameObject;
 import no.kjelli.generic.gameobjects.Collidable;
 import no.kjelli.generic.gfx.Textures;
 
-public class Wall extends AbstractObject implements Collidable {
+public class Wall extends AbstractGameObject implements Collidable {
 
 	public static final int DEFAULT_SIZE = 16;
 

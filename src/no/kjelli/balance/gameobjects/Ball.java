@@ -33,6 +33,7 @@ public class Ball extends AbstractCollidable {
 
 	@Override
 	public void onCollision(Collision collision) {
+		System.out.println(collision.getTarget());
 		GameObject tgt = collision.getTarget();
 		if (tgt instanceof Paddle) {
 			stop(collision.getImpactDirection());

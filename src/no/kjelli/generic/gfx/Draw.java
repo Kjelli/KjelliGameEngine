@@ -1,6 +1,7 @@
 package no.kjelli.generic.gfx;
 
 import static org.lwjgl.opengl.GL11.*;
+import no.kjelli.generic.gameobjects.GameObject;
 
 import org.newdawn.slick.Color;
 
@@ -148,14 +149,23 @@ public class Draw {
 
 			glBegin(GL_LINE_LOOP);
 			{
+				// BOTTOM LEFT
 				glVertex2f(0, 0);
-				glVertex2f(0, height);
-				glVertex2f(width, height);
+				// BOTTOM RIGHT
 				glVertex2f(width, 0);
+				// TOP RIGHT
+				glVertex2f(width, height);
+				// TOP LEFT
+				glVertex2f(0, height);
 			}
 			glEnd();
 		}
 		glPopMatrix();
+	}
+
+	public static void rect(GameObject object) {
+		rect(object.getX(), object.getY(), object.getWidth(),
+				object.getHeight());
 	}
 
 }

@@ -92,9 +92,18 @@ public class World {
 		}
 	}
 
-	public static HashSet<GameObject> retrieve(
+	public static HashSet<GameObject> retrieveCollidables(
 			HashSet<GameObject> returnObjects, Rectangle bounds) {
 		return Physics.quadtree.retrieve(returnObjects, bounds);
+	}
+
+	// Bad fix for retrieving game objects from the rectangle
+	public static void retrieveAll(HashSet<GameObject> returnObjects,
+			Rectangle bounds) {
+		for (GameObject obj : objects) {
+			if (obj.intersects(bounds))
+				returnObjects.add(obj);
+		}
 	}
 
 	public static void setWidth(int width) {

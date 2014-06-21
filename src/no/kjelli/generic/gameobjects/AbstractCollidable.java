@@ -3,7 +3,7 @@ package no.kjelli.generic.gameobjects;
 import no.kjelli.generic.Collision;
 import no.kjelli.generic.Physics;
 
-public abstract class AbstractCollidable extends AbstractObject implements
+public abstract class AbstractCollidable extends AbstractGameObject implements
 		Collidable {
 	private float xStep;
 	private float yStep;

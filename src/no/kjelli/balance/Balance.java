@@ -82,12 +82,12 @@ public class Balance implements Game {
 		World.add(rightWall, World.FOREGROUND);
 
 		loadLevel(LevelEnum.easy);
-		initSubLevel();
+		initSubLevel(sublevel_index);
 	}
 
-	private static void initSubLevel() {
+	private static void initSubLevel(int sublevel_index) {
 		hoopsLeft = 0;
-		Hoop[] hoops = level.getCurrentSublevel().getHoops();
+		Hoop[] hoops = level.getSublevel(sublevel_index).getHoops();
 		for (Hoop hoop : hoops) {
 			hoop.setVisible(true);
 			World.add(hoop);
@@ -160,11 +160,14 @@ public class Balance implements Game {
 		case PLAYING:
 
 			if (hoopsLeft <= 0) {
+				sublevel_index++;
 				if (sublevel_index < level.getSublevels()) {
-					level.progress();
-					initSubLevel();
-				} else
+					initSubLevel(sublevel_index);
+				} else {
+					// TODO: Level Complete
+					sublevel_index = 0;
 					initIntro();
+				}
 			}
 
 			if (World.size() < 500) {
@@ -194,6 +197,8 @@ public class Balance implements Game {
 	}
 
 	public static void main(String[] args) {
+		// System.setProperty("org.lwjgl.librarypath",
+		// new File("natives").getAbsolutePath());
 		new Main(new Balance(), "Balance - by Kjelli", 640, 480, false);
 	}
 

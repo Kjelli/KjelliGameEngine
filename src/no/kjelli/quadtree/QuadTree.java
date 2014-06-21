@@ -49,6 +49,8 @@ public class QuadTree<E extends GameObject> {
 	}
 
 	public void insert(E e) {
+		if (!(e instanceof Collidable))
+			return;
 		if (nodes[0] != null) {
 			int index = pickIndex(e);
 
@@ -229,8 +231,7 @@ public class QuadTree<E extends GameObject> {
 
 	public void insert(ArrayList<E> others) {
 		for (E e : others) {
-			if (e instanceof Collidable)
-				insert(e);
+			insert(e);
 		}
 	}
 }

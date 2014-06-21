@@ -30,6 +30,8 @@ public interface GameObject extends Comparable<GameObject> {
 
 	public boolean intersects(GameObject other);
 
+	public boolean intersects(Rectangle bounds);
+
 	public boolean contains(float x, float y);
 
 	public void move();

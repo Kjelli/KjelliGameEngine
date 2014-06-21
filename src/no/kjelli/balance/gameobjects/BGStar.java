@@ -1,12 +1,12 @@
 package no.kjelli.balance.gameobjects;
 
 import no.kjelli.balance.Balance;
-import no.kjelli.generic.gameobjects.AbstractObject;
+import no.kjelli.generic.gameobjects.AbstractGameObject;
 import no.kjelli.generic.gfx.Draw;
 
 import org.newdawn.slick.Color;
 
-public class BGStar extends AbstractObject {
+public class BGStar extends AbstractGameObject {
 	public BGStar(float x, float y) {
 		this.x = x;
 		this.y = y;

@@ -9,7 +9,7 @@ import org.lwjgl.util.Rectangle;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.opengl.Texture;
 
-public abstract class AbstractObject implements GameObject, Drawable {
+public abstract class AbstractGameObject implements GameObject, Drawable {
 	protected float x;
 	protected float y;
 
@@ -165,6 +165,10 @@ public abstract class AbstractObject implements GameObject, Drawable {
 
 	public void setTexture(Texture texture) {
 		this.texture = texture;
+	}
+
+	public boolean intersects(Rectangle bounds) {
+		return this.getBounds().intersects(bounds);
 	}
 
 }

@@ -10,12 +10,6 @@ import no.kjelli.generic.gfx.Screen;
 
 public class Level {
 	ArrayList<SubLevel> subLevels;
-	int index = 0;
-
-	public void progress() {
-		if (index < getSublevels() - 1)
-			index++;
-	}
 
 	public Level(LevelEnum level) {
 		subLevels = new ArrayList<>();
@@ -24,10 +18,6 @@ public class Level {
 
 	public int getSublevels() {
 		return subLevels.size();
-	}
-
-	public SubLevel getCurrentSublevel() {
-		return subLevels.get(index);
 	}
 
 	public void loadFromFile(LevelEnum level) {
@@ -68,6 +58,10 @@ public class Level {
 		scanner.close();
 	}
 
+	public SubLevel getSublevel(int sublevel_index) {
+		return subLevels.get(sublevel_index);
+	}
+
 	public void printAll() {
 		for (SubLevel sl : subLevels) {
 			for (Hoop hoop : sl.getHoops()) {
@@ -79,7 +73,6 @@ public class Level {
 	public class SubLevel {
 		Scanner hoopDataReader;
 		Hoop[] hoops;
-		int index;
 
 		private boolean makeHoops(String data) {
 			hoopDataReader = new Scanner(data);
@@ -121,4 +114,5 @@ public class Level {
 	public static void main(String[] args) {
 		new Level(LevelEnum.easy).printAll();
 	}
+
 }
