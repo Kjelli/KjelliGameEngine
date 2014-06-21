@@ -3,6 +3,7 @@ package no.kjelli.pong.gameobjects;
 import no.kjelli.generic.Collision;
 import no.kjelli.generic.gameobjects.AbstractCollidable;
 import no.kjelli.generic.gameobjects.Collidable;
+import no.kjelli.generic.gfx.Draw;
 import no.kjelli.generic.gfx.Textures;
 
 public class Bat extends AbstractCollidable {
@@ -42,5 +43,10 @@ public class Bat extends AbstractCollidable {
 		Collidable target = collision.getTarget();
 		if (target instanceof Wall)
 			stop(collision.getImpactDirection());
+	}
+
+	@Override
+	public void draw() {
+		Draw.texture(this);
 	}
 }

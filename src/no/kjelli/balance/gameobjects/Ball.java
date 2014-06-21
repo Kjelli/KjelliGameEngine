@@ -4,6 +4,7 @@ import no.kjelli.balance.Balance;
 import no.kjelli.generic.Collision;
 import no.kjelli.generic.gameobjects.AbstractCollidable;
 import no.kjelli.generic.gameobjects.GameObject;
+import no.kjelli.generic.gfx.Draw;
 import no.kjelli.generic.gfx.Textures;
 import no.kjelli.generic.sound.SoundPlayer;
 
@@ -85,5 +86,10 @@ public class Ball extends AbstractCollidable {
 			Balance.lose();
 		}
 
+	}
+
+	@Override
+	public void draw() {
+		Draw.texture(this);
 	}
 }

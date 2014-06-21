@@ -36,4 +36,9 @@ public class BGStar extends AbstractGameObject {
 			destroy();
 	}
 
+	@Override
+	public void draw() {
+		Draw.texture(this);
+	}
+
 }

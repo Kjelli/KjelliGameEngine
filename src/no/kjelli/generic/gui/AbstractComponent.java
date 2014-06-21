@@ -70,9 +70,4 @@ public abstract class AbstractComponent implements GUIComponent {
 
 	public abstract void update();
 
-	@Override
-	public void setTexture(Texture texture) {
-		this.texture = texture;
-	}
-
 }

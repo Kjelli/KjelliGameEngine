@@ -4,6 +4,7 @@ import no.kjelli.generic.Collision;
 import no.kjelli.generic.World;
 import no.kjelli.generic.gameobjects.AbstractCollidable;
 import no.kjelli.generic.gameobjects.Collidable;
+import no.kjelli.generic.gfx.Draw;
 import no.kjelli.generic.gfx.Textures;
 import no.kjelli.generic.sound.SoundPlayer;
 
@@ -102,6 +103,11 @@ public class Ball extends AbstractCollidable {
 		}
 		SoundPlayer.play("bounce",
 				1 + (float) (Math.abs(velocity_x) / MAX_SPEED_X));
+	}
+
+	@Override
+	public void draw() {
+		Draw.texture(this);
 	}
 
 }

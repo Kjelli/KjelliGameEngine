@@ -44,36 +44,37 @@ public class Draw {
 	}
 
 	public static void texture(Drawable drawable) {
-		texture(drawable, 1.0f, 1, false);
+		texture(drawable, 0, 0, 1.0f, 1, false);
+	}
+
+	public static void texture(Drawable drawable, float xOffset, float yOffset) {
+		texture(drawable, xOffset, yOffset, 1.0f, 1, false);
 	}
 
 	public static void texture(Drawable drawable, float alpha) {
-		texture(drawable, alpha, 1, false);
+		texture(drawable, 0, 0, alpha, 1, false);
 	}
 
 	public static void texture(Drawable drawable, boolean isGUIComponent) {
-		texture(drawable, 1.0f, 1, isGUIComponent);
+		texture(drawable, 0, 0, 1.0f, 1, isGUIComponent);
 	}
 
 	public static void texture(Drawable drawable, float alpha,
 			boolean isGUIComponent) {
-		texture(drawable, alpha, 1, isGUIComponent);
+		texture(drawable, 0, 0, alpha, 1, isGUIComponent);
 	}
 
-	public static void texture(Drawable drawable, float alpha, float rot,
-			boolean isGUIComponent) {
+	public static void texture(Drawable drawable, float xOffset, float yOffset,
+			float alpha, float rot, boolean followScreen) {
 		if (drawable.getTexture() == null) {
 			System.err.println("No texture loaded! [" + drawable + "]");
 			return;
 		}
-		float x;
-		float y;
-		if (isGUIComponent) {
-			x = drawable.getX() + Screen.getX();
-			y = drawable.getY() + Screen.getY();
-		} else {
-			x = drawable.getX();
-			y = drawable.getY();
+		float x = drawable.getX() + xOffset;
+		float y = drawable.getY() + yOffset;
+		if (followScreen) {
+			x += Screen.getX();
+			y += Screen.getY();
 		}
 		float width = drawable.getWidth();
 		float height = drawable.getHeight();
@@ -83,6 +84,9 @@ public class Draw {
 			glBindTexture(GL_TEXTURE_2D, drawable.getTexture().getTextureID());
 			glTranslatef(x - Screen.getX(), y - Screen.getY(), 0);
 			glRotatef(rot, 0, 0, 0);
+
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 			glBegin(GL_QUADS);
 			{
@@ -97,6 +101,8 @@ public class Draw {
 
 			}
 			glEnd();
+
+			glDisable(GL_BLEND);
 
 			glBindTexture(GL_TEXTURE_2D, 0);
 		}
@@ -166,6 +172,11 @@ public class Draw {
 	public static void rect(GameObject object) {
 		rect(object.getX(), object.getY(), object.getWidth(),
 				object.getHeight());
+	}
+
+	public static void rect(GameObject object, float xOffset, float yOffset) {
+		rect(object.getX() + xOffset, object.getY() + yOffset,
+				object.getWidth(), object.getHeight());
 	}
 
 }

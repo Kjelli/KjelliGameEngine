@@ -2,6 +2,7 @@ package no.kjelli.balance.gameobjects;
 
 import no.kjelli.generic.Collision;
 import no.kjelli.generic.gameobjects.AbstractCollidable;
+import no.kjelli.generic.gfx.Draw;
 import no.kjelli.generic.gfx.Screen;
 
 public class SpaceShip extends AbstractCollidable {
@@ -22,7 +23,7 @@ public class SpaceShip extends AbstractCollidable {
 
 	@Override
 	public void onCollision(Collision collision) {
-		if (collision.getTarget() instanceof Ball )
+		if (collision.getTarget() instanceof Ball)
 			destroy();
 	}
 
@@ -33,6 +34,11 @@ public class SpaceShip extends AbstractCollidable {
 			x = -WIDTH;
 		else if (x < 0)
 			x = Screen.getWidth();
+	}
+
+	@Override
+	public void draw() {
+		Draw.texture(this);
 	}
 
 }

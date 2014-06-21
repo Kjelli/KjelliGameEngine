@@ -3,6 +3,7 @@ package no.kjelli.balance.gameobjects;
 import no.kjelli.generic.Collision;
 import no.kjelli.generic.gameobjects.AbstractCollidable;
 import no.kjelli.generic.gameobjects.Collidable;
+import no.kjelli.generic.gfx.Draw;
 import no.kjelli.generic.gfx.Textures;
 import no.kjelli.generic.sound.SoundPlayer;
 
@@ -50,6 +51,11 @@ public class Paddle extends AbstractCollidable {
 
 	public void accelerate(float i) {
 		velocity_x += i;
+	}
+
+	@Override
+	public void draw() {
+		Draw.texture(this);
 	}
 
 }

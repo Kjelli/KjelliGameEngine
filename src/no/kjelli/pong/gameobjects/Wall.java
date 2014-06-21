@@ -3,6 +3,7 @@ package no.kjelli.pong.gameobjects;
 import no.kjelli.generic.Collision;
 import no.kjelli.generic.gameobjects.AbstractGameObject;
 import no.kjelli.generic.gameobjects.Collidable;
+import no.kjelli.generic.gfx.Draw;
 import no.kjelli.generic.gfx.Textures;
 
 public class Wall extends AbstractGameObject implements Collidable {
@@ -29,5 +30,10 @@ public class Wall extends AbstractGameObject implements Collidable {
 
 	@Override
 	public void onCollision(Collision collision) {
+	}
+
+	@Override
+	public void draw() {
+		Draw.texture(this);
 	}
 }

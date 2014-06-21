@@ -2,6 +2,7 @@ package no.kjelli.balance.gameobjects;
 
 import no.kjelli.generic.Collision;
 import no.kjelli.generic.gameobjects.AbstractCollidable;
+import no.kjelli.generic.gfx.Draw;
 import no.kjelli.generic.gfx.Textures;
 
 public class Wall extends AbstractCollidable {
@@ -21,6 +22,11 @@ public class Wall extends AbstractCollidable {
 
 	@Override
 	public void update() {
+	}
+
+	@Override
+	public void draw() {
+		Draw.texture(this);
 	}
 
 }

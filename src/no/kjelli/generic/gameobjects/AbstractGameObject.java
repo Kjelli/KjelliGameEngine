@@ -3,7 +3,6 @@ package no.kjelli.generic.gameobjects;
 import no.kjelli.generic.World;
 import no.kjelli.generic.gfx.Draw;
 import no.kjelli.generic.gfx.Drawable;
-import no.kjelli.generic.gfx.Screen;
 
 import org.lwjgl.util.Rectangle;
 import org.newdawn.slick.Color;
@@ -33,15 +32,7 @@ public abstract class AbstractGameObject implements GameObject, Drawable {
 		y += velocity_y;
 	}
 
-	public void draw() {
-		if (Screen.contains(this)) {
-			if (texture == null) {
-				Draw.fillRect(x, y, width, height, color);
-				return;
-			}
-			Draw.texture(this);
-		}
-	}
+	public abstract void draw();
 
 	public float getX() {
 		return x;

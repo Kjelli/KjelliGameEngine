@@ -21,6 +21,4 @@ public interface Drawable {
 	public Rectangle getBounds();
 
 	public Texture getTexture();
-
-	public void setTexture(Texture texture);
 }

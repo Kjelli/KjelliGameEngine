@@ -32,4 +32,9 @@ public class HoopEdge extends AbstractCollidable {
 	public void update() {
 	}
 
+	@Override
+	public void draw() {
+		Draw.texture(this);
+	}
+
 }
