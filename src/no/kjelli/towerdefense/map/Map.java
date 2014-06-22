@@ -13,12 +13,9 @@ public class Map extends AbstractGameObject {
 	}
 
 	public Map(int x, int y, int tiles_width, int tiles_height) {
-		this.x = x;
-		this.y = y;
+		super(x, y, tiles_width * Tile.SIZE, tiles_height * Tile.SIZE);
 		this.tiles_width = tiles_width;
 		this.tiles_height = tiles_height;
-		this.width = tiles_width * Tile.SIZE;
-		this.height = tiles_height * Tile.SIZE;
 
 		tiles = new Tile[tiles_width][tiles_height];
 	}
@@ -51,5 +48,14 @@ public class Map extends AbstractGameObject {
 
 	public void setTile(int x, int y, Tile tile) {
 		tiles[x][y] = tile;
+	}
+
+	public void destroy() {
+		for (int x = 0; x < tiles_width; x++) {
+			for (int y = 0; y < tiles_height; y++) {
+				tiles[x][y].destroy();
+			}
+		}
+		super.destroy();
 	}
 }

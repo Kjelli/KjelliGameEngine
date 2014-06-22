@@ -1,29 +1,72 @@
 package no.kjelli.generic.gameobjects;
 
+import static org.lwjgl.opengl.GL15.*;
+
+import java.nio.FloatBuffer;
+
 import no.kjelli.generic.World;
 import no.kjelli.generic.gfx.Draw;
-import no.kjelli.generic.gfx.Drawable;
+import no.kjelli.generic.gfx.VBO;
 
+import org.lwjgl.BufferUtils;
 import org.lwjgl.util.Rectangle;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.opengl.Texture;
 
-public abstract class AbstractGameObject implements GameObject, Drawable {
+public abstract class AbstractGameObject implements GameObject, VBO {
+	private static final int NUM_VERTICES = 6, DIMENSIONS = 3;
 	protected float x;
 	protected float y;
+	protected float width;
+	protected float height;
+
+	protected Texture texture;
+	private int vboVertexHandle;
+	private int vboTexCoordHandle;
+
+	protected Color color = new Color(Draw.DEFAULT_COLOR);
+
+	private int layer;
 
 	protected double velocity_x;
 	protected double velocity_y;
 	protected float speed;
 
-	protected Color color = new Color(Draw.DEFAULT_COLOR);
-	protected Texture texture;
-
-	protected float width;
-	protected float height;
-
-	private int layer;
 	protected boolean isVisible;
+
+	public AbstractGameObject(float x, float y, float width, float height) {
+		setX(x);
+		setY(y);
+		setWidth(width);
+		setHeight(height);
+		initVBO();
+
+	}
+
+	private void initVBO() {
+		FloatBuffer vertexData = BufferUtils.createFloatBuffer(NUM_VERTICES
+				* DIMENSIONS);
+		vertexData
+				.put(new float[] { x, y, 0, x + width, y, 0, x, y + height, 0,
+						x + width, y + height, 0, x, y + height, 0, x + width,
+						y, 0 });
+		vertexData.flip();
+
+		FloatBuffer texCoordData = BufferUtils
+				.createFloatBuffer(NUM_VERTICES * 2);
+		texCoordData.put(new float[] { 0, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1 });
+		texCoordData.flip();
+
+		vboVertexHandle = glGenBuffers();
+		glBindBuffer(GL_ARRAY_BUFFER, vboVertexHandle);
+		glBufferData(GL_ARRAY_BUFFER, vertexData, GL_STATIC_DRAW);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+		vboVertexHandle = glGenBuffers();
+		glBindBuffer(GL_ARRAY_BUFFER, vboVertexHandle);
+		glBufferData(GL_ARRAY_BUFFER, vertexData, GL_STATIC_DRAW);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+	}
 
 	public abstract void update();
 
@@ -144,8 +187,12 @@ public abstract class AbstractGameObject implements GameObject, Drawable {
 	public void destroy() {
 		setVisible(false);
 		World.remove(this);
-		if (texture != null) {
-			texture = null;
+		if (this instanceof VBO) {
+			if (texture != null) {
+				texture.release();
+				glDeleteBuffers(vboVertexHandle);
+				glDeleteBuffers(vboTexCoordHandle);
+			}
 		}
 	}
 
@@ -160,6 +207,22 @@ public abstract class AbstractGameObject implements GameObject, Drawable {
 
 	public boolean intersects(Rectangle bounds) {
 		return this.getBounds().intersects(bounds);
+	}
+
+	public int getVBOVertexHandle() {
+		return vboVertexHandle;
+	}
+
+	public int getVBOTextureHandle() {
+		return vboTexCoordHandle;
+	}
+
+	public int getDimensions() {
+		return DIMENSIONS;
+	}
+
+	public int getVertexCount() {
+		return NUM_VERTICES;
 	}
 
 }

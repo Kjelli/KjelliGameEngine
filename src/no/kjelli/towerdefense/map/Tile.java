@@ -10,13 +10,9 @@ public abstract class Tile extends AbstractGameObject {
 	protected final Map map;
 
 	public Tile(Map map, int x, int y, int type) {
+		super(x, y, SIZE, SIZE);
 		this.map = map;
 		this.type = type;
-
-		this.x = x;
-		this.y = y;
-		width = SIZE;
-		height = SIZE;
 	}
 
 }

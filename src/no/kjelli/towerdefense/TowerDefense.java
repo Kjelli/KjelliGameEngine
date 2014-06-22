@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import no.kjelli.generic.Game;
 import no.kjelli.generic.World;
+import no.kjelli.generic.gameobjects.GameObject;
 import no.kjelli.generic.gfx.Screen;
 import no.kjelli.generic.main.Main;
 import no.kjelli.generic.sound.SoundPlayer;
@@ -29,13 +30,11 @@ public class TowerDefense implements Game {
 	}
 
 	public void initIntro() {
-		Screen.clearGUI();
 		World.clear();
 		state = STATE.INTRO;
 	}
 
 	public void initGame() {
-		Screen.clearGUI();
 		World.clear();
 		state = STATE.PLAYING;
 
@@ -107,6 +106,13 @@ public class TowerDefense implements Game {
 
 	public static void main(String[] args) {
 		new Main(new TowerDefense(), "Tower Defense", 640, 480, false);
+	}
+
+	@Override
+	public void destroy() {
+		for (GameObject go : World.getObjects()) {
+			go.destroy();
+		}
 	}
 
 }

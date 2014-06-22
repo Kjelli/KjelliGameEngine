@@ -13,7 +13,7 @@ public class GrassTile extends Tile {
 	}
 
 	public void draw() {
-		Draw.texture(this, x * (Tile.SIZE - 1) + map.getX(), y
+		Draw.textureVBO(this, x * (Tile.SIZE - 1) + map.getX(), y
 				* (Tile.SIZE - 1) + map.getY());
 	}
 

@@ -1,6 +1,8 @@
 package no.kjelli.generic.gfx;
 
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
+import static org.lwjgl.opengl.GL15.glBindBuffer;
 import no.kjelli.generic.gameobjects.GameObject;
 
 import org.newdawn.slick.Color;
@@ -43,27 +45,27 @@ public class Draw {
 		glPopMatrix();
 	}
 
-	public static void texture(Drawable drawable) {
-		texture(drawable, 0, 0, 1.0f, 1, false);
+	public static void texture(VBO drawable) {
+		textureVBO(drawable, 0, 0, 1.0f, 1, false);
 	}
 
-	public static void texture(Drawable drawable, float xOffset, float yOffset) {
-		texture(drawable, xOffset, yOffset, 1.0f, 1, false);
+	public static void texture(VBO drawable, float xOffset, float yOffset) {
+		textureVBO(drawable, xOffset, yOffset, 1.0f, 1, false);
 	}
 
-	public static void texture(Drawable drawable, float alpha) {
-		texture(drawable, 0, 0, alpha, 1, false);
+	public static void texture(VBO drawable, float alpha) {
+		textureVBO(drawable, 0, 0, alpha, 1, false);
 	}
 
-	public static void texture(Drawable drawable, boolean isGUIComponent) {
-		texture(drawable, 0, 0, 1.0f, 1, isGUIComponent);
+	public static void texture(VBO drawable, boolean isGUIComponent) {
+		textureVBO(drawable, 0, 0, 1.0f, 1, isGUIComponent);
 	}
 
-	public static void texture(Drawable drawable, float alpha,
-			boolean isGUIComponent) {
-		texture(drawable, 0, 0, alpha, 1, isGUIComponent);
+	public static void texture(VBO drawable, float alpha, boolean isGUIComponent) {
+		textureVBO(drawable, 0, 0, alpha, 1, isGUIComponent);
 	}
 
+	@Deprecated
 	public static void texture(Drawable drawable, float xOffset, float yOffset,
 			float alpha, float rot, boolean followScreen) {
 		if (drawable.getTexture() == null) {
@@ -107,6 +109,44 @@ public class Draw {
 			glBindTexture(GL_TEXTURE_2D, 0);
 		}
 		glPopMatrix();
+
+	}
+
+	public static void textureVBO(Drawable drawable, float xOffset,
+			float yOffset) {
+		texture(drawable, xOffset, yOffset, 1.0f, 1, false);
+	}
+
+	public static void textureVBO(VBO drawable, float xOffset, float yOffset,
+			float alpha, float rot, boolean followScreen) {
+		if (drawable.getTexture() == null) {
+			System.err.println("No texture loaded! [" + drawable + "]");
+			return;
+		}
+		float x = drawable.getX() + xOffset;
+		float y = drawable.getY() + yOffset;
+		if (followScreen) {
+			x += Screen.getX();
+			y += Screen.getY();
+		}
+		glColor4f(1, 1, 1, Screen.getTransparency() * alpha);
+		glBindTexture(GL_TEXTURE_2D, drawable.getTexture().getTextureID());
+		glTranslatef(x - Screen.getX(), y - Screen.getY(), 0);
+		glRotatef(rot, 0, 0, 0);
+
+		glBindTexture(GL_TEXTURE_2D, drawable.getTexture().getTextureID());
+
+		glBindBuffer(GL_ARRAY_BUFFER, drawable.getVBOVertexHandle());
+		glVertexPointer(drawable.getDimensions(), GL_FLOAT, 0, 0);
+
+		glBindBuffer(GL_ARRAY_BUFFER, drawable.getVBOTextureHandle());
+		glVertexPointer(2, GL_FLOAT, 0, 0);
+
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+		glDrawArrays(GL_TRIANGLES, 0, drawable.getVertexCount());
+		glDisableClientState(GL_VERTEX_ARRAY);
+		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 
 	}
 

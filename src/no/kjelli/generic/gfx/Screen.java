@@ -4,14 +4,12 @@ import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glClearColor;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 
 import no.kjelli.generic.Physics;
 import no.kjelli.generic.World;
 import no.kjelli.generic.gameobjects.Clickable;
 import no.kjelli.generic.gameobjects.GameObject;
-import no.kjelli.generic.gui.GUIComponent;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
@@ -39,9 +37,6 @@ public class Screen {
 
 	private static Cursor blankCursor;
 	private static HashSet<Clickable> mouseOverEventObjects;
-	private static ArrayList<GUIComponent> guiComponents;
-	private static ArrayList<GUIComponent> addQueue;
-	private static ArrayList<GUIComponent> removeQueue;
 
 	private static int debug_cooldown;
 	private static final int DEBUG_COOLDOWN_MAX = 30;
@@ -61,9 +56,6 @@ public class Screen {
 		setTransparency(1.0f);
 
 		mouseOverEventObjects = new HashSet<>();
-		guiComponents = new ArrayList<>();
-		addQueue = new ArrayList<>();
-		removeQueue = new ArrayList<>();
 
 		try {
 			blankCursor = new Cursor(1, 1, 0, 0, 1,
@@ -76,7 +68,6 @@ public class Screen {
 	public static void render() {
 		glClear(GL_COLOR_BUFFER_BIT);
 		World.render();
-		renderGUI();
 		if (debug_draw) {
 			Draw.rect(x, y, width - 1, height - 1, Color.white);
 			Physics.quadtree.render();
@@ -102,39 +93,12 @@ public class Screen {
 			offsetY = 0;
 		}
 
-		for (GUIComponent g : addQueue) {
-			guiComponents.add(g);
-		}
-		for (GUIComponent g : removeQueue) {
-			guiComponents.remove(g);
-		}
-
-		addQueue.clear();
-		removeQueue.clear();
-
-		for (GUIComponent g : guiComponents)
-			g.update();
-
 		Mouse.poll();
 		while (Mouse.next()) {
 			releaseMouseOverObjects();
-			checkGUIMouseEvents();
 			checkWorldMouseEvents();
 		}
 
-	}
-
-	private static void checkGUIMouseEvents() {
-		for (GUIComponent g : guiComponents) {
-			if (!(g instanceof Clickable))
-				continue;
-
-			if (g.contains(Mouse.getX(), Mouse.getY())) {
-				Clickable src = (Clickable) g;
-				doMouseEvents(src);
-
-			}
-		}
 	}
 
 	private static void checkWorldMouseEvents() {
@@ -163,23 +127,6 @@ public class Screen {
 			src.onEnter();
 
 		}
-	}
-
-	public static void add(GUIComponent g) {
-		addQueue.add(g);
-	}
-
-	public static void remove(GUIComponent g) {
-		removeQueue.add(g);
-	}
-
-	public static void clearGUI() {
-		removeQueue.addAll(guiComponents);
-	}
-
-	private static void renderGUI() {
-		for (Drawable d : guiComponents)
-			d.draw();
 	}
 
 	public static boolean contains(GameObject object) {
