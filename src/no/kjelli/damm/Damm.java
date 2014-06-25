@@ -27,7 +27,7 @@ public class Damm implements Game {
 
 	public static long ticks = 0;
 
-	public static final Board board = new Board(9, 9);
+	public static final Board board = new Board(8, 8);
 
 	private int cooldown = 0;
 

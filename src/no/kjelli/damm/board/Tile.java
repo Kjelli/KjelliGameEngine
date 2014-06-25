@@ -6,7 +6,7 @@ import no.kjelli.generic.gfx.Draw;
 import no.kjelli.generic.gfx.Textures;
 
 public class Tile extends AbstractGameObject {
-	public static final int SIZE = 80;
+	public static final int SIZE = 60;
 
 	int x_index;
 	int y_index;

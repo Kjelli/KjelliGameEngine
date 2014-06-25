@@ -50,6 +50,8 @@ public class Board extends AbstractGameObject implements Clickable {
 
 	public void draw() {
 		for (Tile tile : tiles) {
+			if (tile == null)
+				continue;
 			tile.draw();
 		}
 		if (selection != null) {
@@ -101,6 +103,8 @@ public class Board extends AbstractGameObject implements Clickable {
 	public void setVisible(boolean visible) {
 		super.setVisible(visible);
 		for (Tile tile : tiles) {
+			if (tile == null)
+				continue;
 			tile.setVisible(visible);
 		}
 	}
@@ -265,6 +269,8 @@ public class Board extends AbstractGameObject implements Clickable {
 		valid_moves.clear();
 		highest_type = 0;
 		for (Tile tile : tiles) {
+			if (tile == null)
+				continue;
 			Piece piece = tile.piece;
 			if (piece != null && (piece.color & Piece.COLOR_MASK) == turn) {
 				piece.calculateMoves();
