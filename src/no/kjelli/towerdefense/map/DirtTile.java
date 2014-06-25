@@ -4,12 +4,12 @@ import no.kjelli.generic.gfx.Draw;
 import no.kjelli.generic.gfx.textures.Sprite;
 import no.kjelli.generic.gfx.textures.TextureAtlas;
 
-public class GrassTile extends Tile {
+public class DirtTile extends Tile {
 
-	public GrassTile(Map map, int x, int y) {
-		super(map, x, y, Tile.GRASS);
+	public DirtTile(Map map, int x, int y) {
+		super(map, x, y, Tile.DIRT);
 		int random = (int) (Math.random() * 4) * 32;
-		sprite = new Sprite(TextureAtlas.defaultAtlas, random, 0, Tile.SIZE,
+		sprite = new Sprite(TextureAtlas.defaultAtlas, random, 32, Tile.SIZE,
 				Tile.SIZE);
 	}
 

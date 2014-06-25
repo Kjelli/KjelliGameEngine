@@ -1,7 +1,8 @@
 package no.kjelli.generic.gfx;
 
+import no.kjelli.generic.gfx.textures.Sprite;
+
 import org.lwjgl.util.Rectangle;
-import org.newdawn.slick.opengl.Texture;
 
 public interface Drawable {
 
@@ -19,7 +20,7 @@ public interface Drawable {
 
 	public boolean isVisible();
 
-	public Rectangle getBounds();
+	public Sprite getSprite();
 
-	public Texture getTexture();
+	public Rectangle getBounds();
 }

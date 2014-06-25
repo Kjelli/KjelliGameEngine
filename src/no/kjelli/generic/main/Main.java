@@ -128,7 +128,6 @@ public class Main {
 	}
 
 	private static void initGL() {
-		glClearColor(0.0f, 0.0f, 0.5f, 1.0f);
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 		glOrtho(0, Display.getWidth(), 0, Display.getHeight(), -1, 1);
@@ -164,18 +163,19 @@ public class Main {
 
 	static long lastTime = System.nanoTime();
 	static long incrementer;
-	static long framesPerSecond;
+	static long frameCounter;
+	public static long framesPerSecond;
 
 	private static void calculateFrameRate() {
 		long now = System.nanoTime();
 		double diff = now - lastTime;
 		lastTime = now;
 		incrementer += diff / 1000000L;
-		framesPerSecond++;
+		frameCounter++;
 		if (incrementer > 1000) {
 			incrementer -= 1000;
-			System.out.println(framesPerSecond);
-			framesPerSecond = 0;
+			framesPerSecond = frameCounter;
+			frameCounter = 0;
 		}
 	}
 

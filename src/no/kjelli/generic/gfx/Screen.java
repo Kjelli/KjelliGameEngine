@@ -43,7 +43,7 @@ public class Screen {
 	private static boolean debug_draw = false;
 
 	public static void init(int x, int y, int width, int height) {
-		init(x, y, width, height, Color.black);
+		init(x, y, width, height, Color.darkGray);
 	}
 
 	public static void init(int x, int y, int width, int height,

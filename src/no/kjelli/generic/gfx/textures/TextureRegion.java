@@ -1,4 +1,4 @@
-package no.kjelli.generic.gfx;
+package no.kjelli.generic.gfx.textures;
 
 import org.newdawn.slick.opengl.Texture;
 
@@ -35,10 +35,10 @@ public class TextureRegion {
 	}
 
 	public void set(Texture texture, int x, int y, int width, int height) {
-		set(texture, x / (float) texture.getWidth(),
-				y / (float) texture.getHeight(),
-				(x + width) / (float) texture.getWidth(), (y + height)
-						/ (float) texture.getHeight());
+		set(texture, x / (float) texture.getImageWidth(),
+				y / (float) texture.getImageHeight(), (x + width)
+						/ (float) texture.getImageWidth(), (y + height)
+						/ (float) texture.getImageHeight());
 		regionWidth = Math.round(width);
 		regionHeight = Math.round(height);
 	}

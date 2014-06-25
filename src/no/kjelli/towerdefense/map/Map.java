@@ -4,6 +4,8 @@ import no.kjelli.generic.gameobjects.AbstractGameObject;
 import no.kjelli.generic.gfx.Draw;
 
 public class Map extends AbstractGameObject {
+	public static final int EMPTY_GRASS = 0;
+	public static final int EMPTY_DIRT = 1;
 
 	int tiles_width, tiles_height;
 	Tile[][] tiles;
@@ -44,6 +46,11 @@ public class Map extends AbstractGameObject {
 
 	@Override
 	public void update() {
+		for (int x = 0; x < tiles_width; x++) {
+			for (int y = 0; y < tiles_height; y++) {
+				tiles[x][y].update();
+			}
+		}
 	}
 
 	public void setTile(int x, int y, Tile tile) {
@@ -90,29 +97,45 @@ public class Map extends AbstractGameObject {
 		return Builder.generate(width, height);
 	}
 
+	public static Map build(int width, int height, int template) {
+		return Builder.generate(width, height, template);
+	}
+
 	private static class Builder {
-		public static final int EMPTY = 0;
 
 		public static Map generate(int width, int height) {
-			return generate(width, height, EMPTY);
+			return generate(width, height, EMPTY_GRASS);
 		}
 
 		public static Map generate(int width, int height, int template) {
 			Map newMap;
 			switch (template) {
+			case EMPTY_DIRT:
+				newMap = emptyDirtMap(width, height);
+				break;
 			default:
-			case EMPTY:
-				newMap = emptyMap(width, height);
+			case EMPTY_GRASS:
+				newMap = emptyGrassMap(width, height);
 				break;
 			}
 			return newMap;
 		}
 
-		private static Map emptyMap(int width, int height) {
+		private static Map emptyGrassMap(int width, int height) {
 			Map newMap = new Map(width, height);
 			for (int x = 0; x < width; x++) {
 				for (int y = 0; y < height; y++) {
 					newMap.setTile(x, y, new GrassTile(newMap, x, y));
+				}
+			}
+			return newMap;
+		}
+
+		private static Map emptyDirtMap(int width, int height) {
+			Map newMap = new Map(width, height);
+			for (int x = 0; x < width; x++) {
+				for (int y = 0; y < height; y++) {
+					newMap.setTile(x, y, new DirtTile(newMap, x, y));
 				}
 			}
 			return newMap;

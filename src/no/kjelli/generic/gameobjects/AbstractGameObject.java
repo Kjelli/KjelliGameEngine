@@ -1,24 +1,18 @@
 package no.kjelli.generic.gameobjects;
 
-import static org.lwjgl.opengl.GL15.glDeleteBuffers;
 import no.kjelli.generic.World;
-import no.kjelli.generic.gfx.Draw;
-import no.kjelli.generic.gfx.TextureVBO;
-import no.kjelli.generic.gfx.VertexBufferObject;
+import no.kjelli.generic.gfx.Drawable;
+import no.kjelli.generic.gfx.textures.Sprite;
 
 import org.lwjgl.util.Rectangle;
-import org.newdawn.slick.Color;
-import org.newdawn.slick.opengl.Texture;
 
-public abstract class AbstractGameObject implements GameObject, TextureVBO {
+public abstract class AbstractGameObject implements GameObject, Drawable {
 	protected float x;
 	protected float y;
 	protected float width;
 	protected float height;
 
-	protected Texture texture;
-	protected Color color = new Color(Draw.DEFAULT_COLOR);
-	private VertexBufferObject vbo;
+	protected Sprite sprite;
 
 	private int layer;
 
@@ -33,13 +27,7 @@ public abstract class AbstractGameObject implements GameObject, TextureVBO {
 		setY(y);
 		setWidth(width);
 		setHeight(height);
-		initVBO();
 
-	}
-
-	private void initVBO() {
-		vbo = VertexBufferObject.create(VertexBufferObject.RECTANGLE, width,
-				height);
 	}
 
 	public abstract void update();
@@ -111,10 +99,6 @@ public abstract class AbstractGameObject implements GameObject, TextureVBO {
 		return speed;
 	}
 
-	public Color getColor() {
-		return color;
-	}
-
 	private boolean valueInRange(float value, float min, float max) {
 		return (value >= min) && (value <= max);
 	}
@@ -142,8 +126,8 @@ public abstract class AbstractGameObject implements GameObject, TextureVBO {
 		return xOverlap && yOverlap;
 	}
 
-	public Texture getTexture() {
-		return texture;
+	public Sprite getSprite() {
+		return sprite;
 	}
 
 	public void setLayer(int layer) {
@@ -159,15 +143,10 @@ public abstract class AbstractGameObject implements GameObject, TextureVBO {
 	}
 
 	public void destroy() {
+		if (sprite != null)
+			sprite.destroy();
 		setVisible(false);
 		World.remove(this);
-		if (this instanceof TextureVBO) {
-			if (texture != null) {
-				texture.release();
-				glDeleteBuffers(vbo.getVertexHandle());
-				glDeleteBuffers(vbo.getTextureHandle());
-			}
-		}
 	}
 
 	@Override
@@ -175,16 +154,8 @@ public abstract class AbstractGameObject implements GameObject, TextureVBO {
 		return Integer.compare(this.layer, that.getLayer());
 	}
 
-	public void setTexture(Texture texture) {
-		this.texture = texture;
-	}
-
 	public boolean intersects(Rectangle bounds) {
 		return this.getBounds().intersects(bounds);
-	}
-
-	public VertexBufferObject getVertexBufferObject() {
-		return vbo;
 	}
 
 }

@@ -4,8 +4,9 @@ import no.kjelli.generic.gameobjects.AbstractGameObject;
 
 public abstract class Tile extends AbstractGameObject {
 
-	public static final int SIZE = 40;
+	public static final int SIZE = 32;
 	public static final int GRASS = 1;
+	public static final int DIRT = 2;
 	public final int type;
 	protected final Map map;
 

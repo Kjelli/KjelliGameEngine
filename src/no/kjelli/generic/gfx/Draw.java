@@ -4,6 +4,7 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL15.glBindBuffer;
 import no.kjelli.generic.gameobjects.GameObject;
+import no.kjelli.generic.gfx.textures.Sprite;
 
 import org.newdawn.slick.Color;
 
@@ -45,89 +46,38 @@ public class Draw {
 		glPopMatrix();
 	}
 
-	public static void texture(TextureVBO drawable) {
-		textureVBO(drawable, 0, 0, 1.0f, 1, false);
+	public static void texture(Drawable drawable) {
+		sprite(drawable, 0, 0, 1.0f, 1, false);
 	}
 
-	public static void texture(TextureVBO drawable, float xOffset, float yOffset) {
-		textureVBO(drawable, xOffset, yOffset, 1.0f, 1, false);
+	public static void texture(Drawable drawable, float xOffset, float yOffset) {
+		sprite(drawable, xOffset, yOffset, 1.0f, 1, false);
 	}
 
-	public static void texture(TextureVBO drawable, float alpha) {
-		textureVBO(drawable, 0, 0, alpha, 1, false);
+	public static void texture(Drawable drawable, float alpha) {
+		sprite(drawable, 0, 0, alpha, 1, false);
 	}
 
-	public static void texture(TextureVBO drawable, boolean isGUIComponent) {
-		textureVBO(drawable, 0, 0, 1.0f, 1, isGUIComponent);
+	public static void texture(Drawable drawable, boolean isGUIComponent) {
+		sprite(drawable, 0, 0, 1.0f, 1, isGUIComponent);
 	}
 
-	public static void texture(TextureVBO drawable, float alpha, boolean isGUIComponent) {
-		textureVBO(drawable, 0, 0, alpha, 1, isGUIComponent);
+	public static void texture(Drawable drawable, float alpha,
+			boolean isGUIComponent) {
+		sprite(drawable, 0, 0, alpha, 1, isGUIComponent);
 	}
 
-	@Deprecated
-	public static void texture(Drawable drawable, float xOffset, float yOffset,
+	public static void sprite(Drawable drawable, float xOffset, float yOffset) {
+		sprite(drawable, xOffset, yOffset, 1.0f, 1, false);
+	}
+
+	public static void sprite(Drawable drawable, float xOffset, float yOffset,
 			float alpha, float rot, boolean followScreen) {
-		if (drawable.getTexture() == null) {
-			System.err.println("No texture loaded! [" + drawable + "]");
+		Sprite sprite = drawable.getSprite();
+		if (sprite == null) {
+			System.err.println("No working sprite! [" + drawable + "]");
 			return;
 		}
-		float x = drawable.getX() + xOffset;
-		float y = drawable.getY() + yOffset;
-		if (followScreen) {
-			x += Screen.getX();
-			y += Screen.getY();
-		}
-		float width = drawable.getWidth();
-		float height = drawable.getHeight();
-		glPushMatrix();
-		{
-			glColor4f(1, 1, 1, Screen.getTransparency() * alpha);
-			glBindTexture(GL_TEXTURE_2D, drawable.getTexture().getTextureID());
-			glTranslatef(x - Screen.getX(), y - Screen.getY(), 0);
-			glRotatef(rot, 0, 0, 0);
-
-			glEnable(GL_BLEND);
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-			glBegin(GL_QUADS);
-			{
-				glTexCoord2f(0, 1);
-				glVertex2f(0, 0);
-				glTexCoord2f(1, 1);
-				glVertex2f(width, 0);
-				glTexCoord2f(1, 0);
-				glVertex2f(width, height);
-				glTexCoord2f(0, 0);
-				glVertex2f(0, height);
-
-			}
-			glEnd();
-
-			glDisable(GL_BLEND);
-
-			glBindTexture(GL_TEXTURE_2D, 0);
-		}
-		glPopMatrix();
-
-	}
-
-	public static void textureVBO(TextureVBO drawable, float xOffset, float yOffset) {
-		textureVBO(drawable, xOffset, yOffset, 1.0f, 1, false);
-	}
-
-	public static void textureVBO(TextureVBO drawable, float xOffset, float yOffset,
-			float alpha, float rot, boolean followScreen) {
-		if (drawable.getTexture() == null) {
-			System.err.println("No texture loaded! [" + drawable + "]");
-			return;
-		}
-		if (drawable.getVertexBufferObject() == null) {
-			System.err.println("No VBO initialized [" + drawable + "]");
-			return;
-		}
-
-		VertexBufferObject vbo = drawable.getVertexBufferObject();
 
 		float x = drawable.getX() + xOffset;
 		float y = drawable.getY() + yOffset;
@@ -141,18 +91,22 @@ public class Draw {
 		glTranslatef(x - Screen.getX(), y - Screen.getY(), 0);
 		glRotatef(rot, 0, 0, 0);
 
-		glBindTexture(GL_TEXTURE_2D, drawable.getTexture().getTextureID());
+		glBindTexture(GL_TEXTURE_2D, sprite.getTextureRegion().getTexture()
+				.getTextureID());
 
-		glBindBuffer(GL_ARRAY_BUFFER, drawable.getVertexBufferObject()
+		glBindBuffer(GL_ARRAY_BUFFER, sprite.getVertexBufferObject()
 				.getVertexHandle());
-		glVertexPointer(vbo.getDimension(), GL_FLOAT, 0, 0L);
+		glVertexPointer(sprite.getVertexBufferObject().getDimension(),
+				GL_FLOAT, 0, 0L);
 
-		glBindBuffer(GL_ARRAY_BUFFER, vbo.getTextureHandle());
+		glBindBuffer(GL_ARRAY_BUFFER, sprite.getVertexBufferObject()
+				.getTextureHandle());
 		glTexCoordPointer(2, GL_FLOAT, 0, 0L);
 
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-		glDrawArrays(GL_TRIANGLES, 0, vbo.getVertexCount());
+		glDrawArrays(GL_TRIANGLES, 0, sprite.getVertexBufferObject()
+				.getVertexCount());
 		glDisableClientState(GL_VERTEX_ARRAY);
 		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 
@@ -227,6 +181,55 @@ public class Draw {
 	public static void rect(GameObject object, float xOffset, float yOffset) {
 		rect(object.getX() + xOffset, object.getY() + yOffset,
 				object.getWidth(), object.getHeight());
+	}
+
+	public static void string(String drawString) {
+		string(drawString, 0, 0, 1.0f, 1.0f, false);
+	}
+
+	public static void string(String drawString, float xOffset, float yOffset) {
+		string(drawString, xOffset, yOffset, 1.0f, 1.0f, false);
+	}
+
+	public static void string(String string, float xOffset, float yOffset,
+			float alpha, float rot, boolean followScreen) {
+		for (int i = 0; i < string.length(); i++) {
+
+			Sprite sprite = Sprite.resolveChar(string.charAt(i));
+
+			float x = xOffset + i * Sprite.CHARWIDTH;
+			float y = yOffset;
+			if (followScreen) {
+				x += Screen.getX();
+				y += Screen.getY();
+			}
+
+			glPushMatrix();
+			glColor4f(1, 1, 1, Screen.getTransparency() * alpha);
+			glTranslatef(x - Screen.getX(), y - Screen.getY(), 0);
+			glRotatef(rot, 0, 0, 0);
+
+			glBindTexture(GL_TEXTURE_2D, sprite.getTextureRegion().getTexture()
+					.getTextureID());
+
+			glBindBuffer(GL_ARRAY_BUFFER, sprite.getVertexBufferObject()
+					.getVertexHandle());
+			glVertexPointer(sprite.getVertexBufferObject().getDimension(),
+					GL_FLOAT, 0, 0L);
+
+			glBindBuffer(GL_ARRAY_BUFFER, sprite.getVertexBufferObject()
+					.getTextureHandle());
+			glTexCoordPointer(2, GL_FLOAT, 0, 0L);
+
+			glEnableClientState(GL_VERTEX_ARRAY);
+			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+			glDrawArrays(GL_TRIANGLES, 0, sprite.getVertexBufferObject()
+					.getVertexCount());
+			glDisableClientState(GL_VERTEX_ARRAY);
+			glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+
+			glPopMatrix();
+		}
 	}
 
 }

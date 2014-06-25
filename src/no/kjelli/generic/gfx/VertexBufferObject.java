@@ -38,6 +38,11 @@ public class VertexBufferObject {
 	}
 
 	private static VertexBufferObject rectangle(float width, float height) {
+		return rectangle(width, height, 0, 1, 0, 1);
+	}
+
+	private static VertexBufferObject rectangle(float width, float height,
+			float u, float u2, float v, float v2) {
 		int vertices = 6;
 		int dimension = 2;
 		FloatBuffer vertexData = BufferUtils.createFloatBuffer(vertices
@@ -47,8 +52,10 @@ public class VertexBufferObject {
 				0, height, width, 0 });
 		vertexData.flip();
 
-		FloatBuffer texCoordData = BufferUtils.createFloatBuffer(vertices * 2);
-		texCoordData.put(new float[] { 0, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1 });
+		FloatBuffer texCoordData = BufferUtils.createFloatBuffer(vertices
+				* dimension);
+		texCoordData
+				.put(new float[] { u, v2, u2, v2, u, v, u2, v, u, v, u2, v2 });
 		texCoordData.flip();
 
 		int vertexHandle = glGenBuffers();
@@ -80,4 +87,22 @@ public class VertexBufferObject {
 	public int getDimension() {
 		return dimension;
 	}
+
+	public static VertexBufferObject create(int texture_width,
+			int texture_height, float u, float u2, float v, float v2) {
+		return rectangle(texture_width, texture_height, u, u2, v, v2);
+	}
+
+	public void setTextureCoords(float u, float u2, float v, float v2) {
+		FloatBuffer texCoordData = BufferUtils.createFloatBuffer(vertexCount
+				* dimension);
+		texCoordData
+				.put(new float[] { u, v2, u2, v2, u, v, u2, v, u, v, u2, v2 });
+		texCoordData.flip();
+
+		glBindBuffer(GL_ARRAY_BUFFER, textureHandle);
+		glBufferData(GL_ARRAY_BUFFER, texCoordData, GL_STATIC_DRAW);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+	}
+
 }

@@ -1,6 +1,7 @@
-package no.kjelli.generic.gfx;
+package no.kjelli.generic.gfx.textures;
 
 import java.io.IOException;
+import static org.lwjgl.opengl.GL11.*;
 
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
@@ -14,7 +15,7 @@ public class Textures {
 
 		try {
 			texture = TextureLoader.getTexture(format,
-					ResourceLoader.getResourceAsStream(filename));
+					ResourceLoader.getResourceAsStream(filename), GL_NEAREST);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
