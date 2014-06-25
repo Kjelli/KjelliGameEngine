@@ -45,23 +45,23 @@ public class Draw {
 		glPopMatrix();
 	}
 
-	public static void texture(VBO drawable) {
+	public static void texture(TextureVBO drawable) {
 		textureVBO(drawable, 0, 0, 1.0f, 1, false);
 	}
 
-	public static void texture(VBO drawable, float xOffset, float yOffset) {
+	public static void texture(TextureVBO drawable, float xOffset, float yOffset) {
 		textureVBO(drawable, xOffset, yOffset, 1.0f, 1, false);
 	}
 
-	public static void texture(VBO drawable, float alpha) {
+	public static void texture(TextureVBO drawable, float alpha) {
 		textureVBO(drawable, 0, 0, alpha, 1, false);
 	}
 
-	public static void texture(VBO drawable, boolean isGUIComponent) {
+	public static void texture(TextureVBO drawable, boolean isGUIComponent) {
 		textureVBO(drawable, 0, 0, 1.0f, 1, isGUIComponent);
 	}
 
-	public static void texture(VBO drawable, float alpha, boolean isGUIComponent) {
+	public static void texture(TextureVBO drawable, float alpha, boolean isGUIComponent) {
 		textureVBO(drawable, 0, 0, alpha, 1, isGUIComponent);
 	}
 
@@ -112,41 +112,51 @@ public class Draw {
 
 	}
 
-	public static void textureVBO(Drawable drawable, float xOffset,
-			float yOffset) {
-		texture(drawable, xOffset, yOffset, 1.0f, 1, false);
+	public static void textureVBO(TextureVBO drawable, float xOffset, float yOffset) {
+		textureVBO(drawable, xOffset, yOffset, 1.0f, 1, false);
 	}
 
-	public static void textureVBO(VBO drawable, float xOffset, float yOffset,
+	public static void textureVBO(TextureVBO drawable, float xOffset, float yOffset,
 			float alpha, float rot, boolean followScreen) {
 		if (drawable.getTexture() == null) {
 			System.err.println("No texture loaded! [" + drawable + "]");
 			return;
 		}
+		if (drawable.getVertexBufferObject() == null) {
+			System.err.println("No VBO initialized [" + drawable + "]");
+			return;
+		}
+
+		VertexBufferObject vbo = drawable.getVertexBufferObject();
+
 		float x = drawable.getX() + xOffset;
 		float y = drawable.getY() + yOffset;
 		if (followScreen) {
 			x += Screen.getX();
 			y += Screen.getY();
 		}
+
+		glPushMatrix();
 		glColor4f(1, 1, 1, Screen.getTransparency() * alpha);
-		glBindTexture(GL_TEXTURE_2D, drawable.getTexture().getTextureID());
 		glTranslatef(x - Screen.getX(), y - Screen.getY(), 0);
 		glRotatef(rot, 0, 0, 0);
 
 		glBindTexture(GL_TEXTURE_2D, drawable.getTexture().getTextureID());
 
-		glBindBuffer(GL_ARRAY_BUFFER, drawable.getVBOVertexHandle());
-		glVertexPointer(drawable.getDimensions(), GL_FLOAT, 0, 0);
+		glBindBuffer(GL_ARRAY_BUFFER, drawable.getVertexBufferObject()
+				.getVertexHandle());
+		glVertexPointer(vbo.getDimension(), GL_FLOAT, 0, 0L);
 
-		glBindBuffer(GL_ARRAY_BUFFER, drawable.getVBOTextureHandle());
-		glVertexPointer(2, GL_FLOAT, 0, 0);
+		glBindBuffer(GL_ARRAY_BUFFER, vbo.getTextureHandle());
+		glTexCoordPointer(2, GL_FLOAT, 0, 0L);
 
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-		glDrawArrays(GL_TRIANGLES, 0, drawable.getVertexCount());
+		glDrawArrays(GL_TRIANGLES, 0, vbo.getVertexCount());
 		glDisableClientState(GL_VERTEX_ARRAY);
 		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+
+		glPopMatrix();
 
 	}
 

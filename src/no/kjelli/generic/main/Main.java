@@ -16,6 +16,7 @@ import org.lwjgl.opengl.DisplayMode;
 
 public class Main {
 
+	private static final int FRAME_RATE = 60;
 	private static Game game;
 
 	public Main(Game game, String title, int width, int height,
@@ -127,15 +128,16 @@ public class Main {
 	}
 
 	private static void initGL() {
+		glClearColor(0.0f, 0.0f, 0.5f, 1.0f);
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 		glOrtho(0, Display.getWidth(), 0, Display.getHeight(), -1, 1);
 		glMatrixMode(GL_MODELVIEW);
 
-		glDisable(GL_DEPTH_TEST);
 		glEnable(GL_TEXTURE_2D);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glLoadIdentity();
 
 	}
 
@@ -156,6 +158,24 @@ public class Main {
 			getInput();
 			update();
 			render();
+			calculateFrameRate();
+		}
+	}
+
+	static long lastTime = System.nanoTime();
+	static long incrementer;
+	static long framesPerSecond;
+
+	private static void calculateFrameRate() {
+		long now = System.nanoTime();
+		double diff = now - lastTime;
+		lastTime = now;
+		incrementer += diff / 1000000L;
+		framesPerSecond++;
+		if (incrementer > 1000) {
+			incrementer -= 1000;
+			System.out.println(framesPerSecond);
+			framesPerSecond = 0;
 		}
 	}
 
@@ -171,7 +191,7 @@ public class Main {
 		game.render();
 
 		Display.update();
-		Display.sync(60);
+		Display.sync(FRAME_RATE);
 	}
 
 	private static void cleanUp() {

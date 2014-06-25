@@ -8,11 +8,11 @@ public class Map extends AbstractGameObject {
 	int tiles_width, tiles_height;
 	Tile[][] tiles;
 
-	public Map(int tiles_width, int tiles_height) {
+	private Map(int tiles_width, int tiles_height) {
 		this(0, 0, tiles_width, tiles_height);
 	}
 
-	public Map(int x, int y, int tiles_width, int tiles_height) {
+	private Map(int x, int y, int tiles_width, int tiles_height) {
 		super(x, y, tiles_width * Tile.SIZE, tiles_height * Tile.SIZE);
 		this.tiles_width = tiles_width;
 		this.tiles_height = tiles_height;
@@ -57,5 +57,65 @@ public class Map extends AbstractGameObject {
 			}
 		}
 		super.destroy();
+	}
+
+	public void setX(float newX) {
+		for (int x = 0; x < tiles_width; x++) {
+			for (int y = 0; y < tiles_height; y++) {
+				tiles[x][y].setX(x * Tile.SIZE + newX);
+			}
+		}
+		this.x = newX;
+	}
+
+	public void setVisible(boolean isVisible) {
+		for (int x = 0; x < tiles_width; x++) {
+			for (int y = 0; y < tiles_height; y++) {
+				tiles[x][y].setVisible(isVisible);
+			}
+		}
+		this.isVisible = isVisible;
+	}
+
+	public void setY(float newY) {
+		for (int x = 0; x < tiles_width; x++) {
+			for (int y = 0; y < tiles_height; y++) {
+				tiles[x][y].setY(y * Tile.SIZE + newY);
+			}
+		}
+		this.y = newY;
+	}
+
+	public static Map build(int width, int height) {
+		return Builder.generate(width, height);
+	}
+
+	private static class Builder {
+		public static final int EMPTY = 0;
+
+		public static Map generate(int width, int height) {
+			return generate(width, height, EMPTY);
+		}
+
+		public static Map generate(int width, int height, int template) {
+			Map newMap;
+			switch (template) {
+			default:
+			case EMPTY:
+				newMap = emptyMap(width, height);
+				break;
+			}
+			return newMap;
+		}
+
+		private static Map emptyMap(int width, int height) {
+			Map newMap = new Map(width, height);
+			for (int x = 0; x < width; x++) {
+				for (int y = 0; y < height; y++) {
+					newMap.setTile(x, y, new GrassTile(newMap, x, y));
+				}
+			}
+			return newMap;
+		}
 	}
 }

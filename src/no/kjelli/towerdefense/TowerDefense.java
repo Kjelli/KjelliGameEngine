@@ -9,7 +9,8 @@ import no.kjelli.generic.gfx.Screen;
 import no.kjelli.generic.main.Main;
 import no.kjelli.generic.sound.SoundPlayer;
 import no.kjelli.towerdefense.map.Map;
-import no.kjelli.towerdefense.map.MapFactory;
+
+import org.lwjgl.input.Keyboard;
 
 public class TowerDefense implements Game {
 
@@ -38,7 +39,7 @@ public class TowerDefense implements Game {
 		World.clear();
 		state = STATE.PLAYING;
 
-		Map map = MapFactory.generate(14, 10);
+		Map map = Map.build(14, 10);
 		map.setX(40);
 		map.setY(40);
 		map.setVisible(true);
@@ -71,6 +72,8 @@ public class TowerDefense implements Game {
 		case MENU:
 			break;
 		case PLAYING:
+			if (Keyboard.isKeyDown(Keyboard.KEY_Q))
+				Screen.toggleDebugDraw();
 			break;
 		default:
 			break;
