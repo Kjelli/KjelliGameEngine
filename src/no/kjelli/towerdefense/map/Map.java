@@ -171,12 +171,12 @@ public class Map extends AbstractGameObject {
 
 	static int browse_cooldown;
 
-	public void browse(int direction) {
+	public Tile browse(int direction) {
 		if (browse_cooldown > 0)
-			return;
+			return null;
 		if (selection == null) {
 			select(getTile(0, 0));
-			return;
+			return selection;
 		}
 		try {
 			switch (direction) {
@@ -196,6 +196,8 @@ public class Map extends AbstractGameObject {
 			browse_cooldown = 3;
 		} catch (IllegalArgumentException e) {
 			//
+		} finally{
+			return selection;
 		}
 	}
 }
