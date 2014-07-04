@@ -14,11 +14,18 @@ public class GrassTile extends Tile {
 	}
 
 	public void draw() {
-		Draw.texture(this);
+		Draw.sprite(this);
+		if (selected)
+			Draw.rect(this);
 	}
 
 	@Override
 	public void update() {
+	}
+
+	@Override
+	public void onSelect() {
+		// TODO Auto-generated method stub
 
 	}
 

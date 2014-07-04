@@ -136,6 +136,7 @@ public class Main {
 		glEnable(GL_TEXTURE_2D);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 		glLoadIdentity();
 
 	}
@@ -189,6 +190,8 @@ public class Main {
 		glLoadIdentity();
 
 		game.render();
+		
+		glFlush();
 
 		Display.update();
 		Display.sync(FRAME_RATE);

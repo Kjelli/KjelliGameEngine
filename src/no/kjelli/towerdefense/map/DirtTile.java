@@ -14,12 +14,17 @@ public class DirtTile extends Tile {
 	}
 
 	public void draw() {
-		Draw.texture(this);
+		Draw.sprite(this);
 	}
 
 	@Override
 	public void update() {
 
+	}
+
+	@Override
+	public void onSelect() {
+		//TODO:
 	}
 
 }

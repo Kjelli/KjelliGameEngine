@@ -1,14 +1,18 @@
 package no.kjelli.towerdefense.map;
 
+import no.kjelli.generic.World;
 import no.kjelli.generic.gameobjects.AbstractGameObject;
 import no.kjelli.generic.gfx.Draw;
 
 public class Map extends AbstractGameObject {
 	public static final int EMPTY_GRASS = 0;
 	public static final int EMPTY_DIRT = 1;
+	public static final int RIGHT = 0, LEFT = 1, UP = 2, DOWN = 3;
 
 	int tiles_width, tiles_height;
 	Tile[][] tiles;
+
+	public Tile selection;
 
 	private Map(int tiles_width, int tiles_height) {
 		this(0, 0, tiles_width, tiles_height);
@@ -36,9 +40,9 @@ public class Map extends AbstractGameObject {
 	}
 
 	public Tile getTile(int x, int y) {
-		if (x < 0 || x > tiles_width)
+		if (x < 0 || x >= tiles_width)
 			throw new IllegalArgumentException("Out of bounds (" + x + ")");
-		else if (y < 0 || x > tiles_height)
+		else if (y < 0 || y >= tiles_height)
 			throw new IllegalArgumentException("Out of bounds (" + y + ")");
 		else
 			return tiles[x][y];
@@ -51,6 +55,8 @@ public class Map extends AbstractGameObject {
 				tiles[x][y].update();
 			}
 		}
+		if(browse_cooldown > 0)
+			browse_cooldown --;
 	}
 
 	public void setTile(int x, int y, Tile tile) {
@@ -75,7 +81,7 @@ public class Map extends AbstractGameObject {
 		this.x = newX;
 	}
 
-	public void setVisible(boolean isVisible) {
+	public final void setVisible(boolean isVisible) {
 		for (int x = 0; x < tiles_width; x++) {
 			for (int y = 0; y < tiles_height; y++) {
 				tiles[x][y].setVisible(isVisible);
@@ -84,7 +90,7 @@ public class Map extends AbstractGameObject {
 		this.isVisible = isVisible;
 	}
 
-	public void setY(float newY) {
+	public final void setY(float newY) {
 		for (int x = 0; x < tiles_width; x++) {
 			for (int y = 0; y < tiles_height; y++) {
 				tiles[x][y].setY(y * Tile.SIZE + newY);
@@ -139,6 +145,57 @@ public class Map extends AbstractGameObject {
 				}
 			}
 			return newMap;
+		}
+	}
+
+	@Override
+	public void onCreate() {
+		for (int x = 0; x < tiles_width; x++) {
+			for (int y = 0; y < tiles_height; y++) {
+				World.add(tiles[x][y]);
+			}
+		}
+	}
+
+	public void select(Tile tile) {
+		if (selection != null)
+			unselect(selection);
+		selection = tile;
+		tile.selected = true;
+	}
+
+	public void unselect(Tile tile) {
+		selection = null;
+		tile.selected = false;
+	}
+
+	static int browse_cooldown;
+
+	public void browse(int direction) {
+		if (browse_cooldown > 0)
+			return;
+		if (selection == null) {
+			select(getTile(0, 0));
+			return;
+		}
+		try {
+			switch (direction) {
+			case LEFT:
+				select(getTile(selection.x_index - 1, selection.y_index));
+				break;
+			case RIGHT:
+				select(getTile(selection.x_index + 1, selection.y_index));
+				break;
+			case UP:
+				select(getTile(selection.x_index, selection.y_index + 1));
+				break;
+			case DOWN:
+				select(getTile(selection.x_index, selection.y_index - 1));
+				break;
+			}
+			browse_cooldown = 3;
+		} catch (IllegalArgumentException e) {
+			//
 		}
 	}
 }

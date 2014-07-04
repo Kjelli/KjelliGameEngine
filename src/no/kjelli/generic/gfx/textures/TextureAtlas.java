@@ -4,7 +4,7 @@ import org.newdawn.slick.opengl.Texture;
 
 public class TextureAtlas {
 	public static TextureAtlas defaultAtlas = new TextureAtlas("res\\atlas.png");
-	public static TextureAtlas font = new TextureAtlas("res\\font.png");
+	public static TextureAtlas font = new TextureAtlas("res\\fontsmall.png");
 
 	Texture atlasTexture;
 	int sourceWidth, sourceHeight;

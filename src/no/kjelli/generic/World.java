@@ -36,6 +36,7 @@ public class World {
 		if (object instanceof Drawable)
 			object.setLayer(layer);
 		addQueue.add(object);
+		object.onCreate();
 		newItems = true;
 	}
 
@@ -58,15 +59,6 @@ public class World {
 			System.exit(0);
 		}
 		for (GameObject object : objects) {
-			if (newItems) {
-				Collections.sort(objects, new Comparator<GameObject>() {
-					@Override
-					public int compare(GameObject arg0, GameObject arg1) {
-						return arg0.compareTo(arg1);
-					}
-				});
-				newItems = false;
-			}
 			if (object instanceof Drawable && object.isVisible())
 				((Drawable) object).draw();
 		}
@@ -79,7 +71,10 @@ public class World {
 			objects.remove(oldObject);
 		}
 		for (GameObject newObject : addQueue) {
-			objects.add(newObject);
+			if (newObject.getLayer() == BACKGROUND)
+				objects.add(newObject);
+			else if (newObject.getLayer() == FOREGROUND)
+				objects.add(0, newObject);
 		}
 
 		addQueue.clear();

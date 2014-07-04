@@ -37,6 +37,8 @@ public interface GameObject extends Comparable<GameObject> {
 	public void move();
 
 	public void update();
+	
+	public void onCreate();
 
 	public void destroy();
 }

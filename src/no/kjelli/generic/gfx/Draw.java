@@ -9,7 +9,7 @@ import no.kjelli.generic.gfx.textures.Sprite;
 import org.newdawn.slick.Color;
 
 public class Draw {
-	public static final Color DEFAULT_COLOR = new Color(1f, 1f, 1f);
+	public static final Color DEFAULT_COLOR = new Color(1f, 1f, 1f, 1f);
 
 	public static void fillRect(float x, float y, float width, float height) {
 		fillRect(x, y, width, height, 0, DEFAULT_COLOR);
@@ -28,9 +28,9 @@ public class Draw {
 	public static void fillRect(float x, float y, float width, float height,
 			float rot, Color color) {
 
+		glColor4f(color.r, color.g, color.b, color.a);
 		glPushMatrix();
 		{
-			glColor4f(color.r, color.g, color.b, color.a);
 			glTranslatef(x - Screen.getX(), y - Screen.getY(), 0);
 			glRotatef(rot, 0, 0, 0);
 
@@ -46,33 +46,30 @@ public class Draw {
 		glPopMatrix();
 	}
 
-	public static void texture(Drawable drawable) {
+	public static void sprite(Drawable drawable) {
 		sprite(drawable, 0, 0, 1.0f, 1, false);
-	}
-
-	public static void texture(Drawable drawable, float xOffset, float yOffset) {
-		sprite(drawable, xOffset, yOffset, 1.0f, 1, false);
-	}
-
-	public static void texture(Drawable drawable, float alpha) {
-		sprite(drawable, 0, 0, alpha, 1, false);
-	}
-
-	public static void texture(Drawable drawable, boolean isGUIComponent) {
-		sprite(drawable, 0, 0, 1.0f, 1, isGUIComponent);
-	}
-
-	public static void texture(Drawable drawable, float alpha,
-			boolean isGUIComponent) {
-		sprite(drawable, 0, 0, alpha, 1, isGUIComponent);
 	}
 
 	public static void sprite(Drawable drawable, float xOffset, float yOffset) {
 		sprite(drawable, xOffset, yOffset, 1.0f, 1, false);
 	}
 
+	public static void sprite(Drawable drawable, float alpha) {
+		sprite(drawable, 0, 0, alpha, 1, false);
+	}
+
+	public static void sprite(Drawable drawable, boolean isGUIComponent) {
+		sprite(drawable, 0, 0, 1.0f, 1, isGUIComponent);
+	}
+
+	public static void sprite(Drawable drawable, float alpha,
+			boolean isGUIComponent) {
+		sprite(drawable, 0, 0, alpha, 1, isGUIComponent);
+	}
+
 	public static void sprite(Drawable drawable, float xOffset, float yOffset,
 			float alpha, float rot, boolean followScreen) {
+
 		Sprite sprite = drawable.getSprite();
 		if (sprite == null) {
 			System.err.println("No working sprite! [" + drawable + "]");
@@ -86,31 +83,35 @@ public class Draw {
 			y += Screen.getY();
 		}
 
+		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 		glPushMatrix();
-		glColor4f(1, 1, 1, Screen.getTransparency() * alpha);
-		glTranslatef(x - Screen.getX(), y - Screen.getY(), 0);
-		glRotatef(rot, 0, 0, 0);
+		{
+			glTranslatef(x - Screen.getX(), y - Screen.getY(), 0);
+			glRotatef(rot, 0, 0, 0);
 
-		glBindTexture(GL_TEXTURE_2D, sprite.getTextureRegion().getTexture()
-				.getTextureID());
+			glBindTexture(GL_TEXTURE_2D, sprite.getTextureRegion().getTexture()
+					.getTextureID());
 
-		glBindBuffer(GL_ARRAY_BUFFER, sprite.getVertexBufferObject()
-				.getVertexHandle());
-		glVertexPointer(sprite.getVertexBufferObject().getDimension(),
-				GL_FLOAT, 0, 0L);
+			glBindBuffer(GL_ARRAY_BUFFER, sprite.getVertexBufferObject()
+					.getVertexHandle());
+			glVertexPointer(sprite.getVertexBufferObject().getDimension(),
+					GL_FLOAT, 0, 0L);
 
-		glBindBuffer(GL_ARRAY_BUFFER, sprite.getVertexBufferObject()
-				.getTextureHandle());
-		glTexCoordPointer(2, GL_FLOAT, 0, 0L);
+			glBindBuffer(GL_ARRAY_BUFFER, sprite.getVertexBufferObject()
+					.getTextureHandle());
+			glTexCoordPointer(2, GL_FLOAT, 0, 0L);
 
-		glEnableClientState(GL_VERTEX_ARRAY);
-		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-		glDrawArrays(GL_TRIANGLES, 0, sprite.getVertexBufferObject()
-				.getVertexCount());
-		glDisableClientState(GL_VERTEX_ARRAY);
-		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+			glEnableClientState(GL_VERTEX_ARRAY);
+			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+			glDrawArrays(GL_TRIANGLES, 0, sprite.getVertexBufferObject()
+					.getVertexCount());
+			glDisableClientState(GL_VERTEX_ARRAY);
+			glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 
+		}
 		glPopMatrix();
+		glBindBuffer(GL_ARRAY_BUFFER, 0); // TODO?
+		glBindTexture(GL_TEXTURE_2D, 0);
 
 	}
 
@@ -121,9 +122,9 @@ public class Draw {
 	public static void line(float x, float y, float destX, float destY,
 			Color color) {
 
+		glColor4f(color.r, color.g, color.b, color.a);
 		glPushMatrix();
 		{
-			glColor4f(color.r, color.g, color.b, color.a);
 			glTranslatef(x - Screen.getX(), y - Screen.getY(), 0);
 			glBegin(GL_LINE_STRIP);
 			{
@@ -151,9 +152,10 @@ public class Draw {
 
 	public static void rect(float x, float y, float width, float height,
 			float rot, Color color) {
+
+		glColor4f(color.r, color.g, color.b, color.a);
 		glPushMatrix();
 		{
-			glColor4f(color.r, color.g, color.b, color.a);
 			glTranslatef(x - Screen.getX(), y - Screen.getY(), 0);
 			glRotatef(rot, 0, 0, 0);
 
@@ -164,7 +166,7 @@ public class Draw {
 				// BOTTOM RIGHT
 				glVertex2f(width, 0);
 				// TOP RIGHT
-				glVertex2f(width, height);
+				glVertex2f(width + 1, height);
 				// TOP LEFT
 				glVertex2f(0, height);
 			}
@@ -174,8 +176,8 @@ public class Draw {
 	}
 
 	public static void rect(GameObject object) {
-		rect(object.getX(), object.getY(), object.getWidth(),
-				object.getHeight());
+		rect(object.getX(), object.getY(), object.getWidth()-1,
+				object.getHeight()-1);
 	}
 
 	public static void rect(GameObject object, float xOffset, float yOffset) {
@@ -184,51 +186,68 @@ public class Draw {
 	}
 
 	public static void string(String drawString) {
-		string(drawString, 0, 0, 1.0f, 1.0f, false);
+		string(drawString, 0, 0, DEFAULT_COLOR,false);
 	}
 
 	public static void string(String drawString, float xOffset, float yOffset) {
-		string(drawString, xOffset, yOffset, 1.0f, 1.0f, false);
+		string(drawString, xOffset, yOffset, DEFAULT_COLOR, false);
+	}
+	
+	public static void string(String string, float xOffset, float yOffset,
+			Color color) {
+		string(string,xOffset,yOffset,color,false);
 	}
 
 	public static void string(String string, float xOffset, float yOffset,
-			float alpha, float rot, boolean followScreen) {
+			Color color, boolean followScreen) {
+		char current;
+		float x = xOffset, xRunning = 0, y = yOffset;
 		for (int i = 0; i < string.length(); i++) {
+			current = string.charAt(i);
+			if (current == 10) {
+				xRunning = 0;
+				yOffset -= Sprite.CHAR_HEIGHT;
+				continue;
+			}
+			Sprite sprite = Sprite.resolveChar(current);
 
-			Sprite sprite = Sprite.resolveChar(string.charAt(i));
-
-			float x = xOffset + i * Sprite.CHARWIDTH;
-			float y = yOffset;
+			x = xOffset + xRunning;
+			y = yOffset;
 			if (followScreen) {
 				x += Screen.getX();
 				y += Screen.getY();
 			}
+			
+			xRunning += Sprite.CHAR_WIDTH;
 
+			glColor4f(color.r, color.g, color.b, Screen.getTransparency() * color.a);
 			glPushMatrix();
-			glColor4f(1, 1, 1, Screen.getTransparency() * alpha);
-			glTranslatef(x - Screen.getX(), y - Screen.getY(), 0);
-			glRotatef(rot, 0, 0, 0);
+			{
+				glTranslatef(x - Screen.getX(), y - Screen.getY(), 0);
 
-			glBindTexture(GL_TEXTURE_2D, sprite.getTextureRegion().getTexture()
-					.getTextureID());
+				glBindTexture(GL_TEXTURE_2D, sprite.getTextureRegion()
+						.getTexture().getTextureID());
 
-			glBindBuffer(GL_ARRAY_BUFFER, sprite.getVertexBufferObject()
-					.getVertexHandle());
-			glVertexPointer(sprite.getVertexBufferObject().getDimension(),
-					GL_FLOAT, 0, 0L);
+				glBindBuffer(GL_ARRAY_BUFFER, sprite.getVertexBufferObject()
+						.getVertexHandle());
+				glVertexPointer(sprite.getVertexBufferObject().getDimension(),
+						GL_FLOAT, 0, 0L);
 
-			glBindBuffer(GL_ARRAY_BUFFER, sprite.getVertexBufferObject()
-					.getTextureHandle());
-			glTexCoordPointer(2, GL_FLOAT, 0, 0L);
+				glBindBuffer(GL_ARRAY_BUFFER, sprite.getVertexBufferObject()
+						.getTextureHandle());
+				glTexCoordPointer(2, GL_FLOAT, 0, 0L);
 
-			glEnableClientState(GL_VERTEX_ARRAY);
-			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-			glDrawArrays(GL_TRIANGLES, 0, sprite.getVertexBufferObject()
-					.getVertexCount());
-			glDisableClientState(GL_VERTEX_ARRAY);
-			glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+				glEnableClientState(GL_VERTEX_ARRAY);
+				glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+				glDrawArrays(GL_TRIANGLES, 0, sprite.getVertexBufferObject()
+						.getVertexCount());
+				glDisableClientState(GL_VERTEX_ARRAY);
+				glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 
+			}
 			glPopMatrix();
+			glBindBuffer(GL_ARRAY_BUFFER, 0); // TODO ?
+			glBindTexture(GL_TEXTURE_2D, 0);
 		}
 	}
 

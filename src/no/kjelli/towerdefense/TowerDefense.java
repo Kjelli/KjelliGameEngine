@@ -23,6 +23,8 @@ public class TowerDefense implements Game {
 	public static STATE state;
 	public static long ticks = 0;
 
+	Map map;
+
 	private int cooldown = 0;
 
 	@Override
@@ -41,7 +43,7 @@ public class TowerDefense implements Game {
 		World.clear();
 		state = STATE.PLAYING;
 
-		Map map = Map.build(12, 12, Map.EMPTY_DIRT);
+		map = Map.build(12, 12, Map.EMPTY_GRASS);
 		map.setX(Screen.getWidth() / 2 - map.getWidth() / 2);
 		map.setY(Screen.getHeight() / 2 - map.getHeight() / 2);
 		map.setVisible(true);
@@ -63,8 +65,7 @@ public class TowerDefense implements Game {
 	@Override
 	public void render() {
 		Screen.render();
-		Draw.string("FPS: " + Main.framesPerSecond, 0, Screen.getHeight()
-				- Sprite.CHARHEIGHT);
+
 	}
 
 	@Override
@@ -77,6 +78,20 @@ public class TowerDefense implements Game {
 		case MENU:
 			break;
 		case PLAYING:
+
+			if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
+				map.browse(Map.RIGHT);
+			}
+			if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
+				map.browse(Map.LEFT);
+			}
+			if (Keyboard.isKeyDown(Keyboard.KEY_UP)) {
+				map.browse(Map.UP);
+			}
+			if (Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
+				map.browse(Map.DOWN);
+			}
+
 			if (Keyboard.isKeyDown(Keyboard.KEY_Q))
 				Screen.toggleDebugDraw();
 			break;
