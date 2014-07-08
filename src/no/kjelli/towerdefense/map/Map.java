@@ -1,5 +1,9 @@
 package no.kjelli.towerdefense.map;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+
 import no.kjelli.generic.World;
 import no.kjelli.generic.gameobjects.AbstractGameObject;
 import no.kjelli.generic.gfx.Draw;
@@ -11,6 +15,9 @@ public class Map extends AbstractGameObject {
 
 	int tiles_width, tiles_height;
 	Tile[][] tiles;
+	
+	SpawnPoint[] spawns;
+	GoalPoint goal;
 
 	public Tile selection;
 
@@ -55,8 +62,8 @@ public class Map extends AbstractGameObject {
 				tiles[x][y].update();
 			}
 		}
-		if(browse_cooldown > 0)
-			browse_cooldown --;
+		if (browse_cooldown > 0)
+			browse_cooldown--;
 	}
 
 	public void setTile(int x, int y, Tile tile) {
@@ -106,8 +113,77 @@ public class Map extends AbstractGameObject {
 	public static Map build(int width, int height, int template) {
 		return Builder.generate(width, height, template);
 	}
+	
+	public static Map load(String name){
+		return Builder.loadFromFile(name);
+	}
+
+	public int getTilesWidth() {
+		return tiles_width;
+	}
+
+	public int getTilesHeight() {
+		return tiles_height;
+	}
 
 	private static class Builder {
+		
+		private static final char GRASS = 'G', DIRT = 'D';
+		
+		public static Map loadFromFile(String name){
+			Map newMap = null;
+			
+			BufferedReader br = null;
+			try {
+				br = new BufferedReader(new FileReader("res\\" + name + ".map"));
+				
+				int width = Integer.parseInt(br.readLine());
+				int height = Integer.parseInt(br.readLine());
+				
+				newMap = new Map(width, height);
+				
+				int x = 0;
+				int y = 0;
+				
+				String line;
+				while((line = br.readLine()) != null){
+					x = 0;
+					for(char c : line.toCharArray()){
+						if(x > width || y > height){
+							System.err.println("Inconsistent dimensions in map file!");
+							br.close();
+							return null;
+						}
+						switch(c){
+						case GRASS:
+							newMap.setTile(x, y, new GrassTile(newMap, x, y));
+							break;
+						case DIRT:
+							newMap.setTile(x, y, new DirtTile(newMap, x, y));
+							break;
+						default:
+							System.err.println("Invalid character in map file!");
+							br.close();
+							return null;
+						}
+						x++;
+					}
+					y++;
+				}
+				
+				return newMap;
+				
+			} catch (IOException e) {
+				e.printStackTrace();
+			}finally{
+				try {
+					br.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			return null;
+		}
 
 		public static Map generate(int width, int height) {
 			return generate(width, height, EMPTY_GRASS);
@@ -162,6 +238,7 @@ public class Map extends AbstractGameObject {
 			unselect(selection);
 		selection = tile;
 		tile.selected = true;
+		tile.onSelect();
 	}
 
 	public void unselect(Tile tile) {
@@ -171,6 +248,10 @@ public class Map extends AbstractGameObject {
 
 	static int browse_cooldown;
 
+	public Tile[][] getTiles(){
+		return tiles;
+	}
+	
 	public Tile browse(int direction) {
 		if (browse_cooldown > 0)
 			return null;
@@ -196,8 +277,7 @@ public class Map extends AbstractGameObject {
 			browse_cooldown = 3;
 		} catch (IllegalArgumentException e) {
 			//
-		} finally{
-			return selection;
 		}
+		return selection;
 	}
 }

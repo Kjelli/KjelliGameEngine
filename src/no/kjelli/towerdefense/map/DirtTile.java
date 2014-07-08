@@ -7,7 +7,7 @@ import no.kjelli.generic.gfx.textures.TextureAtlas;
 public class DirtTile extends Tile {
 
 	public DirtTile(Map map, int x, int y) {
-		super(map, x, y, Tile.DIRT);
+		super(map, x, y, Tile.DIRT, true, true);
 		int random = (int) (Math.random() * 4) * 32;
 		sprite = new Sprite(TextureAtlas.defaultAtlas, random, 32, Tile.SIZE,
 				Tile.SIZE);
@@ -15,6 +15,12 @@ public class DirtTile extends Tile {
 
 	public void draw() {
 		Draw.sprite(this);
+		if (selected)
+			drawBorders();
+		if (traversalCount > -1)
+			Draw.string(traversalCount + "", x + SIZE / 2 - Sprite.CHAR_WIDTH
+					/ 2, y + SIZE / 2 - Sprite.CHAR_HEIGHT / 2);
+
 	}
 
 	@Override
@@ -24,7 +30,7 @@ public class DirtTile extends Tile {
 
 	@Override
 	public void onSelect() {
-		//TODO:
+		testPathfinding();
 	}
 
 }

@@ -43,14 +43,17 @@ public class TowerDefense implements Game {
 		World.clear();
 		state = STATE.PLAYING;
 
-		map = Map.build(12, 12, Map.EMPTY_GRASS);
+		//map = Map.build(12, 12, Map.EMPTY_GRASS);
+
+		map = Map.load("test");
+		
 		map.setX(Screen.getWidth() / 2 - map.getWidth() / 2);
 		map.setY(Screen.getHeight() / 2 - map.getHeight() / 2);
 		map.setVisible(true);
 
 		World.add(map);
 	}
-
+	
 	@Override
 	public void loadSounds() {
 		try {

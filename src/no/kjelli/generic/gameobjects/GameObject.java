@@ -35,7 +35,7 @@ public interface GameObject extends Comparable<GameObject> {
 	public boolean contains(float x, float y);
 
 	public void move();
-
+	
 	public void update();
 	
 	public void onCreate();
