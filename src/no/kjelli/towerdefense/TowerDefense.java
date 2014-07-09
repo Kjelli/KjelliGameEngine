@@ -5,11 +5,10 @@ import java.io.IOException;
 import no.kjelli.generic.Game;
 import no.kjelli.generic.World;
 import no.kjelli.generic.gameobjects.GameObject;
-import no.kjelli.generic.gfx.Draw;
-import no.kjelli.generic.gfx.Screen;
-import no.kjelli.generic.gfx.textures.Sprite;
+import no.kjelli.generic.gfx.*;
 import no.kjelli.generic.main.Main;
 import no.kjelli.generic.sound.SoundPlayer;
+import no.kjelli.towerdefense.gameobjects.towers.ArrowTower;
 import no.kjelli.towerdefense.map.Map;
 
 import org.lwjgl.input.Keyboard;
@@ -50,8 +49,11 @@ public class TowerDefense implements Game {
 		map.setX(Screen.getWidth() / 2 - map.getWidth() / 2);
 		map.setY(Screen.getHeight() / 2 - map.getHeight() / 2);
 		map.setVisible(true);
+		
+		ArrowTower at = new ArrowTower(map, 5, 5);
 
-		World.add(map);
+		World.add(map,World.BACKGROUND);
+		World.add(at,World.FOREGROUND);
 	}
 	
 	@Override

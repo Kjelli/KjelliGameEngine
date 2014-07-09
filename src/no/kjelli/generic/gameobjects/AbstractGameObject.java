@@ -2,7 +2,7 @@ package no.kjelli.generic.gameobjects;
 
 import no.kjelli.generic.World;
 import no.kjelli.generic.gfx.Drawable;
-import no.kjelli.generic.gfx.textures.Sprite;
+import no.kjelli.generic.gfx.Sprite;
 
 import org.lwjgl.util.Rectangle;
 

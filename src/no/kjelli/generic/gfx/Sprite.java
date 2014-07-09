@@ -1,7 +1,8 @@
-package no.kjelli.generic.gfx.textures;
+package no.kjelli.generic.gfx;
 
 import static org.lwjgl.opengl.GL15.glDeleteBuffers;
-import no.kjelli.generic.gfx.VertexBufferObject;
+import no.kjelli.generic.gfx.textures.TextureAtlas;
+import no.kjelli.generic.gfx.textures.TextureRegion;
 
 import org.newdawn.slick.opengl.Texture;
 
@@ -56,7 +57,7 @@ public class Sprite {
 	}
 
 	public void destroy() {
-		textureRegion.texture.release();
+		textureRegion.getTexture().release();
 		glDeleteBuffers(vbo.getVertexHandle());
 		glDeleteBuffers(vbo.getTextureHandle());
 

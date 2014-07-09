@@ -1,7 +1,5 @@
 package no.kjelli.generic.gfx;
 
-import no.kjelli.generic.gfx.textures.Sprite;
-
 import org.lwjgl.util.Rectangle;
 
 public interface Drawable {

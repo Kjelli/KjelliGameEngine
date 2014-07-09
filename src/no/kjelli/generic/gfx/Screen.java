@@ -8,7 +8,6 @@ import no.kjelli.generic.Physics;
 import no.kjelli.generic.World;
 import no.kjelli.generic.gameobjects.Clickable;
 import no.kjelli.generic.gameobjects.GameObject;
-import no.kjelli.generic.gfx.textures.Sprite;
 import no.kjelli.generic.main.Main;
 
 import org.lwjgl.BufferUtils;

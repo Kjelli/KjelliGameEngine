@@ -1,4 +1,4 @@
-package no.kjelli.towerdefense.enemies;
+package no.kjelli.towerdefense.gameobjects.enemies;
 
 import no.kjelli.generic.gameobjects.AbstractGameObject;
 

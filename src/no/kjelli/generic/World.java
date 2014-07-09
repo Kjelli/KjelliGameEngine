@@ -71,9 +71,9 @@ public class World {
 			objects.remove(oldObject);
 		}
 		for (GameObject newObject : addQueue) {
-			if (newObject.getLayer() == BACKGROUND)
+			if (newObject.getLayer() == FOREGROUND)
 				objects.add(newObject);
-			else if (newObject.getLayer() == FOREGROUND)
+			else if (newObject.getLayer() == BACKGROUND)
 				objects.add(0, newObject);
 		}
 

@@ -3,7 +3,8 @@ package no.kjelli.generic.gfx.textures;
 import org.newdawn.slick.opengl.Texture;
 
 public class TextureAtlas {
-	public static TextureAtlas defaultAtlas = new TextureAtlas("res\\atlas.png");
+	public static TextureAtlas tiles = new TextureAtlas("res\\tiles.png");
+	public static TextureAtlas objects = new TextureAtlas("res\\objects.png");
 	public static TextureAtlas font = new TextureAtlas("res\\fontsmall.png");
 
 	Texture atlasTexture;

@@ -1,16 +1,13 @@
 package no.kjelli.towerdefense.map;
 
 import no.kjelli.generic.gfx.Draw;
-import no.kjelli.generic.gfx.textures.Sprite;
+import no.kjelli.generic.gfx.Sprite;
 import no.kjelli.generic.gfx.textures.TextureAtlas;
 
 public class DirtTile extends Tile {
 
 	public DirtTile(Map map, int x, int y) {
-		super(map, x, y, Tile.DIRT, true, true);
-		int random = (int) (Math.random() * 4) * 32;
-		sprite = new Sprite(TextureAtlas.defaultAtlas, random, 32, Tile.SIZE,
-				Tile.SIZE);
+		super(map, x, y, Tile.DIRT, false, false);
 	}
 
 	public void draw() {
@@ -18,8 +15,7 @@ public class DirtTile extends Tile {
 		if (selected)
 			drawBorders();
 		if (traversalCount > -1)
-			Draw.string(traversalCount + "", x + SIZE / 2 - Sprite.CHAR_WIDTH
-					/ 2, y + SIZE / 2 - Sprite.CHAR_HEIGHT / 2);
+			drawTraversalCount();
 
 	}
 
@@ -31,6 +27,17 @@ public class DirtTile extends Tile {
 	@Override
 	public void onSelect() {
 		testPathfinding();
+	}
+
+	@Override
+	public void onCreate() {
+		randomizeGrassTexture();
+	}
+	
+	public void randomizeGrassTexture(){
+		int random = (int) (Math.random() * 4) * 32;
+		sprite = new Sprite(TextureAtlas.tiles, random, 32, Tile.SIZE,
+				Tile.SIZE);
 	}
 
 }

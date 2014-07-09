@@ -6,6 +6,7 @@ import ai.pathfinder.Node;
 import no.kjelli.generic.gameobjects.AbstractGameObject;
 import no.kjelli.generic.gameobjects.Clickable;
 import no.kjelli.generic.gfx.Draw;
+import no.kjelli.generic.gfx.Sprite;
 import no.kjelli.towerdefense.pathfinding.PathFinder;
 
 public abstract class Tile extends AbstractGameObject implements Clickable {
@@ -50,6 +51,11 @@ public abstract class Tile extends AbstractGameObject implements Clickable {
 		Draw.rect(this);
 	}
 
+	public void drawTraversalCount() {
+		Draw.string(traversalCount + "", x,
+				y + SIZE - Sprite.CHAR_HEIGHT);
+	}
+
 	public abstract void onSelect();
 
 	@Override
@@ -66,11 +72,6 @@ public abstract class Tile extends AbstractGameObject implements Clickable {
 	@Override
 	public void onExit() {
 		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void onCreate() {
 
 	}
 

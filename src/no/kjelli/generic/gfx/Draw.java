@@ -4,7 +4,7 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL15.glBindBuffer;
 import no.kjelli.generic.gameobjects.GameObject;
-import no.kjelli.generic.gfx.textures.Sprite;
+import no.kjelli.towerdefense.TowerDefense;
 
 import org.newdawn.slick.Color;
 
@@ -47,28 +47,29 @@ public class Draw {
 	}
 
 	public static void sprite(Drawable drawable) {
-		sprite(drawable, 0, 0, 1.0f, 1, false);
+		sprite(drawable, 0, 0, 1.0f, 1, 1.0f, 1.0f, false);
 	}
 
 	public static void sprite(Drawable drawable, float xOffset, float yOffset) {
-		sprite(drawable, xOffset, yOffset, 1.0f, 1, false);
+		sprite(drawable, xOffset, yOffset, 1.0f, 1, 1.0f, 1.0f, false);
 	}
 
 	public static void sprite(Drawable drawable, float alpha) {
-		sprite(drawable, 0, 0, alpha, 1, false);
+		sprite(drawable, 0, 0, alpha, 1, 1.0f, 1.0f, false);
 	}
 
-	public static void sprite(Drawable drawable, boolean isGUIComponent) {
-		sprite(drawable, 0, 0, 1.0f, 1, isGUIComponent);
+	public static void sprite(Drawable drawable, boolean followScreen) {
+		sprite(drawable, 0, 0, 1.0f, 1, 1.0f, 1.0f, followScreen);
 	}
 
 	public static void sprite(Drawable drawable, float alpha,
-			boolean isGUIComponent) {
-		sprite(drawable, 0, 0, alpha, 1, isGUIComponent);
+			boolean followScreen) {
+		sprite(drawable, 0, 0, alpha, 1, 1.0f, 1.0f, followScreen);
 	}
 
 	public static void sprite(Drawable drawable, float xOffset, float yOffset,
-			float alpha, float rot, boolean followScreen) {
+			float alpha, float rot, float xScale, float yScale,
+			boolean followScreen) {
 
 		Sprite sprite = drawable.getSprite();
 		if (sprite == null) {
@@ -83,11 +84,15 @@ public class Draw {
 			y += Screen.getY();
 		}
 
-		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 		glPushMatrix();
 		{
-			glTranslatef(x - Screen.getX(), y - Screen.getY(), 0);
-			glRotatef(rot, 0, 0, 0);
+			glColor4f(1.0f, 1.0f, 1.0f, alpha);
+
+			glTranslatef(x - Screen.getX() + drawable.getWidth() / 2, y
+					- Screen.getY() + drawable.getHeight() / 2, 0);
+			glRotatef(rot, 0, 0, 1.0f);
+			glTranslatef(-drawable.getWidth() / 2, -drawable.getHeight() / 2, 0);
+			glScalef(xScale, yScale, 1.0f);
 
 			glBindTexture(GL_TEXTURE_2D, sprite.getTextureRegion().getTexture()
 					.getTextureID());
@@ -110,7 +115,7 @@ public class Draw {
 
 		}
 		glPopMatrix();
-		glBindBuffer(GL_ARRAY_BUFFER, 0); // TODO?
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindTexture(GL_TEXTURE_2D, 0);
 
 	}
@@ -176,8 +181,8 @@ public class Draw {
 	}
 
 	public static void rect(GameObject object) {
-		rect(object.getX(), object.getY(), object.getWidth()-1,
-				object.getHeight()-1);
+		rect(object.getX(), object.getY(), object.getWidth() - 1,
+				object.getHeight() - 1);
 	}
 
 	public static void rect(GameObject object, float xOffset, float yOffset) {
@@ -186,16 +191,16 @@ public class Draw {
 	}
 
 	public static void string(String drawString) {
-		string(drawString, 0, 0, DEFAULT_COLOR,false);
+		string(drawString, 0, 0, DEFAULT_COLOR, false);
 	}
 
 	public static void string(String drawString, float xOffset, float yOffset) {
 		string(drawString, xOffset, yOffset, DEFAULT_COLOR, false);
 	}
-	
+
 	public static void string(String string, float xOffset, float yOffset,
 			Color color) {
-		string(string,xOffset,yOffset,color,false);
+		string(string, xOffset, yOffset, color, false);
 	}
 
 	public static void string(String string, float xOffset, float yOffset,
@@ -217,10 +222,11 @@ public class Draw {
 				x += Screen.getX();
 				y += Screen.getY();
 			}
-			
+
 			xRunning += Sprite.CHAR_WIDTH;
 
-			glColor4f(color.r, color.g, color.b, Screen.getTransparency() * color.a);
+			glColor4f(color.r, color.g, color.b, Screen.getTransparency()
+					* color.a);
 			glPushMatrix();
 			{
 				glTranslatef(x - Screen.getX(), y - Screen.getY(), 0);
