@@ -1,6 +1,7 @@
 package no.kjelli.generic.gfx;
 
 import org.lwjgl.util.Rectangle;
+import org.newdawn.slick.Color;
 
 public interface Drawable {
 
@@ -19,6 +20,8 @@ public interface Drawable {
 	public boolean isVisible();
 
 	public Sprite getSprite();
+	
+	public Color getColor();
 
 	public Rectangle getBounds();
 }

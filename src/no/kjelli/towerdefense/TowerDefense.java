@@ -42,20 +42,20 @@ public class TowerDefense implements Game {
 		World.clear();
 		state = STATE.PLAYING;
 
-		//map = Map.build(12, 12, Map.EMPTY_GRASS);
+		// map = Map.build(12, 12, Map.EMPTY_GRASS);
 
-		map = Map.load("test");
-		
+		map = Map.load("testlong");
+
 		map.setX(Screen.getWidth() / 2 - map.getWidth() / 2);
 		map.setY(Screen.getHeight() / 2 - map.getHeight() / 2);
 		map.setVisible(true);
-		
-		ArrowTower at = new ArrowTower(map, 5, 5);
 
-		World.add(map,World.BACKGROUND);
-		World.add(at,World.FOREGROUND);
+		ArrowTower at = new ArrowTower(map, 4,2);
+
+		World.add(map, World.BACKGROUND);
+		World.add(at, World.FOREGROUND);
 	}
-	
+
 	@Override
 	public void loadSounds() {
 		try {
@@ -133,7 +133,7 @@ public class TowerDefense implements Game {
 	}
 
 	public static void main(String[] args) {
-		new Main(new TowerDefense(), "Tower Defense", 640, 480, false);
+		new Main(new TowerDefense(), "Tower Defense", 800, 600, false);
 	}
 
 	@Override

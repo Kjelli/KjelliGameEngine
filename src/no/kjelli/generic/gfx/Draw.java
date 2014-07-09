@@ -47,31 +47,32 @@ public class Draw {
 	}
 
 	public static void sprite(Drawable drawable) {
-		sprite(drawable, 0, 0, 1.0f, 1, 1.0f, 1.0f, false);
+		sprite(drawable, 0, 0, 1, 1.0f, 1.0f, false);
+	}
+
+	public static void sprite(Drawable drawable, Color color) {
+		sprite(drawable, 0, 0, 1, 1.0f, 1.0f, false);
 	}
 
 	public static void sprite(Drawable drawable, float xOffset, float yOffset) {
-		sprite(drawable, xOffset, yOffset, 1.0f, 1, 1.0f, 1.0f, false);
-	}
-
-	public static void sprite(Drawable drawable, float alpha) {
-		sprite(drawable, 0, 0, alpha, 1, 1.0f, 1.0f, false);
+		sprite(drawable, xOffset, yOffset, 1, 1.0f, 1.0f, false);
 	}
 
 	public static void sprite(Drawable drawable, boolean followScreen) {
-		sprite(drawable, 0, 0, 1.0f, 1, 1.0f, 1.0f, followScreen);
+		sprite(drawable, 0, 0, 1, 1.0f, 1.0f, followScreen);
 	}
 
-	public static void sprite(Drawable drawable, float alpha,
+	public static void sprite(Drawable drawable, Color color,
 			boolean followScreen) {
-		sprite(drawable, 0, 0, alpha, 1, 1.0f, 1.0f, followScreen);
+		sprite(drawable, 0, 0, 1, 1.0f, 1.0f, followScreen);
 	}
 
 	public static void sprite(Drawable drawable, float xOffset, float yOffset,
-			float alpha, float rot, float xScale, float yScale,
-			boolean followScreen) {
+			float rot, float xScale, float yScale, boolean followScreen) {
 
 		Sprite sprite = drawable.getSprite();
+		Color color = drawable.getColor();
+
 		if (sprite == null) {
 			System.err.println("No working sprite! [" + drawable + "]");
 			return;
@@ -86,13 +87,14 @@ public class Draw {
 
 		glPushMatrix();
 		{
-			glColor4f(1.0f, 1.0f, 1.0f, alpha);
 
 			glTranslatef(x - Screen.getX() + drawable.getWidth() / 2, y
 					- Screen.getY() + drawable.getHeight() / 2, 0);
 			glRotatef(rot, 0, 0, 1.0f);
 			glTranslatef(-drawable.getWidth() / 2, -drawable.getHeight() / 2, 0);
 			glScalef(xScale, yScale, 1.0f);
+			glColor4f(color.r, color.g, color.b, Screen.getTransparency()
+					* color.a);
 
 			glBindTexture(GL_TEXTURE_2D, sprite.getTextureRegion().getTexture()
 					.getTextureID());
@@ -162,6 +164,7 @@ public class Draw {
 		glPushMatrix();
 		{
 			glTranslatef(x - Screen.getX(), y - Screen.getY(), 0);
+			glTranslatef(0.5f, 0.5f, 0.0f);
 			glRotatef(rot, 0, 0, 0);
 
 			glBegin(GL_LINE_LOOP);
@@ -171,13 +174,18 @@ public class Draw {
 				// BOTTOM RIGHT
 				glVertex2f(width, 0);
 				// TOP RIGHT
-				glVertex2f(width + 1, height);
+				glVertex2f(width, height);
 				// TOP LEFT
 				glVertex2f(0, height);
 			}
 			glEnd();
 		}
 		glPopMatrix();
+	}
+
+	public static void rect(GameObject object, Color color) {
+		rect(object.getX(), object.getY(), object.getWidth() - 1,
+				object.getHeight() - 1, color);
 	}
 
 	public static void rect(GameObject object) {
@@ -188,10 +196,6 @@ public class Draw {
 	public static void rect(GameObject object, float xOffset, float yOffset) {
 		rect(object.getX() + xOffset, object.getY() + yOffset,
 				object.getWidth(), object.getHeight());
-	}
-
-	public static void string(String drawString) {
-		string(drawString, 0, 0, DEFAULT_COLOR, false);
 	}
 
 	public static void string(String drawString, float xOffset, float yOffset) {

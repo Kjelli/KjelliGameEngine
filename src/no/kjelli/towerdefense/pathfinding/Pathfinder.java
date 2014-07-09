@@ -17,6 +17,10 @@ public class PathFinder {
 			System.err.println("Source or target was null");
 			return null;
 		}
+		s = new Node(start.x_index, start.y_index);
+		s.walkable = start.isTraversable();
+		t = new Node(goal.x_index, goal.y_index);
+		t.walkable = goal.isTraversable();
 		if (!start.isTraversable() || !goal.isTraversable()) {
 			System.err.println("Source or target was not traversable");
 			return null;
@@ -24,13 +28,12 @@ public class PathFinder {
 
 		nodes.clear();
 
-		s = new Node(start.x_index, start.y_index);
-		s.walkable = start.isTraversable();
-		t = new Node(goal.x_index, goal.y_index);
-		t.walkable = goal.isTraversable();
-
 		insertNodes(map);
 		connect(map);
+
+		float tx = nodes.get(112).x;
+		float ty = nodes.get(112).y;
+		Node n2 = retrieveNode(map, (int) tx, (int) ty);
 
 		Pathfinder pf = new Pathfinder(nodes);
 		ArrayList<Node> result = pf.aStar(s, t);
@@ -40,8 +43,8 @@ public class PathFinder {
 
 	private static void insertNodes(Map map) {
 		boolean walkable = false;
-		for (int x = 0; x < map.getTilesWidth(); x++) {
-			for (int y = 0; y < map.getTilesHeight(); y++) {
+		for (int y = 0; y < map.getTilesHeight(); y++) {
+			for (int x = 0; x < map.getTilesWidth(); x++) {
 				if ((x == s.x && y == s.y)) {
 					nodes.add(s);
 					continue;
@@ -63,7 +66,6 @@ public class PathFinder {
 	private static void connect(Map map) {
 		for (int x = 0; x < map.getTilesWidth(); x++) {
 			for (int y = 0; y < map.getTilesHeight(); y++) {
-				int index = x + y * map.getTilesWidth();
 				Node current = retrieveNode(map, x, y);
 				Node next;
 				if ((next = retrieveNode(map, x - 1, y)) != null) {

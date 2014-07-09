@@ -1,6 +1,5 @@
 package no.kjelli.towerdefense.gameobjects.towers;
 
-import no.kjelli.generic.gfx.Draw;
 import no.kjelli.generic.gfx.Sprite;
 import no.kjelli.generic.gfx.textures.TextureAtlas;
 import no.kjelli.generic.sound.SoundPlayer;
@@ -17,7 +16,7 @@ public class ArrowTower extends Tower {
 	Sprite busy_sprite;
 
 	public ArrowTower(Map map, int x_index, int y_index) {
-		super(map, x_index, y_index);
+		super(map.getTile(x_index, y_index));
 	}
 
 	@Override
@@ -39,11 +38,6 @@ public class ArrowTower extends Tower {
 		if(TowerDefense.ticks % 100 == 0){
 			shoot(0,0);
 		}
-	}
-
-	@Override
-	public void draw() {
-		Draw.sprite(this);
 	}
 
 	@Override

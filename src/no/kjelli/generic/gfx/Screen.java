@@ -99,8 +99,10 @@ public class Screen {
 
 		Mouse.poll();
 		while (Mouse.next()) {
-			for (Clickable c : mouseOverEventObjectsRemoveQueue)
+			for (Clickable c : mouseOverEventObjectsRemoveQueue){
 				mouseOverEventObjects.remove(c);
+			}
+			mouseOverEventObjectsRemoveQueue.clear();
 			releaseMouseOverObjects();
 			checkWorldMouseEvents();
 		}
@@ -126,6 +128,7 @@ public class Screen {
 				src.onMousePressed(button);
 			else
 				src.onMouseReleased(button);
+			return;
 		}
 
 		if (!mouseOverEventObjects.contains(src)) {

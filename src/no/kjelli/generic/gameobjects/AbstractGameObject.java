@@ -1,10 +1,12 @@
 package no.kjelli.generic.gameobjects;
 
 import no.kjelli.generic.World;
+import no.kjelli.generic.gfx.Draw;
 import no.kjelli.generic.gfx.Drawable;
 import no.kjelli.generic.gfx.Sprite;
 
 import org.lwjgl.util.Rectangle;
+import org.newdawn.slick.Color;
 
 public abstract class AbstractGameObject implements GameObject, Drawable {
 	protected float x;
@@ -13,6 +15,7 @@ public abstract class AbstractGameObject implements GameObject, Drawable {
 	protected float height;
 
 	protected Sprite sprite;
+	protected Color color;
 
 	private int layer;
 
@@ -27,7 +30,7 @@ public abstract class AbstractGameObject implements GameObject, Drawable {
 		setY(y);
 		setWidth(width);
 		setHeight(height);
-
+		color = new Color(Color.black);
 	}
 
 	public abstract void update();
@@ -149,6 +152,10 @@ public abstract class AbstractGameObject implements GameObject, Drawable {
 		World.remove(this);
 	}
 
+	public Color getColor(){
+		return color;
+	}
+	
 	@Override
 	public int compareTo(GameObject that) {
 		return Integer.compare(this.layer, that.getLayer());

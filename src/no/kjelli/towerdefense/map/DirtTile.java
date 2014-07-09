@@ -1,22 +1,12 @@
 package no.kjelli.towerdefense.map;
 
-import no.kjelli.generic.gfx.Draw;
 import no.kjelli.generic.gfx.Sprite;
 import no.kjelli.generic.gfx.textures.TextureAtlas;
 
 public class DirtTile extends Tile {
 
 	public DirtTile(Map map, int x, int y) {
-		super(map, x, y, Tile.DIRT, false, false);
-	}
-
-	public void draw() {
-		Draw.sprite(this);
-		if (selected)
-			drawBorders();
-		if (traversalCount > -1)
-			drawTraversalCount();
-
+		super(map, x, y, false, false);
 	}
 
 	@Override

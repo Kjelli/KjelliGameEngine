@@ -2,21 +2,19 @@ package no.kjelli.towerdefense.map;
 
 import java.util.ArrayList;
 
-import ai.pathfinder.Node;
 import no.kjelli.generic.gameobjects.AbstractGameObject;
 import no.kjelli.generic.gameobjects.Clickable;
 import no.kjelli.generic.gfx.Draw;
 import no.kjelli.generic.gfx.Sprite;
+import no.kjelli.towerdefense.gameobjects.towers.Tower;
 import no.kjelli.towerdefense.pathfinding.PathFinder;
+import ai.pathfinder.Node;
 
 public abstract class Tile extends AbstractGameObject implements Clickable {
 
 	public static final int SIZE = 32;
-	public static final int GRASS = 1;
-	public static final int DIRT = 2;
 	public final int x_index;
 	public final int y_index;
-	public final int type;
 	protected final Map map;
 	public boolean selected;
 
@@ -28,23 +26,39 @@ public abstract class Tile extends AbstractGameObject implements Clickable {
 	protected boolean isTraversable;
 	protected boolean isBuildable;
 
+	public Tower tower;
+
 	public int traversalCount = -1;
 
-	public Tile(Map map, int x_index, int y_index, int type,
-			boolean traversable, boolean buildable) {
+	public Tile(Map map, int x_index, int y_index, boolean traversable,
+			boolean buildable) {
 		super(x_index, y_index, SIZE, SIZE);
 		this.x_index = x_index;
 		this.y_index = y_index;
 		this.map = map;
-		this.type = type;
 		isTraversable = traversable;
 		isBuildable = buildable;
 	}
 
 	@Override
 	public void onMousePressed(int mouseButton) {
-		if (mouseButton == 0)
-			map.select(this);
+		if (isBuildable()){
+			if (mouseButton == 0){
+				map.select(this);
+			}
+		}
+		else if(tower != null){
+			map.select(tower);
+		}
+	}
+
+	public void draw() {
+		Draw.sprite(this, color);
+		if (selected)
+			drawBorders();
+		if (traversalCount > -1) {
+			drawTraversalCount();
+		}
 	}
 
 	public void drawBorders() {
@@ -52,8 +66,7 @@ public abstract class Tile extends AbstractGameObject implements Clickable {
 	}
 
 	public void drawTraversalCount() {
-		Draw.string(traversalCount + "", x,
-				y + SIZE - Sprite.CHAR_HEIGHT);
+		Draw.string(traversalCount + "", x, y + SIZE - Sprite.CHAR_HEIGHT);
 	}
 
 	public abstract void onSelect();
@@ -66,21 +79,24 @@ public abstract class Tile extends AbstractGameObject implements Clickable {
 
 	@Override
 	public void onEnter() {
-
+		color.r = 0.1f;
+		color.g = 0.1f;
+		color.b = 0.1f;
 	}
 
 	@Override
 	public void onExit() {
-		// TODO Auto-generated method stub
-
+		color.r = 0.0f;
+		color.g = 0.0f;
+		color.b = 0.0f;
 	}
 
 	public boolean isTraversable() {
-		return isTraversable;
+		return isTraversable && tower == null;
 	}
 
 	public boolean isBuildable() {
-		return isBuildable;
+		return isBuildable && tower == null;
 	}
 
 	public void testPathfinding() {

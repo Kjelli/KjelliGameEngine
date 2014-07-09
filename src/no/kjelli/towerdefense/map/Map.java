@@ -7,6 +7,7 @@ import java.io.IOException;
 import no.kjelli.generic.World;
 import no.kjelli.generic.gameobjects.AbstractGameObject;
 import no.kjelli.generic.gfx.Draw;
+import no.kjelli.towerdefense.gameobjects.towers.Tower;
 
 public class Map extends AbstractGameObject {
 	public static final int EMPTY_GRASS = 0;
@@ -19,7 +20,8 @@ public class Map extends AbstractGameObject {
 	SpawnPoint[] spawns;
 	GoalPoint goal;
 
-	public Tile selection;
+	public Tile selectedTile;
+	public Tower selectedTower;
 
 	private Map(int tiles_width, int tiles_height) {
 		this(0, 0, tiles_width, tiles_height);
@@ -27,8 +29,8 @@ public class Map extends AbstractGameObject {
 
 	private Map(int x, int y, int tiles_width, int tiles_height) {
 		super(x, y, tiles_width * Tile.SIZE, tiles_height * Tile.SIZE);
-		this.tiles_width = tiles_width;
-		this.tiles_height = tiles_height;
+		Map.tiles_width = tiles_width;
+		Map.tiles_height = tiles_height;
 
 		tiles = new Tile[tiles_width][tiles_height];
 	}
@@ -128,7 +130,7 @@ public class Map extends AbstractGameObject {
 
 	private static class Builder {
 
-		private static final char GRASS = 'G', DIRT = 'D';
+		private static final char GRASS = 'G', DIRT = 'D', VOID = 'V';
 
 		public static Map loadFromFile(String name) {
 			Map newMap = null;
@@ -164,13 +166,16 @@ public class Map extends AbstractGameObject {
 							newMap.setTile(x, (height - 1) - y, new DirtTile(
 									newMap, x, (height - 1) - y));
 							break;
+						case VOID:
+							newMap.setTile(x, (height - 1) - y, new VoidTile(
+									newMap, x, (height - 1) - y));
+							break;
 						default:
-							System.err
-									.println("Invalid character in map file!");
-							br.close();
-							return null;
+							newMap.setTile(x, (height - 1) - y, new VoidTile(
+									newMap, x, (height - 1) - y));
 						}
 						x++;
+
 					}
 					y++;
 				}
@@ -238,19 +243,19 @@ public class Map extends AbstractGameObject {
 	}
 
 	public void select(Tile tile) {
-		if (tile != null) {
-			if (!tile.isBuildable)
-				return;
+		if (selectedTower != null) {
+			unselect(selectedTower);
 		}
-		if (selection != null)
-			unselect(selection);
-		selection = tile;
+		if (selectedTile != null) {
+			unselect(selectedTile);
+		}
+		selectedTile = tile;
 		tile.selected = true;
 		tile.onSelect();
 	}
 
 	public void unselect(Tile tile) {
-		selection = null;
+		selectedTile = null;
 		tile.selected = false;
 	}
 
@@ -263,29 +268,51 @@ public class Map extends AbstractGameObject {
 	public Tile browse(int direction) {
 		if (browse_cooldown > 0)
 			return null;
-		if (selection == null) {
+		if (selectedTile == null) {
 			select(getTile(0, 0));
-			return selection;
+			return selectedTile;
 		}
 		try {
+			Tile tile = null;
 			switch (direction) {
 			case LEFT:
-				select(getTile(selection.x_index - 1, selection.y_index));
+				tile = getTile(selectedTile.x_index - 1, selectedTile.y_index);
 				break;
 			case RIGHT:
-				select(getTile(selection.x_index + 1, selection.y_index));
+				tile = getTile(selectedTile.x_index + 1, selectedTile.y_index);
 				break;
 			case UP:
-				select(getTile(selection.x_index, selection.y_index + 1));
+				tile = getTile(selectedTile.x_index, selectedTile.y_index + 1);
 				break;
 			case DOWN:
-				select(getTile(selection.x_index, selection.y_index - 1));
+				tile = getTile(selectedTile.x_index, selectedTile.y_index - 1);
 				break;
 			}
-			browse_cooldown = 3;
+			if (tile.isBuildable()) {
+				select(tile);
+				browse_cooldown = 3;
+			}
 		} catch (IllegalArgumentException e) {
 			//
 		}
-		return selection;
+		return selectedTile;
+	}
+
+	public void select(Tower tower) {
+		if (selectedTower != null) {
+			unselect(selectedTower);
+		}
+		if (selectedTile != null) {
+			unselect(selectedTile);
+		}
+		selectedTower = tower;
+		tower.selected = true;
+		tower.onSelect();
+	}
+
+	public void unselect(Tower tower) {
+		selectedTower = null;
+		tower.selected = false;
+		tower.onUnselect();
 	}
 }
