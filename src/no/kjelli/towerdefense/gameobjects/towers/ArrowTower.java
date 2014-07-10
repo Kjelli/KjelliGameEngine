@@ -1,22 +1,20 @@
 package no.kjelli.towerdefense.gameobjects.towers;
 
+import no.kjelli.generic.World;
 import no.kjelli.generic.gfx.Sprite;
 import no.kjelli.generic.gfx.textures.TextureAtlas;
 import no.kjelli.generic.sound.SoundPlayer;
-import no.kjelli.towerdefense.TowerDefense;
-import no.kjelli.towerdefense.gameobjects.enemies.Enemy;
+import no.kjelli.towerdefense.gameobjects.projectiles.StarProjectile;
+import no.kjelli.towerdefense.gameobjects.projectiles.Target;
 import no.kjelli.towerdefense.map.Map;
 
 public class ArrowTower extends Tower {
 
 	static final int COOLDOWN_MAX = 30;
-	int cooldown = 0;
-
-	Sprite idle_sprite;
-	Sprite busy_sprite;
+	static final float RANGE =  10.0f;
 
 	public ArrowTower(Map map, int x_index, int y_index) {
-		super(map.getTile(x_index, y_index));
+		super(map.getTile(x_index, y_index), RANGE, false, COOLDOWN_MAX);
 	}
 
 	@Override
@@ -28,30 +26,12 @@ public class ArrowTower extends Tower {
 	}
 
 	@Override
-	public void update() {
-		if (cooldown > 0) {
-			cooldown--;
-			if (cooldown == 0)
-				sprite = idle_sprite;
-		}
-		
-		if(TowerDefense.ticks % 100 == 0){
-			shoot(0,0);
-		}
-	}
-
-	@Override
-	public void shoot(float x, float y) {
-		afterShoot();
-	}
-
-	@Override
-	public void shoot(Enemy e) {
-		afterShoot();
-	}
-
-	@Override
-	public void shoot(Tower t) {
+	public void shoot(Target t) {
+		StarProjectile sp = new StarProjectile(getCenterX()
+				- StarProjectile.SIZE / 2, getCenterY() - StarProjectile.SIZE
+				/ 2);
+		sp.setTarget(t);
+		World.add(sp, World.FOREGROUND);
 		afterShoot();
 	}
 
@@ -59,7 +39,6 @@ public class ArrowTower extends Tower {
 	public void afterShoot() {
 		SoundPlayer.play("bounce");
 		sprite = busy_sprite;
-		cooldown = COOLDOWN_MAX;
 	}
 
 }

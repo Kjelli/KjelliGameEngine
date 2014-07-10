@@ -15,11 +15,6 @@ public class DirtTile extends Tile {
 	}
 
 	@Override
-	public void onSelect() {
-		testPathfinding();
-	}
-
-	@Override
 	public void onCreate() {
 		randomizeGrassTexture();
 	}

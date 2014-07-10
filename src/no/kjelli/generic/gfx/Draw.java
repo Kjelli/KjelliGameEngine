@@ -9,6 +9,7 @@ import no.kjelli.towerdefense.TowerDefense;
 import org.newdawn.slick.Color;
 
 public class Draw {
+	
 	public static final Color DEFAULT_COLOR = new Color(1f, 1f, 1f, 1f);
 
 	public static void fillRect(float x, float y, float width, float height) {
@@ -47,25 +48,17 @@ public class Draw {
 	}
 
 	public static void sprite(Drawable drawable) {
-		sprite(drawable, 0, 0, 1, 1.0f, 1.0f, false);
-	}
-
-	public static void sprite(Drawable drawable, Color color) {
-		sprite(drawable, 0, 0, 1, 1.0f, 1.0f, false);
-	}
-
-	public static void sprite(Drawable drawable, float xOffset, float yOffset) {
-		sprite(drawable, xOffset, yOffset, 1, 1.0f, 1.0f, false);
+		sprite(drawable, 0, 0, 0, 1.0f, 1.0f, false);
 	}
 
 	public static void sprite(Drawable drawable, boolean followScreen) {
-		sprite(drawable, 0, 0, 1, 1.0f, 1.0f, followScreen);
+		sprite(drawable, 0, 0, 0, 1.0f, 1.0f, followScreen);
 	}
 
-	public static void sprite(Drawable drawable, Color color,
-			boolean followScreen) {
-		sprite(drawable, 0, 0, 1, 1.0f, 1.0f, followScreen);
+	public static void sprite(Drawable drawable, float xOffset, float yOffset) {
+		sprite(drawable, xOffset, yOffset, 0, 1.0f, 1.0f, false);
 	}
+
 
 	public static void sprite(Drawable drawable, float xOffset, float yOffset,
 			float rot, float xScale, float yScale, boolean followScreen) {
@@ -91,8 +84,9 @@ public class Draw {
 			glTranslatef(x - Screen.getX() + drawable.getWidth() / 2, y
 					- Screen.getY() + drawable.getHeight() / 2, 0);
 			glRotatef(rot, 0, 0, 1.0f);
-			glTranslatef(-drawable.getWidth() / 2, -drawable.getHeight() / 2, 0);
+			glTranslatef(-drawable.getWidth()*xScale / 2, -drawable.getHeight()*yScale / 2, 0);
 			glScalef(xScale, yScale, 1.0f);
+			
 			glColor4f(color.r, color.g, color.b, Screen.getTransparency()
 					* color.a);
 

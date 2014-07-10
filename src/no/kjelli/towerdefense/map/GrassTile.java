@@ -13,10 +13,7 @@ public class GrassTile extends Tile {
 	public void update() {
 	}
 
-	@Override
-	public void onSelect() {
-		testPathfinding();
-	}
+	
 
 	@Override
 	public void onCreate() {

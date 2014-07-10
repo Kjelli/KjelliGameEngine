@@ -13,7 +13,7 @@ public class Sprite {
 	public static final char[] charList = new char[] { ' ', 'a', 'b', 'c', 'd',
 			'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q',
 			'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'æ', 'ø', 'å', '.',
-			',', '?', ':','0','1','2','3','4','5','6','7','8','9' };
+			',', '?', ':', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
 	public static final Sprite[] chars = initializeFont();
 
 	private static Sprite[] initializeFont() {
@@ -57,10 +57,8 @@ public class Sprite {
 	}
 
 	public void destroy() {
-		textureRegion.getTexture().release();
 		glDeleteBuffers(vbo.getVertexHandle());
 		glDeleteBuffers(vbo.getTextureHandle());
-
 	}
 
 	public void setSpriteInAtlas(int texture_x, int texture_y,

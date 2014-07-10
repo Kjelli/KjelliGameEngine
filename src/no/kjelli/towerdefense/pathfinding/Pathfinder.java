@@ -13,8 +13,13 @@ public class PathFinder {
 	private static Node s, t;
 
 	public static ArrayList<Node> findPath(Map map, Tile start, Tile goal) {
+		if(start == goal){
+			System.err.println("Starting tile was equal to destination!");
+			return null;
+		}
+			
 		if (start == null || goal == null) {
-			System.err.println("Source or target was null");
+			System.err.println("Start or target was null!");
 			return null;
 		}
 		s = new Node(start.x_index, start.y_index);
@@ -22,7 +27,7 @@ public class PathFinder {
 		t = new Node(goal.x_index, goal.y_index);
 		t.walkable = goal.isTraversable();
 		if (!start.isTraversable() || !goal.isTraversable()) {
-			System.err.println("Source or target was not traversable");
+			System.err.println("Start or target was not traversable");
 			return null;
 		}
 
@@ -37,7 +42,12 @@ public class PathFinder {
 
 		Pathfinder pf = new Pathfinder(nodes);
 		ArrayList<Node> result = pf.aStar(s, t);
-		return result;
+		if (result.contains(t) && result.contains(s))
+			return result;
+		else{
+			System.err.println("No path to target!");
+			return null;
+		}
 
 	}
 

@@ -5,6 +5,7 @@ import no.kjelli.generic.Game;
 import no.kjelli.generic.Physics;
 import no.kjelli.generic.World;
 import no.kjelli.generic.gfx.Screen;
+import no.kjelli.generic.gfx.textures.TextureAtlas;
 import no.kjelli.generic.sound.SoundPlayer;
 
 import org.lwjgl.LWJGLException;
@@ -199,6 +200,7 @@ public class Main {
 
 	private static void cleanUp() {
 		game.destroy();
+		TextureAtlas.destroy();
 		Keyboard.destroy();
 		Mouse.destroy();
 		Display.destroy();

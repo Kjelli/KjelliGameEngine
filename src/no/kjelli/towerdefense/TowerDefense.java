@@ -37,6 +37,9 @@ public class TowerDefense implements Game {
 		World.clear();
 		state = STATE.INTRO;
 	}
+	
+	static ArrowTower at;
+	static ArrowTower st;
 
 	public void initGame() {
 		World.clear();
@@ -50,10 +53,13 @@ public class TowerDefense implements Game {
 		map.setY(Screen.getHeight() / 2 - map.getHeight() / 2);
 		map.setVisible(true);
 
-		ArrowTower at = new ArrowTower(map, 4,2);
+		at = new ArrowTower(map, 3, 1);
+		
+		st = new ArrowTower(map, 15, 1);
 
 		World.add(map, World.BACKGROUND);
 		World.add(at, World.FOREGROUND);
+		World.add(st, World.FOREGROUND);
 	}
 
 	@Override

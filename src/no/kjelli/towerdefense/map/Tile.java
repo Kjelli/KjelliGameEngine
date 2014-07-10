@@ -2,10 +2,12 @@ package no.kjelli.towerdefense.map;
 
 import java.util.ArrayList;
 
+import no.kjelli.generic.World;
 import no.kjelli.generic.gameobjects.AbstractGameObject;
 import no.kjelli.generic.gameobjects.Clickable;
 import no.kjelli.generic.gfx.Draw;
 import no.kjelli.generic.gfx.Sprite;
+import no.kjelli.towerdefense.gameobjects.towers.ArrowTower;
 import no.kjelli.towerdefense.gameobjects.towers.Tower;
 import no.kjelli.towerdefense.pathfinding.PathFinder;
 import ai.pathfinder.Node;
@@ -46,6 +48,12 @@ public abstract class Tile extends AbstractGameObject implements Clickable {
 			if (mouseButton == 0){
 				map.select(this);
 			}
+			if(mouseButton == 1){
+				tower = new ArrowTower(map, x_index, y_index);
+				World.add(tower, World.FOREGROUND);
+				map.unselectTile();
+				selectcount = 0;
+			}
 		}
 		else if(tower != null){
 			map.select(tower);
@@ -53,7 +61,7 @@ public abstract class Tile extends AbstractGameObject implements Clickable {
 	}
 
 	public void draw() {
-		Draw.sprite(this, color);
+		Draw.sprite(this);
 		if (selected)
 			drawBorders();
 		if (traversalCount > -1) {
@@ -69,7 +77,10 @@ public abstract class Tile extends AbstractGameObject implements Clickable {
 		Draw.string(traversalCount + "", x, y + SIZE - Sprite.CHAR_HEIGHT);
 	}
 
-	public abstract void onSelect();
+	
+	public void onSelect() {
+		testPathfinding();
+	}
 
 	@Override
 	public void onMouseReleased(int mouseButton) {
@@ -111,6 +122,10 @@ public abstract class Tile extends AbstractGameObject implements Clickable {
 
 			goal = this;
 			ArrayList<Node> result = PathFinder.findPath(map, start, goal);
+			if(result == null){
+				selectcount = 0;
+				return;
+			}
 			int i = result.size() - 1;
 			for (Node n : result) {
 				map.getTile((int) n.x, (int) n.y).traversalCount = i;
@@ -119,6 +134,10 @@ public abstract class Tile extends AbstractGameObject implements Clickable {
 		}
 
 		selectcount++;
+	}
+
+	public void onUnselect(){
+		//TODO:
 	}
 
 }

@@ -244,19 +244,22 @@ public class Map extends AbstractGameObject {
 
 	public void select(Tile tile) {
 		if (selectedTower != null) {
-			unselect(selectedTower);
+			unselectTower();
 		}
 		if (selectedTile != null) {
-			unselect(selectedTile);
+			unselectTile();
 		}
 		selectedTile = tile;
 		tile.selected = true;
 		tile.onSelect();
 	}
 
-	public void unselect(Tile tile) {
-		selectedTile = null;
-		tile.selected = false;
+	public void unselectTile() {
+		if (selectedTile != null) {
+			selectedTile.selected = false;
+			selectedTile.onUnselect();
+			selectedTile = null;
+		}
 	}
 
 	static int browse_cooldown;
@@ -300,19 +303,21 @@ public class Map extends AbstractGameObject {
 
 	public void select(Tower tower) {
 		if (selectedTower != null) {
-			unselect(selectedTower);
+			unselectTower();
 		}
 		if (selectedTile != null) {
-			unselect(selectedTile);
+			unselectTile();
 		}
 		selectedTower = tower;
 		tower.selected = true;
 		tower.onSelect();
 	}
 
-	public void unselect(Tower tower) {
-		selectedTower = null;
-		tower.selected = false;
-		tower.onUnselect();
+	public void unselectTower() {
+		if (selectedTower != null) {
+			selectedTower.selected = false;
+			selectedTower.onUnselect();
+			selectedTower = null;
+		}
 	}
 }

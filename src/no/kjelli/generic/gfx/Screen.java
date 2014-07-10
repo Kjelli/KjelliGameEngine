@@ -112,7 +112,7 @@ public class Screen {
 	private static void checkWorldMouseEvents() {
 		HashSet<GameObject> returnObjects = new HashSet<>();
 		World.retrieveAll(returnObjects,
-				new Rectangle(Mouse.getX() - 1, Mouse.getY() - 1, 2, 2));
+				new Rectangle(Mouse.getX(), Mouse.getY(), 1, 1));
 		for (GameObject obj : returnObjects) {
 			if (obj instanceof Clickable) {
 				Clickable src = (Clickable) obj;
