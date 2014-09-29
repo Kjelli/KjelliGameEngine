@@ -145,7 +145,6 @@ public class Main {
 	private static void initGame() {
 		Screen.init(0, 0, Display.getWidth(), Display.getHeight());
 		World.init(Display.getWidth(), Display.getHeight());
-		Physics.init();
 		game.init();
 	}
 

@@ -1,14 +1,12 @@
 package no.kjelli.generic.gameobjects;
 
 import no.kjelli.generic.World;
-import no.kjelli.generic.gfx.Draw;
-import no.kjelli.generic.gfx.Drawable;
 import no.kjelli.generic.gfx.Sprite;
 
 import org.lwjgl.util.Rectangle;
 import org.newdawn.slick.Color;
 
-public abstract class AbstractGameObject implements GameObject, Drawable {
+public abstract class AbstractGameObject implements GameObject {
 	protected float x;
 	protected float y;
 	protected float width;
@@ -24,6 +22,9 @@ public abstract class AbstractGameObject implements GameObject, Drawable {
 	protected float speed;
 
 	protected boolean isVisible;
+
+	private int tag;
+	private boolean pause = false;
 
 	public AbstractGameObject(float x, float y, float width, float height) {
 		setX(x);
@@ -56,6 +57,11 @@ public abstract class AbstractGameObject implements GameObject, Drawable {
 
 	public void setY(float y) {
 		this.y = y;
+	}
+
+	public double getDistance(GameObject other) {
+		return Math.abs(Math.hypot(this.getCenterX() - other.getCenterX(),
+				this.getCenterY() - other.getCenterY()));
 	}
 
 	public boolean isVisible() {
@@ -152,10 +158,10 @@ public abstract class AbstractGameObject implements GameObject, Drawable {
 		World.remove(this);
 	}
 
-	public Color getColor(){
+	public Color getColor() {
 		return color;
 	}
-	
+
 	@Override
 	public int compareTo(GameObject that) {
 		return Integer.compare(this.layer, that.getLayer());
@@ -163,6 +169,35 @@ public abstract class AbstractGameObject implements GameObject, Drawable {
 
 	public boolean intersects(Rectangle bounds) {
 		return this.getBounds().intersects(bounds);
+	}
+
+	@Override
+	public void tag(int tag) {
+		this.tag |= tag;
+	}
+
+	@Override
+	public boolean hasTag(int tag) {
+		return (this.tag & tag) > 0;
+	}
+
+	@Override
+	public void removeTag(int tag) {
+		if (hasTag(tag))
+			this.tag ^= tag;
+	}
+
+	@Override
+	public void removeTags() {
+		this.tag = 0;
+	}
+
+	public void pause(boolean pause) {
+		this.pause = pause;
+	}
+
+	public boolean isPaused() {
+		return pause;
 	}
 
 }

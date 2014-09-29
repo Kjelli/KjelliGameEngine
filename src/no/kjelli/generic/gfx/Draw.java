@@ -84,7 +84,7 @@ public class Draw {
 			glTranslatef(x - Screen.getX() + drawable.getWidth() / 2, y
 					- Screen.getY() + drawable.getHeight() / 2, 0);
 			glRotatef(rot, 0, 0, 1.0f);
-			glTranslatef(-drawable.getWidth()*xScale / 2, -drawable.getHeight()*yScale / 2, 0);
+			glTranslatef(-drawable.getWidth() / 2, -drawable.getHeight() / 2, 0);
 			glScalef(xScale, yScale, 1.0f);
 			
 			glColor4f(color.r, color.g, color.b, Screen.getTransparency()

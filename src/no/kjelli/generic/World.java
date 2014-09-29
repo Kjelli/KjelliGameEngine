@@ -21,7 +21,7 @@ public class World {
 	public static void init(int width, int height) {
 		setWidth(width);
 		setHeight(height);
-
+		Physics.init();
 	}
 
 	public static ArrayList<GameObject> getObjects() {
@@ -83,7 +83,8 @@ public class World {
 		Physics.quadtree.clear();
 		Physics.addObjects(objects);
 		for (GameObject gameObject : objects) {
-			gameObject.update();
+			if (!gameObject.isPaused())
+				gameObject.update();
 		}
 	}
 
@@ -119,6 +120,18 @@ public class World {
 
 	public static int getHeight() {
 		return height;
+	}
+
+	public static void pause(int tag, boolean pause) {
+		for (GameObject o : objects)
+			if (o.hasTag(tag))
+				o.pause(pause);
+	}
+	
+	public static void hide(int tag, boolean visible) {
+		for (GameObject o : objects)
+			if (o.hasTag(tag))
+				o.setVisible(!visible);
 	}
 
 }

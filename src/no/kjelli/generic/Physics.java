@@ -20,7 +20,7 @@ public class Physics {
 		quadtree.insert(others);
 	}
 
-	public static Collision getCollisions(Collidable object) {
+	public static void getCollisions(Collidable object) {
 		HashSet<GameObject> others = new HashSet<>();
 		quadtree.retrieve(others, object);
 		for (GameObject other : others) {
@@ -37,6 +37,5 @@ public class Physics {
 				tgt.onCollision(collision2);
 			}
 		}
-		return null;
 	}
 }

@@ -15,6 +15,10 @@ public interface Drawable {
 
 	public void draw();
 
+	public void setLayer(int layer);
+
+	public int getLayer();
+	
 	public void setVisible(boolean visible);
 
 	public boolean isVisible();

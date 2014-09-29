@@ -74,7 +74,7 @@ public class Screen {
 			Physics.quadtree.render();
 			Draw.string("FPS: " + Main.framesPerSecond + "\nObjects: "
 					+ World.getObjects().size(), 1, Screen.getHeight()
-					- Sprite.CHAR_HEIGHT - 1, Color.yellow);
+					- Sprite.CHAR_HEIGHT - 1, Color.yellow,true);
 		}
 	}
 
@@ -99,7 +99,7 @@ public class Screen {
 
 		Mouse.poll();
 		while (Mouse.next()) {
-			for (Clickable c : mouseOverEventObjectsRemoveQueue){
+			for (Clickable c : mouseOverEventObjectsRemoveQueue) {
 				mouseOverEventObjects.remove(c);
 			}
 			mouseOverEventObjectsRemoveQueue.clear();
@@ -136,6 +136,11 @@ public class Screen {
 			src.onEnter();
 
 		}
+	}
+
+	public static void centerOn(GameObject object) {
+		setX((int) (object.getCenterX() - getWidth() / 2));
+		setY((int) (object.getCenterY() - getHeight() / 2));
 	}
 
 	public static boolean contains(GameObject object) {
@@ -240,5 +245,13 @@ public class Screen {
 				c.onExit();
 			}
 		}
+	}
+
+	public static float getCenterX() {
+		return getX() + getWidth() / 2;
+	}
+	
+	public static float getCenterY() {
+		return getY() + getHeight() / 2;
 	}
 }

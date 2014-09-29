@@ -13,7 +13,8 @@ public class Sprite {
 	public static final char[] charList = new char[] { ' ', 'a', 'b', 'c', 'd',
 			'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q',
 			'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'æ', 'ø', 'å', '.',
-			',', '?', ':', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+			',', '?', ':', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+			'+', '/', '-' , '=','_'};
 	public static final Sprite[] chars = initializeFont();
 
 	private static Sprite[] initializeFont() {
@@ -62,9 +63,9 @@ public class Sprite {
 	}
 
 	public void setSpriteInAtlas(int texture_x, int texture_y,
-			int texture_width, int texture_height) {
+			int sprite_width, int sprite_height) {
 		textureRegion.set(textureAtlas.getTextureAtlas(), texture_x, texture_y,
-				texture_width, texture_height);
+				sprite_width, sprite_height);
 		vbo.setTextureCoords(textureRegion.getU(), textureRegion.getU2(),
 				textureRegion.getV(), textureRegion.getV2());
 	}

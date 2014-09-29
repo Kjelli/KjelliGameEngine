@@ -10,7 +10,7 @@ import no.kjelli.towerdefense.map.Map;
 
 public class ArrowTower extends Tower {
 
-	static final int COOLDOWN_MAX = 30;
+	static final int COOLDOWN_MAX = 50;
 	static final float RANGE =  10.0f;
 
 	public ArrowTower(Map map, int x_index, int y_index) {

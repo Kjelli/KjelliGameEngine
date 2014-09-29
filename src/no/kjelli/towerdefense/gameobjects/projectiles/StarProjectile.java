@@ -17,7 +17,7 @@ public class StarProjectile extends Projectile {
 
 	public StarProjectile(float x, float y) {
 		super(x, y, SIZE, SIZE, SPEED);
-		sprite = new Sprite(TextureAtlas.objects, 0, 224, 8, 8);
+		sprite = new Sprite(TextureAtlas.objects, base_x, base_y, 8, 8);
 		color = Color.white;
 	}
 
