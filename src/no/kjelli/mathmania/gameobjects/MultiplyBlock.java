@@ -15,8 +15,9 @@ public class MultiplyBlock extends AbstractBlock {
 
 	public MultiplyBlock(int x_index, int y_index, int difficulty) {
 		super(x_index, y_index, difficulty);
-		sprite = new Sprite(TextureAtlas.objects, base_x + difficulty
-				* SPRITE_SIZE, base_y, SPRITE_SIZE, SPRITE_SIZE);
+		sprite = new Sprite(TextureAtlas.objects, base_x, base_y, SPRITE_SIZE,
+				SPRITE_SIZE);
+		color = color.darker();
 	}
 
 	@Override
@@ -26,14 +27,17 @@ public class MultiplyBlock extends AbstractBlock {
 
 	@Override
 	public void update() {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public Question getQuestion() {
 		return new Question(Screen.getCenterX(), Screen.getCenterY(),
 				Question.TYPE.MULTIPLY, difficulty, this);
+	}
+
+	@Override
+	public String getOperator() {
+		return "x";
 	}
 
 }

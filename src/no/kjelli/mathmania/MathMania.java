@@ -157,7 +157,7 @@ public class MathMania implements Game {
 	}
 
 	public static void main(String[] args) {
-		new Main(new MathMania(), "MathMania", 800, 600, true);
+		new Main(new MathMania(), "MathMania", 1366, 768, true);
 	}
 
 	@Override

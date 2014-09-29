@@ -31,7 +31,7 @@ public abstract class AbstractGameObject implements GameObject {
 		setY(y);
 		setWidth(width);
 		setHeight(height);
-		color = new Color(Color.black);
+		color = new Color(Color.white);
 	}
 
 	public abstract void update();

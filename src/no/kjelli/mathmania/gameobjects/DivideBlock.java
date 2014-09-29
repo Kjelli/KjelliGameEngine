@@ -1,6 +1,9 @@
 package no.kjelli.mathmania.gameobjects;
 
+import org.newdawn.slick.Color;
+
 import no.kjelli.generic.Collision;
+import no.kjelli.generic.gfx.Draw;
 import no.kjelli.generic.gfx.Screen;
 import no.kjelli.generic.gfx.Sprite;
 import no.kjelli.generic.gfx.textures.TextureAtlas;
@@ -12,8 +15,9 @@ public class DivideBlock extends AbstractBlock {
 
 	public DivideBlock(int x_index, int y_index, int difficulty) {
 		super(x_index, y_index, difficulty);
-		sprite = new Sprite(TextureAtlas.objects, base_x + difficulty
-				* SPRITE_SIZE, base_y, SPRITE_SIZE, SPRITE_SIZE);
+		sprite = new Sprite(TextureAtlas.objects, base_x, base_y, SPRITE_SIZE,
+				SPRITE_SIZE);
+		color = color.darker();
 	}
 
 	@Override
@@ -27,7 +31,13 @@ public class DivideBlock extends AbstractBlock {
 
 	@Override
 	public Question getQuestion() {
-		return new Question(Screen.getCenterX(), Screen.getCenterY(),Question.TYPE.DIVIDE, difficulty, this);
+		return new Question(Screen.getCenterX(), Screen.getCenterY(),
+				Question.TYPE.DIVIDE, difficulty, this);
+	}
+
+	@Override
+	public String getOperator() {
+		return "/";
 	}
 
 }

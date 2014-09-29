@@ -38,4 +38,9 @@ public class ObstructingBlock extends AbstractBlock {
 		return true;
 	}
 	
+	@Override
+	public String getOperator() {
+		return null;
+	}
+	
 }
