@@ -90,13 +90,13 @@ public class Level extends AbstractGameObject {
 					}
 					switch (c) {
 					case BLOCK:
-						blocks.add(new ObstructingBlock(x, height - 1 - y));
+						blocks.add(new ObstructingBlock(x, height - 1 - y, this));
 						break;
 					case MULTIPLY:
-						blocks.add(new MultiplyBlock(x, height - 1 - y, difficulty));
+						blocks.add(new MultiplyBlock(x, height - 1 - y, difficulty, this));
 						break;
 					case DIVIDE:
-						blocks.add(new DivideBlock(x, height - 1 - y, difficulty));
+						blocks.add(new DivideBlock(x, height - 1 - y, difficulty, this));
 						break;
 					case FLOOR:
 						break;

@@ -1,4 +1,4 @@
-package no.kjelli.mathmania.gameobjects;
+package no.kjelli.mathmania.levels;
 
 import static org.lwjgl.input.Keyboard.*;
 import no.kjelli.generic.gameobjects.AbstractGameObject;
@@ -6,7 +6,6 @@ import no.kjelli.generic.gfx.Draw;
 import no.kjelli.generic.gfx.Sprite;
 import no.kjelli.generic.sound.SoundPlayer;
 import no.kjelli.mathmania.MathMania;
-import no.kjelli.mathmania.levels.Question;
 
 public class Input extends AbstractGameObject {
 	private Question question;
@@ -53,6 +52,7 @@ public class Input extends AbstractGameObject {
 				MathMania.resumeGameplay();
 			else if (Integer.parseInt(input) == question.getAnswer()) {
 				question.getContainingBlock().destroy();
+				question.getContainingBlock().getLevel().player.selection = null;
 				MathMania.resumeGameplay();
 				SoundPlayer.play("win");
 			} else {

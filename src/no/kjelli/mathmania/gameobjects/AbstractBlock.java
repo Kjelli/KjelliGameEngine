@@ -4,6 +4,7 @@ import no.kjelli.generic.gameobjects.AbstractCollidable;
 import no.kjelli.generic.gfx.Draw;
 import no.kjelli.generic.gfx.Sprite;
 import no.kjelli.mathmania.MathMania;
+import no.kjelli.mathmania.levels.Level;
 import no.kjelli.mathmania.levels.Question;
 
 import org.newdawn.slick.Color;
@@ -15,20 +16,22 @@ public abstract class AbstractBlock extends AbstractCollidable implements Block 
 	protected Color textColor = new Color(1.0f, 1.0f, 1.0f, 0.0f);
 	public final int x_index, y_index;
 	protected final int difficulty;
+	protected Level level;
 
 	protected float highlight = 0.0f;
 
-	public AbstractBlock(int x_index, int y_index) {
-		this(x_index, y_index, -1);
+	public AbstractBlock(int x_index, int y_index, Level level) {
+		this(x_index, y_index, -1, level);
 	}
 
-	public AbstractBlock(int x_index, int y_index, int difficulty) {
+	public AbstractBlock(int x_index, int y_index, int difficulty, Level level) {
 		super(x_index * SIZE, y_index * SIZE, SIZE, SIZE);
 		this.difficulty = difficulty;
 		tag(MathMania.tag_playfield);
 		this.x_index = x_index;
 		this.y_index = y_index;
 		color = new Color(Color.green);
+		this.level = level;
 	}
 
 	@Override
@@ -76,7 +79,7 @@ public abstract class AbstractBlock extends AbstractCollidable implements Block 
 		MathMania.initQuestion(getQuestion());
 	}
 
-	public abstract Question getQuestion();
+	protected abstract Question getQuestion();
 
 	public void select(boolean select) {
 		selected = select;
@@ -88,6 +91,10 @@ public abstract class AbstractBlock extends AbstractCollidable implements Block 
 
 	public boolean isObstructionBlock() {
 		return false;
+	}
+	
+	public Level getLevel(){
+		return level;
 	}
 
 }

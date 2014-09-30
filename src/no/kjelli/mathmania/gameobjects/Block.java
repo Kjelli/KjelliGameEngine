@@ -1,6 +1,7 @@
 package no.kjelli.mathmania.gameobjects;
 
 import no.kjelli.generic.gameobjects.Collidable;
+import no.kjelli.mathmania.levels.Level;
 
 
 public interface Block extends Collidable{
@@ -12,4 +13,5 @@ public interface Block extends Collidable{
 	public boolean isSelected();
 	public void select(boolean bool);
 	public boolean isObstructionBlock();
+	public Level getLevel();
 }

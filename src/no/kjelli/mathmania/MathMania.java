@@ -12,7 +12,7 @@ import no.kjelli.generic.gameobjects.Tagger;
 import no.kjelli.generic.gfx.Screen;
 import no.kjelli.generic.main.Main;
 import no.kjelli.generic.sound.SoundPlayer;
-import no.kjelli.mathmania.gameobjects.Input;
+import no.kjelli.mathmania.levels.Input;
 import no.kjelli.mathmania.levels.Level;
 import no.kjelli.mathmania.levels.Question;
 
