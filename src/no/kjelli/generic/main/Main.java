@@ -131,6 +131,7 @@ public class Main {
 	private static void initGL() {
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
+		glViewport(0, 0, Display.getWidth(), Display.getHeight());
 		glOrtho(0, Display.getWidth(), 0, Display.getHeight(), -1, 1);
 		glMatrixMode(GL_MODELVIEW);
 
@@ -190,7 +191,7 @@ public class Main {
 		glLoadIdentity();
 
 		game.render();
-		
+
 		glFlush();
 
 		Display.update();

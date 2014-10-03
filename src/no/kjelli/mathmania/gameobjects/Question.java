@@ -1,14 +1,18 @@
-package no.kjelli.mathmania.levels;
+package no.kjelli.mathmania.gameobjects;
 
 import static org.lwjgl.input.Keyboard.KEY_SPACE;
 import static org.lwjgl.input.Keyboard.isKeyDown;
+
+import org.newdawn.slick.Color;
+
 import no.kjelli.generic.gameobjects.AbstractGameObject;
 import no.kjelli.generic.gfx.Draw;
+import no.kjelli.generic.gfx.Screen;
 import no.kjelli.generic.gfx.Sprite;
 import no.kjelli.mathmania.MathMania;
-import no.kjelli.mathmania.gameobjects.Block;
+import no.kjelli.mathmania.gameobjects.blocks.Block;
 
-public class Question extends AbstractGameObject {
+public class Question extends AbstractGameObject implements ComboItem {
 	public static final int MIN_DIFFICULTY = 0;
 	public static final int MAX_DIFFICULTY = 100;
 	public static final int TRESHOLD_ONE = (MAX_DIFFICULTY - MIN_DIFFICULTY) / 3;
@@ -22,8 +26,8 @@ public class Question extends AbstractGameObject {
 	private final int difficulty;
 	private Block containingBlock;
 
-	public Question(float x, float y, TYPE type, int difficulty, Block containingBlock) {
-		super(x, y, 0, Sprite.CHAR_HEIGHT);
+	public Question(TYPE type, int difficulty, Block containingBlock) {
+		super(Screen.getCenterX(), Screen.getCenterY(), 0, Sprite.CHAR_HEIGHT);
 		this.containingBlock = containingBlock;
 		this.type = type;
 		this.difficulty = difficulty;
@@ -45,14 +49,14 @@ public class Question extends AbstractGameObject {
 	}
 
 	private void multiply() {
-		term1 = (int) (Math.random() * 2.5 * difficulty + 1);
-		term2 = (int) (Math.random() * 2.5 * difficulty + 1);
+		term1 = (int) (Math.random() * 1.5 * difficulty + 1);
+		term2 = (int) (Math.random() * 1.5 * difficulty + 1);
 		ans = term1 * term2;
 	}
 
 	private void divide() {
 		term2 = (int) (Math.random() * 2.5 * difficulty + 1);
-		term1 = term2 * (int) (Math.random() * 5);
+		term1 = term2 * (int) (Math.random() * 10);
 
 		ans = term1 / term2;
 	}
@@ -61,8 +65,7 @@ public class Question extends AbstractGameObject {
 		do {
 			term1 = (int) (Math.random() * 10 * difficulty) + 1;
 			term2 = (int) (Math.random() * 10 * difficulty);
-		} while (term2 > term1 && difficulty <= TRESHOLD_ONE);
-		// Difficulty below treshold one will contain a - b where a >= b
+		} while (term2 > term1);
 		ans = term1 - term2;
 	}
 
@@ -86,11 +89,18 @@ public class Question extends AbstractGameObject {
 
 	@Override
 	public void draw() {
-		Draw.string(this.toString(), x - getWidth()/2, y - getHeight()/2 + 100);
+		Draw.fillRect(Screen.getCenterX() - getWidth() / 2 - 10,
+				Screen.getCenterY() - getHeight() / 2 + 40, getWidth() + 20,
+				getHeight() + 20, Color.black);
+		Draw.rect(Screen.getCenterX() - getWidth() / 2 - 10,
+				Screen.getCenterY() - getHeight() / 2 + 40, getWidth() + 20,
+				getHeight() + 20, Color.white);
+		Draw.string(this.toString(), Screen.getCenterX() - getWidth() / 2,
+				Screen.getCenterY() - getHeight() / 2 + 50);
 	}
 
 	public String toString() {
-		return "What is " + term1 + " " + operator() + " " + term2 + "?";
+		return term1 + " " + operator() + " " + term2;
 	}
 
 	private String operator() {
@@ -111,16 +121,23 @@ public class Question extends AbstractGameObject {
 	public int getAnswer() {
 		return ans;
 	}
-	
-	public Block getContainingBlock(){
+
+	public Block getContainingBlock() {
 		return containingBlock;
 	}
 
-	// public static void main(String[] args) {
-	// for (;;) {
-	// Question q = new Question(TYPE.ADD, 1);
-	// System.out.println(q);
-	// }
-	// }
+	public long getDifficulty() {
+		return difficulty;
+	}
+
+	@Override
+	public int getScore() {
+		return difficulty * 10;
+	}
+
+	@Override
+	public int getMultiplier() {
+		return 1;
+	}
 
 }

@@ -1,11 +1,14 @@
-package no.kjelli.mathmania.gameobjects;
+package no.kjelli.mathmania.gameobjects.blocks;
 
+import no.kjelli.generic.World;
 import no.kjelli.generic.gameobjects.AbstractCollidable;
 import no.kjelli.generic.gfx.Draw;
 import no.kjelli.generic.gfx.Sprite;
 import no.kjelli.mathmania.MathMania;
+import no.kjelli.mathmania.gameobjects.Combo;
+import no.kjelli.mathmania.gameobjects.Question;
+import no.kjelli.mathmania.gameobjects.particles.BlockParticle;
 import no.kjelli.mathmania.levels.Level;
-import no.kjelli.mathmania.levels.Question;
 
 import org.newdawn.slick.Color;
 
@@ -20,22 +23,26 @@ public abstract class AbstractBlock extends AbstractCollidable implements Block 
 
 	protected float highlight = 0.0f;
 
-	public AbstractBlock(int x_index, int y_index, Level level) {
-		this(x_index, y_index, -1, level);
+	public AbstractBlock(int x_index, int y_index) {
+		this(x_index, y_index, -1);
 	}
 
-	public AbstractBlock(int x_index, int y_index, int difficulty, Level level) {
+	public AbstractBlock(int x_index, int y_index, int difficulty) {
 		super(x_index * SIZE, y_index * SIZE, SIZE, SIZE);
 		this.difficulty = difficulty;
-		tag(MathMania.tag_playfield);
 		this.x_index = x_index;
 		this.y_index = y_index;
-		color = new Color(Color.green);
-		this.level = level;
+
+		tag(MathMania.tag_playfield);
+		if (difficulty > Level.getDifficulty())
+			color = new Color(Color.green);
+		else
+			color = new Color(Color.white);
 	}
 
 	@Override
 	public void onCreate() {
+		setVisible(true);
 	}
 
 	@Override
@@ -60,17 +67,10 @@ public abstract class AbstractBlock extends AbstractCollidable implements Block 
 			}
 		}
 		Draw.sprite(this, 0f, 0f, 0f, SCALE, SCALE, false);
-		if (highlight > 0.0f) {
-			Draw.fillRect(getCenterX() - Sprite.CHAR_WIDTH / 2 - 1,
-					getCenterY() - Sprite.CHAR_WIDTH / 2 - 1,
-					Sprite.CHAR_WIDTH + 2, Sprite.CHAR_HEIGHT + 2,
-					backgroundColor);
-			Draw.string(getOperator(), x + width / 2 - Sprite.CHAR_WIDTH / 2, y
-					+ height / 2 - Sprite.CHAR_HEIGHT / 2, textColor);
-		}
 
-		color.a =  0.8f + 0.2f*(float) Math.abs(Math.sin((float)(MathMania.ticks + x*y)/100));
-		
+		color.a = 0.8f + 0.2f * (float) Math.abs(Math
+				.sin((float) (MathMania.ticks + x * y) / 100));
+
 	}
 
 	public abstract String getOperator();
@@ -92,9 +92,16 @@ public abstract class AbstractBlock extends AbstractCollidable implements Block 
 	public boolean isObstructionBlock() {
 		return false;
 	}
-	
-	public Level getLevel(){
-		return level;
+
+	public void destroy() {
+		super.destroy();
+		int particles = 5 * Math.min(Combo.getCount(), 20);
+		for (int i = 0; i < particles; i++) {
+			World.add(new BlockParticle(getCenterX()
+					- BlockParticle.SPRITE_SIZE / 2, getCenterY()
+					- BlockParticle.SPRITE_SIZE / 2,
+					(float) (i * Math.PI / (particles / 2))));
+		}
 	}
 
 }

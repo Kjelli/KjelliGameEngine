@@ -9,30 +9,36 @@ import no.kjelli.towerdefense.TowerDefense;
 import org.newdawn.slick.Color;
 
 public class Draw {
-	
+
 	public static final Color DEFAULT_COLOR = new Color(1f, 1f, 1f, 1f);
 
 	public static void fillRect(float x, float y, float width, float height) {
-		fillRect(x, y, width, height, 0, DEFAULT_COLOR);
+		fillRect(x, y, width, height, 0, DEFAULT_COLOR, false);
 	}
 
 	public static void fillRect(float x, float y, float width, float height,
 			float rot) {
-		fillRect(x, y, width, height, 0, DEFAULT_COLOR);
+		fillRect(x, y, width, height, 0, DEFAULT_COLOR, false);
 	}
 
 	public static void fillRect(float x, float y, float width, float height,
 			Color color) {
-		fillRect(x, y, width, height, 0, color);
+		fillRect(x, y, width, height, 0, color, false);
 	}
 
 	public static void fillRect(float x, float y, float width, float height,
-			float rot, Color color) {
+			float rot, Color color, boolean followScreen) {
 
 		glColor4f(color.r, color.g, color.b, color.a);
 		glPushMatrix();
 		{
+			if (followScreen) {
+				x += Screen.getX();
+				y += Screen.getY();
+			}
+
 			glTranslatef(x - Screen.getX(), y - Screen.getY(), 0);
+			glTranslatef(0.5f, 0.5f, 0.0f);
 			glRotatef(rot, 0, 0, 0);
 
 			glBegin(GL_QUADS);
@@ -59,6 +65,11 @@ public class Draw {
 		sprite(drawable, xOffset, yOffset, 0, 1.0f, 1.0f, false);
 	}
 
+	public static void sprite(Drawable drawable, float xOffset, float yOffset,
+			float rot, boolean followScreen) {
+		sprite(drawable, xOffset, yOffset, rot, 1.0f, 1.0f, followScreen);
+
+	}
 
 	public static void sprite(Drawable drawable, float xOffset, float yOffset,
 			float rot, float xScale, float yScale, boolean followScreen) {
@@ -86,7 +97,7 @@ public class Draw {
 			glRotatef(rot, 0, 0, 1.0f);
 			glTranslatef(-drawable.getWidth() / 2, -drawable.getHeight() / 2, 0);
 			glScalef(xScale, yScale, 1.0f);
-			
+
 			glColor4f(color.r, color.g, color.b, Screen.getTransparency()
 					* color.a);
 
@@ -117,15 +128,24 @@ public class Draw {
 	}
 
 	public static void line(float x, float y, float destX, float destY) {
-		line(x, y, destX, destY, DEFAULT_COLOR);
+		line(x, y, destX, destY, DEFAULT_COLOR, false);
 	}
 
 	public static void line(float x, float y, float destX, float destY,
 			Color color) {
+		line(x, y, destX, destY, color, false);
+	}
+
+	public static void line(float x, float y, float destX, float destY,
+			Color color, boolean followScreen) {
 
 		glColor4f(color.r, color.g, color.b, color.a);
 		glPushMatrix();
 		{
+			if (followScreen) {
+				x += Screen.getX();
+				y += Screen.getY();
+			}
 			glTranslatef(x - Screen.getX(), y - Screen.getY(), 0);
 			glBegin(GL_LINE_STRIP);
 			{
@@ -138,25 +158,29 @@ public class Draw {
 	}
 
 	public static void rect(float x, float y, float width, float height) {
-		rect(x, y, width, height, 0, Draw.DEFAULT_COLOR);
+		rect(x, y, width, height, 0, Draw.DEFAULT_COLOR, false);
 	}
 
 	public static void rect(float x, float y, float width, float height,
 			float rot) {
-		rect(x, y, width, height, rot, Draw.DEFAULT_COLOR);
+		rect(x, y, width, height, rot, Draw.DEFAULT_COLOR, false);
 	}
 
 	public static void rect(float x, float y, float width, float height,
 			Color color) {
-		rect(x, y, width, height, 0, color);
+		rect(x, y, width, height, 0, color, false);
 	}
 
 	public static void rect(float x, float y, float width, float height,
-			float rot, Color color) {
+			float rot, Color color, boolean followScreen) {
 
 		glColor4f(color.r, color.g, color.b, color.a);
 		glPushMatrix();
 		{
+			if (followScreen) {
+				x += Screen.getX();
+				y += Screen.getY();
+			}
 			glTranslatef(x - Screen.getX(), y - Screen.getY(), 0);
 			glTranslatef(0.5f, 0.5f, 0.0f);
 			glRotatef(rot, 0, 0, 0);
@@ -193,23 +217,23 @@ public class Draw {
 	}
 
 	public static void string(String drawString, float xOffset, float yOffset) {
-		string(drawString, xOffset, yOffset, DEFAULT_COLOR, false);
+		string(drawString, xOffset, yOffset, 1, 1, DEFAULT_COLOR, false);
 	}
 
 	public static void string(String string, float xOffset, float yOffset,
 			Color color) {
-		string(string, xOffset, yOffset, color, false);
+		string(string, xOffset, yOffset, 1, 1, color, false);
 	}
 
 	public static void string(String string, float xOffset, float yOffset,
-			Color color, boolean followScreen) {
+			float xScale, float yScale, Color color, boolean followScreen) {
 		char current;
 		float x = xOffset, xRunning = 0, y = yOffset;
 		for (int i = 0; i < string.length(); i++) {
 			current = string.charAt(i);
 			if (current == 10) {
 				xRunning = 0;
-				yOffset -= Sprite.CHAR_HEIGHT;
+				yOffset -= Sprite.CHAR_HEIGHT * yScale;
 				continue;
 			}
 			Sprite sprite = Sprite.resolveChar(current);
@@ -221,13 +245,14 @@ public class Draw {
 				y += Screen.getY();
 			}
 
-			xRunning += Sprite.CHAR_WIDTH;
+			xRunning += Sprite.CHAR_WIDTH * xScale;
 
 			glColor4f(color.r, color.g, color.b, Screen.getTransparency()
 					* color.a);
 			glPushMatrix();
 			{
 				glTranslatef(x - Screen.getX(), y - Screen.getY(), 0);
+				glScalef(xScale, yScale, 1.0f);
 
 				glBindTexture(GL_TEXTURE_2D, sprite.getTextureRegion()
 						.getTexture().getTextureID());

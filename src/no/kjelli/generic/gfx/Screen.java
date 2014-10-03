@@ -4,11 +4,14 @@ import static org.lwjgl.opengl.GL11.*;
 
 import java.util.HashSet;
 
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane.MoveAction;
+
 import no.kjelli.generic.Physics;
 import no.kjelli.generic.World;
 import no.kjelli.generic.gameobjects.Clickable;
 import no.kjelli.generic.gameobjects.GameObject;
 import no.kjelli.generic.main.Main;
+import no.kjelli.mathmania.MathMania;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
@@ -33,6 +36,11 @@ public class Screen {
 	private static int offsetX;
 	private static int offsetY;
 	private static float alpha;
+
+	private static float velocity_x, velocity_y;
+	private static GameObject centerTarget;
+
+	public static float scale = 1.0f;
 
 	private static Cursor blankCursor;
 	private static HashSet<Clickable> mouseOverEventObjects;
@@ -66,15 +74,20 @@ public class Screen {
 		}
 	}
 
-	public static void render() {
+	public static void zoom(float scale) {
+		Screen.scale = 1 / scale;
+	}
 
+	public static void render() {
+		// TODO: unfinished
+		glScalef(1 / scale, 1 / scale, 1.0f);
 		World.render();
 		if (debug_draw) {
-			Draw.rect(x, y, width - 1, height - 1);
+			Draw.rect(x, y, getWidth() - 1, getHeight() - 1);
 			Physics.quadtree.render();
 			Draw.string("FPS: " + Main.framesPerSecond + "\nObjects: "
 					+ World.getObjects().size(), 1, Screen.getHeight()
-					- Sprite.CHAR_HEIGHT - 1, Color.yellow,true);
+					- Sprite.CHAR_HEIGHT - 1, 1, 1, Color.yellow, true);
 		}
 	}
 
@@ -96,6 +109,8 @@ public class Screen {
 			offsetX = 0;
 			offsetY = 0;
 		}
+		if (centerTarget != null)
+			followCenterTarget();
 
 		Mouse.poll();
 		while (Mouse.next()) {
@@ -107,6 +122,13 @@ public class Screen {
 			checkWorldMouseEvents();
 		}
 
+	}
+
+	private static void followCenterTarget() {
+		velocity_x = (centerTarget.getCenterX() - getCenterX()) / 5;
+		velocity_y = (centerTarget.getCenterY() - getCenterY()) / 5;
+		setX((int) (getX()+velocity_x));
+		setY((int) (getY()+velocity_y));
 	}
 
 	private static void checkWorldMouseEvents() {
@@ -139,8 +161,7 @@ public class Screen {
 	}
 
 	public static void centerOn(GameObject object) {
-		setX((int) (object.getCenterX() - getWidth() / 2));
-		setY((int) (object.getCenterY() - getHeight() / 2));
+		centerTarget = object;
 	}
 
 	public static boolean contains(GameObject object) {
@@ -149,8 +170,8 @@ public class Screen {
 		float width = object.getWidth();
 		float height = object.getHeight();
 
-		boolean inXBounds = (x < Screen.width && x + width > 0);
-		boolean inYBounds = (y < Screen.height && y + height > 0);
+		boolean inXBounds = (x < getWidth() && x + width > 0);
+		boolean inYBounds = (y < getHeight() && y + height > 0);
 
 		return inXBounds && inYBounds;
 	}
@@ -172,7 +193,7 @@ public class Screen {
 	}
 
 	public static int getWidth() {
-		return width;
+		return (int) (width * scale);
 	}
 
 	public static void setWidth(int width) {
@@ -180,7 +201,7 @@ public class Screen {
 	}
 
 	public static int getHeight() {
-		return height;
+		return (int) (height * scale);
 	}
 
 	public static void setHeight(int height) {
@@ -250,7 +271,7 @@ public class Screen {
 	public static float getCenterX() {
 		return getX() + getWidth() / 2;
 	}
-	
+
 	public static float getCenterY() {
 		return getY() + getHeight() / 2;
 	}
