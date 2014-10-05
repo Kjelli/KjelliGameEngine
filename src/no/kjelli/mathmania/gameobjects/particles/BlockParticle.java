@@ -6,6 +6,7 @@ import no.kjelli.generic.gfx.Draw;
 import no.kjelli.generic.gfx.Sprite;
 import no.kjelli.generic.gfx.textures.TextureAtlas;
 import no.kjelli.mathmania.MathMania;
+import no.kjelli.mathmania.gameobjects.Combo;
 
 public class BlockParticle extends AbstractParticle {
 
@@ -15,10 +16,10 @@ public class BlockParticle extends AbstractParticle {
 	private float angle;
 	private float speed;
 
-	private static final long MAX_TIME_TO_LIVE = 100;
+	private static final long MAX_TIME_TO_LIVE = 200;
 	private static final float MAX_SPEED = 3.0f;
 	private float INITIAL_SPEED;
-	private long timetolive = MAX_TIME_TO_LIVE;
+	private long timetolive;
 
 	private static final float INITIAL_SCALE = 1.0f;
 
@@ -30,11 +31,13 @@ public class BlockParticle extends AbstractParticle {
 		sprite = new Sprite(TextureAtlas.objects, BASE_X, BASE_Y, SPRITE_SIZE,
 				SPRITE_SIZE);
 
-		float component = MathMania.combo.getPercentage();
+		float component = Combo.getPercentage();
 		float r = (float) (component + (1 - component) * Math.random()), g = (float) (component + (1 - component)
 				* Math.random()), b = (float) (component + (1 - component)
 				* Math.random());
 		color = new Color(r, g, b);
+
+		timetolive = (long) ((float) (Math.random() * Combo.getCount()) / 5 * MAX_TIME_TO_LIVE);
 	}
 
 	@Override

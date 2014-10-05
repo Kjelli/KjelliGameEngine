@@ -1,7 +1,6 @@
 package no.kjelli.mathmania;
 
-import static org.lwjgl.input.Keyboard.KEY_Q;
-import static org.lwjgl.input.Keyboard.isKeyDown;
+import static org.lwjgl.input.Keyboard.*;
 
 import java.io.IOException;
 
@@ -44,7 +43,7 @@ public class MathMania implements Game {
 
 	private static int cooldown = 0;
 
-	public static Combo combo;
+	public Combo combo;
 	private Score score;
 
 	@Override
@@ -52,6 +51,25 @@ public class MathMania implements Game {
 		loadSounds();
 		initIntro();
 		initGame();
+	}
+
+	@Override
+	public void loadSounds() {
+		try {
+			SoundPlayer.load("bounce.wav");
+			SoundPlayer.load("win.wav");
+			SoundPlayer.load("coin.wav");
+			SoundPlayer.load("combo.wav");
+			SoundPlayer.load("wrong.wav");
+			SoundPlayer.load("right.wav");
+			SoundPlayer.load("lose.wav");
+			SoundPlayer.load("music.wav");
+			SoundPlayer.load("comboexpire.wav");
+			SoundPlayer.load("musicadd.wav");
+			SoundPlayer.load("musicbeat.wav");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void initIntro() {
@@ -63,7 +81,7 @@ public class MathMania implements Game {
 		World.clear();
 		state = STATE.PLAYING;
 
-		Screen.setBackgroundColor(Color.blue);
+		Screen.setBackgroundColor(Color.black);
 		Screen.zoom(2.0f);
 
 		combo = new Combo();
@@ -78,6 +96,10 @@ public class MathMania implements Game {
 
 		Level.init("1");
 		Level.start();
+
+		SoundPlayer.music("music", 1.0f, 1.0f);
+		SoundPlayer.play("musicadd", 1.0f, 0.0f, true);
+		SoundPlayer.play("musicbeat", 1.0f, 0.0f, true);
 
 		Screen.centerOn(Level.getPlayer());
 	}
@@ -114,17 +136,6 @@ public class MathMania implements Game {
 	}
 
 	@Override
-	public void loadSounds() {
-		try {
-			SoundPlayer.load("res\\bounce.wav");
-			SoundPlayer.load("res\\win.wav");
-			SoundPlayer.load("res\\lose.wav");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	@Override
 	public void render() {
 		Screen.render();
 	}
@@ -139,6 +150,10 @@ public class MathMania implements Game {
 		case MENU:
 			break;
 		case PLAYING:
+			if (isKeyDown(KEY_U))
+				SoundPlayer.setGain("music", 1.0f);
+			if (isKeyDown(KEY_J))
+				SoundPlayer.setGain("music", 0.1f);
 			if (isKeyDown(KEY_Q))
 				Screen.toggleDebugDraw();
 			break;
@@ -176,7 +191,7 @@ public class MathMania implements Game {
 	}
 
 	public static void main(String[] args) {
-		new Main(new MathMania(), "MathMania", 1366, 768, true);
+		new Main(new MathMania(), "MathMania", 800, 600, false);
 	}
 
 	@Override

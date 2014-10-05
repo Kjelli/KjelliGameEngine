@@ -4,7 +4,6 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL15.glBindBuffer;
 import no.kjelli.generic.gameobjects.GameObject;
-import no.kjelli.towerdefense.TowerDefense;
 
 import org.newdawn.slick.Color;
 

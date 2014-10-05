@@ -78,8 +78,7 @@ public class Screen {
 		Screen.scale = 1 / scale;
 	}
 
-	public static void render() {
-		// TODO: unfinished
+public static void render() {
 		glScalef(1 / scale, 1 / scale, 1.0f);
 		World.render();
 		if (debug_draw) {
@@ -127,8 +126,8 @@ public class Screen {
 	private static void followCenterTarget() {
 		velocity_x = (centerTarget.getCenterX() - getCenterX()) / 5;
 		velocity_y = (centerTarget.getCenterY() - getCenterY()) / 5;
-		setX((int) (getX()+velocity_x));
-		setY((int) (getY()+velocity_y));
+		setX((int) (getX() + velocity_x));
+		setY((int) (getY() + velocity_y));
 	}
 
 	private static void checkWorldMouseEvents() {

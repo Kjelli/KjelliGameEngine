@@ -80,12 +80,13 @@ public class Input extends AbstractGameObject {
 				Score.addToScore(question.getDifficulty() * 10
 						* (Combo.getCount() / 5 + 1));
 				MathMania.resumeGameplay();
-				SoundPlayer.play("win");
+				SoundPlayer.play("right",
+						((float) Combo.getCount() / 30 + 1.0f));
 			} else {
 				// Wrong answer
 				MathMania.resumeGameplay();
 				Combo.clearCombo();
-				SoundPlayer.play("lose");
+				SoundPlayer.play("wrong");
 			}
 		}
 

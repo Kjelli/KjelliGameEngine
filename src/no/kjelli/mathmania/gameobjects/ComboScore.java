@@ -1,9 +1,8 @@
 package no.kjelli.mathmania.gameobjects;
 
-import javax.swing.plaf.basic.BasicInternalFrameTitlePane.MaximizeAction;
-
 import no.kjelli.generic.gameobjects.AbstractGameObject;
 import no.kjelli.generic.gfx.Draw;
+import no.kjelli.generic.gfx.Screen;
 import no.kjelli.generic.gfx.Sprite;
 
 import org.newdawn.slick.Color;

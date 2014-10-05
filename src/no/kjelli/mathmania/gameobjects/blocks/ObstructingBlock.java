@@ -1,5 +1,7 @@
 package no.kjelli.mathmania.gameobjects.blocks;
 
+import org.newdawn.slick.Color;
+
 import no.kjelli.generic.Collision;
 import no.kjelli.generic.gfx.Sprite;
 import no.kjelli.generic.gfx.textures.TextureAtlas;
@@ -14,6 +16,12 @@ public class ObstructingBlock extends AbstractBlock {
 		super(x_index, y_index);
 		sprite = new Sprite(TextureAtlas.objects, base_x, base_y, SPRITE_SIZE,
 				SPRITE_SIZE);
+		System.out.println(x_index + "/" + Level.getWidth() + " , " + y_index
+				+ "/" + Level.getHeight());
+		if (x_index == 0 || x_index == Level.getWidth() / Block.SIZE - 1
+				|| y_index == -1
+				|| y_index == Level.getHeight() / Block.SIZE - 1)
+			color = Color.gray;
 	}
 
 	@Override
@@ -35,13 +43,13 @@ public class ObstructingBlock extends AbstractBlock {
 		return null;
 	}
 
-	public boolean isObstructionBlock(){
+	public boolean isObstructionBlock() {
 		return true;
 	}
-	
+
 	@Override
 	public String getOperator() {
 		return null;
 	}
-	
+
 }

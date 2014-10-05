@@ -8,7 +8,6 @@ public class TextureAtlas {
 	
 	public static final HashSet<TextureAtlas> list = new HashSet<>();
 	
-	public static TextureAtlas tiles = new TextureAtlas("res\\tiles.png");
 	public static TextureAtlas objects = new TextureAtlas("res\\objects.png");
 	public static TextureAtlas font = new TextureAtlas("res\\fontsmall.png");
 

@@ -4,10 +4,13 @@ import org.newdawn.slick.Color;
 
 import no.kjelli.generic.World;
 import no.kjelli.generic.gfx.Draw;
+import no.kjelli.generic.gfx.Screen;
 import no.kjelli.generic.gfx.Sprite;
 import no.kjelli.generic.gfx.textures.TextureAtlas;
+import no.kjelli.generic.sound.SoundPlayer;
 import no.kjelli.mathmania.MathMania;
 import no.kjelli.mathmania.gameobjects.Combo;
+import no.kjelli.mathmania.gameobjects.Score;
 import no.kjelli.mathmania.gameobjects.blocks.Block;
 import no.kjelli.mathmania.gameobjects.particles.GlitterParticle;
 
@@ -37,10 +40,10 @@ public class Coin extends AbstractCollectible {
 
 	@Override
 	protected void onCollect() {
-		if (!isCollected) {
-			isCollected = true;
-			Combo.addToCombo(this);
-		}
+		isCollected = true;
+		Score.addToScore(getScore());
+		SoundPlayer.play("coin", ((float) Combo.getCount() / 30) + 1.0f);
+		Combo.addToCombo(this);
 		destroy();
 	}
 
@@ -52,7 +55,7 @@ public class Coin extends AbstractCollectible {
 		color.b = (float) Math.sin((float) MathMania.ticks / 100 + 4 * Math.PI
 				/ 3);
 
-		if (Math.random() < scoreMultiplier / 500)
+		if (Math.random() < scoreMultiplier / 500 && Screen.contains(this))
 			World.add(new GlitterParticle((float) (x + Math.random() * width)
 					- width / 2, (float) (y + Math.random() * height) - height
 					/ 2, this));

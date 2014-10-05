@@ -7,13 +7,14 @@ import no.kjelli.generic.World;
 import no.kjelli.generic.gameobjects.AbstractGameObject;
 import no.kjelli.generic.gfx.Draw;
 import no.kjelli.generic.gfx.Screen;
+import no.kjelli.generic.sound.SoundPlayer;
 import no.kjelli.mathmania.levels.Level;
 
 public class Combo extends AbstractGameObject {
 
 	private static final int BOOST_PER_QUESTION = 600;
 	private static final int MAX_TIMER = 3000;
-	private static final int PAUSE_TIMER_MAX = 30;
+	private static final int PAUSE_TIMER_MAX = 50;
 	private static int count;
 	private static int timer;
 	private static int pausetimer;
@@ -54,54 +55,74 @@ public class Combo extends AbstractGameObject {
 					/ HEIGHT_MODIFIER_MAX);
 			color.b = Math.max(getPercentage(), heightModifier
 					/ HEIGHT_MODIFIER_MAX);
+			SoundPlayer.setGain("musicadd", getPercentage());
+			SoundPlayer.setGain("musicbeat", getPercentage() * 2 - 0.5f);
+
 		} else if (timer <= 0 && count > 0) {
-			timer = 0;
 			clearCombo();
 		}
 
 		if (heightModifier > 0)
 			heightModifier -= 0.5f;
 
-		targetWidth = Screen.getWidth() * getPercentage();
+		targetWidth = Screen.getWidth() / 2 * getPercentage();
 		if (targetWidth > topWidth)
 			topWidth = targetWidth;
-		drawingAcceleration = (targetWidth - drawingWidth) / 10;
+		drawingAcceleration = (targetWidth - drawingWidth) / 4;
 		drawingWidth = drawingWidth + drawingAcceleration;
 	}
 
 	public static void addToCombo(ComboItem c) {
-		timerDelta += 0.2;
-		timer += BOOST_PER_QUESTION;
-		pausetimer = PAUSE_TIMER_MAX;
 		count += c.getMultiplier();
+
+		timerDelta += 0.2;
+		if ((timer += BOOST_PER_QUESTION) > MAX_TIMER)
+			timer = MAX_TIMER;
+
+		pausetimer = PAUSE_TIMER_MAX;
 		heightModifier = HEIGHT_MODIFIER_MAX;
 
 		if (count % 5 == 0) {
+			SoundPlayer.play("combo", 1.0f + count / 30);
 			World.add(new ComboScore(Level.getPlayer().getCenterX(), Level
 					.getPlayer().getCenterY() + 20, count));
 		}
 
-		Screen.shake(10, (int) (getPercentage() * 10));
+		Screen.shake(10, (int) (getPercentage() * 4));
 	}
 
 	public static void clearCombo() {
 		if (count > 0) {
-			Score.addToScore(count * 100);
+			Score.addToScore((long) Math.pow(count, 1.5) * 100);
 		}
+		SoundPlayer.play("comboexpire",
+				0.5f + Math.max(0, Math.min((float) count / 10, 0.5f)),
+				((float) count / 10));
+		SoundPlayer.setGain("musicadd", 0);
+		SoundPlayer.setGain("musicbeat", 0);
 		topWidth = 0;
 		timerDelta = 1.0f;
 		timer = 0;
 		count = 0;
-		// TODO: score
 	}
 
 	@Override
 	public void draw() {
-		Draw.fillRect(0, Screen.getHeight() - HEIGHT - heightModifier,
-				drawingWidth, height + heightModifier, 0f, color, true);
-		Draw.fillRect(topWidth - topWidthIndicatorWidth, Screen.getHeight()
-				- HEIGHT - heightModifier, topWidthIndicatorWidth, height
-				+ heightModifier, 0f, color, true);
+		Draw.fillRect(Screen.getWidth() / 2 - drawingWidth
+				- (timer > 0 ? topWidthIndicatorWidth / 2 : 0),
+				Screen.getHeight() - HEIGHT - heightModifier, 2 * drawingWidth
+						+ (timer > 0 ? topWidthIndicatorWidth : 0), height
+						+ heightModifier, 0f, color, true);
+		if (timer > 0) {
+			Draw.fillRect(Screen.getWidth() / 2 - topWidth
+					- topWidthIndicatorWidth / 2, Screen.getHeight() - HEIGHT
+					- heightModifier, topWidthIndicatorWidth, height
+					+ heightModifier, 0f, color, true);
+			Draw.fillRect(Screen.getWidth() / 2 + topWidth
+					- topWidthIndicatorWidth, Screen.getHeight() - HEIGHT
+					- heightModifier, topWidthIndicatorWidth, height
+					+ heightModifier, 0f, color, true);
+		}
 	}
 
 	public static float getPercentage() {

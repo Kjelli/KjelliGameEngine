@@ -8,7 +8,7 @@ import no.kjelli.mathmania.gameobjects.Score;
 
 public abstract class AbstractCollectible extends AbstractCollidable implements
 		Collectible {
-
+	protected boolean isCollected = false;
 	public AbstractCollectible(float x, float y, float width, float height) {
 		super(x, y, width, height);
 	}
@@ -21,8 +21,10 @@ public abstract class AbstractCollectible extends AbstractCollidable implements
 	@Override
 	public void onCollision(Collision collision) {
 		if (collision.getTarget() instanceof Player) {
-			Score.addToScore(getScore());
-			onCollect();
+			if (!isCollected) {
+				isCollected = true;
+				onCollect();
+			}
 		}
 	}
 

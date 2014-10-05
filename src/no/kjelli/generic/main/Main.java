@@ -1,6 +1,9 @@
 package no.kjelli.generic.main;
 
 import static org.lwjgl.opengl.GL11.*;
+
+import java.io.File;
+
 import no.kjelli.generic.Game;
 import no.kjelli.generic.Physics;
 import no.kjelli.generic.World;

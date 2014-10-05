@@ -78,8 +78,6 @@ public class Level {
 					if (c.length() > 1) {
 						difficultyModifier = Integer.parseInt(c.substring(1,
 								c.length()));
-						System.out.println("Found difficultymodifier: "
-								+ difficultyModifier);
 					}
 
 					switch (c.charAt(0)) {
