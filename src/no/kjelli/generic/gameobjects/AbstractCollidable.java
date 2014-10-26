@@ -5,6 +5,10 @@ import no.kjelli.generic.Physics;
 
 public abstract class AbstractCollidable extends AbstractGameObject implements
 		Collidable {
+	public AbstractCollidable(float x, float y, float width, float height) {
+		super(x, y, width, height);
+	}
+
 	private float xStep;
 	private float yStep;
 
@@ -14,10 +18,10 @@ public abstract class AbstractCollidable extends AbstractGameObject implements
 	private boolean colBelow;
 
 	protected void stop(int impactDirection) {
-		colLeft = ((impactDirection & Collision.LEFT) > 0);
-		colAbove = ((impactDirection & Collision.ABOVE) > 0);
-		colRight = ((impactDirection & Collision.RIGHT) > 0);
-		colBelow = ((impactDirection & Collision.BELOW) > 0);
+		colLeft = ((impactDirection & Collision.LEFT) > 0  || (colLeft));
+		colAbove = ((impactDirection & Collision.ABOVE) > 0 || (colAbove));
+		colRight = ((impactDirection & Collision.RIGHT) > 0 || (colRight));
+		colBelow = ((impactDirection & Collision.BELOW) > 0 || (colBelow));
 
 	}
 

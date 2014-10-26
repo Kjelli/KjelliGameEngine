@@ -190,10 +190,12 @@ public class QuadTree<E extends GameObject> {
 
 	public void render() {
 		Draw.rect(borderLeft, borderBottom, width, height);
-		for (E object : objects)
+		for (E object : objects){
 			Draw.line(borderLeft + width / 2, borderBottom + height / 2,
 					object.getX() + object.getWidth() / 2, object.getY()
 							+ object.getHeight() / 2, Color.red);
+			Draw.rect(object);
+		}
 		if (nodes[0] != null) {
 			for (int i = 0; i < nodes.length; i++) {
 				nodes[i].render();

@@ -1,8 +1,10 @@
 package no.kjelli.generic.gameobjects;
 
+import no.kjelli.generic.gfx.Drawable;
+
 import org.lwjgl.util.Rectangle;
 
-public interface GameObject extends Comparable<GameObject> {
+public interface GameObject extends Drawable, Comparable<GameObject> {
 
 	public float getX();
 
@@ -23,10 +25,8 @@ public interface GameObject extends Comparable<GameObject> {
 	public boolean isVisible();
 
 	public Rectangle getBounds();
-
-	public void setLayer(int layer);
-
-	public int getLayer();
+	
+	public double getDistance(GameObject other);
 
 	public boolean intersects(GameObject other);
 
@@ -35,8 +35,22 @@ public interface GameObject extends Comparable<GameObject> {
 	public boolean contains(float x, float y);
 
 	public void move();
-
+	
 	public void update();
+	
+	public void onCreate();
 
 	public void destroy();
+	
+	public void tag(int tag);
+	
+	public void pause(boolean pause);
+	
+	public boolean hasTag(int tag);
+	
+	public void removeTag(int tag);
+	
+	public void removeTags();
+
+	public boolean isPaused();
 }

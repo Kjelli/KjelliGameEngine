@@ -1,30 +1,38 @@
 package no.kjelli.generic.gameobjects;
 
 import no.kjelli.generic.World;
-import no.kjelli.generic.gfx.Draw;
-import no.kjelli.generic.gfx.Drawable;
-import no.kjelli.generic.gfx.Screen;
+import no.kjelli.generic.gfx.Sprite;
 
 import org.lwjgl.util.Rectangle;
 import org.newdawn.slick.Color;
-import org.newdawn.slick.opengl.Texture;
 
-public abstract class AbstractGameObject implements GameObject, Drawable {
+public abstract class AbstractGameObject implements GameObject {
 	protected float x;
 	protected float y;
+	protected float width;
+	protected float height;
+
+	protected Sprite sprite;
+	protected Color color;
+
+	private int layer;
 
 	protected double velocity_x;
 	protected double velocity_y;
 	protected float speed;
 
-	protected Color color = new Color(Draw.DEFAULT_COLOR);
-	protected Texture texture;
-
-	protected float width;
-	protected float height;
-
-	private int layer;
 	protected boolean isVisible;
+
+	private int tag;
+	private boolean pause = false;
+
+	public AbstractGameObject(float x, float y, float width, float height) {
+		setX(x);
+		setY(y);
+		setWidth(width);
+		setHeight(height);
+		color = new Color(Color.white);
+	}
 
 	public abstract void update();
 
@@ -33,15 +41,7 @@ public abstract class AbstractGameObject implements GameObject, Drawable {
 		y += velocity_y;
 	}
 
-	public void draw() {
-		if (Screen.contains(this)) {
-			if (texture == null) {
-				Draw.fillRect(x, y, width, height, color);
-				return;
-			}
-			Draw.texture(this);
-		}
-	}
+	public abstract void draw();
 
 	public float getX() {
 		return x;
@@ -57,6 +57,11 @@ public abstract class AbstractGameObject implements GameObject, Drawable {
 
 	public void setY(float y) {
 		this.y = y;
+	}
+
+	public double getDistance(GameObject other) {
+		return Math.abs(Math.hypot(this.getCenterX() - other.getCenterX(),
+				this.getCenterY() - other.getCenterY()));
 	}
 
 	public boolean isVisible() {
@@ -103,10 +108,6 @@ public abstract class AbstractGameObject implements GameObject, Drawable {
 		return speed;
 	}
 
-	public Color getColor() {
-		return color;
-	}
-
 	private boolean valueInRange(float value, float min, float max) {
 		return (value >= min) && (value <= max);
 	}
@@ -134,8 +135,8 @@ public abstract class AbstractGameObject implements GameObject, Drawable {
 		return xOverlap && yOverlap;
 	}
 
-	public Texture getTexture() {
-		return texture;
+	public Sprite getSprite() {
+		return sprite;
 	}
 
 	public void setLayer(int layer) {
@@ -151,11 +152,14 @@ public abstract class AbstractGameObject implements GameObject, Drawable {
 	}
 
 	public void destroy() {
+		if (sprite != null)
+			sprite.destroy();
 		setVisible(false);
 		World.remove(this);
-		if (texture != null) {
-			texture = null;
-		}
+	}
+
+	public Color getColor() {
+		return color;
 	}
 
 	@Override
@@ -163,12 +167,37 @@ public abstract class AbstractGameObject implements GameObject, Drawable {
 		return Integer.compare(this.layer, that.getLayer());
 	}
 
-	public void setTexture(Texture texture) {
-		this.texture = texture;
-	}
-
 	public boolean intersects(Rectangle bounds) {
 		return this.getBounds().intersects(bounds);
+	}
+
+	@Override
+	public void tag(int tag) {
+		this.tag |= tag;
+	}
+
+	@Override
+	public boolean hasTag(int tag) {
+		return (this.tag & tag) > 0;
+	}
+
+	@Override
+	public void removeTag(int tag) {
+		if (hasTag(tag))
+			this.tag ^= tag;
+	}
+
+	@Override
+	public void removeTags() {
+		this.tag = 0;
+	}
+
+	public void pause(boolean pause) {
+		this.pause = pause;
+	}
+
+	public boolean isPaused() {
+		return pause;
 	}
 
 }

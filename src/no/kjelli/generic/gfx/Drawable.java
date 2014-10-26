@@ -1,9 +1,10 @@
 package no.kjelli.generic.gfx;
 
 import org.lwjgl.util.Rectangle;
-import org.newdawn.slick.opengl.Texture;
+import org.newdawn.slick.Color;
 
 public interface Drawable {
+
 	public float getX();
 
 	public float getY();
@@ -14,13 +15,17 @@ public interface Drawable {
 
 	public void draw();
 
+	public void setLayer(int layer);
+
+	public int getLayer();
+	
 	public void setVisible(boolean visible);
 
 	public boolean isVisible();
 
+	public Sprite getSprite();
+	
+	public Color getColor();
+
 	public Rectangle getBounds();
-
-	public Texture getTexture();
-
-	public void setTexture(Texture texture);
 }

@@ -1,17 +1,14 @@
 package no.kjelli.generic.gfx;
 
-import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.glClear;
-import static org.lwjgl.opengl.GL11.glClearColor;
+import static org.lwjgl.opengl.GL11.*;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 
 import no.kjelli.generic.Physics;
 import no.kjelli.generic.World;
 import no.kjelli.generic.gameobjects.Clickable;
 import no.kjelli.generic.gameobjects.GameObject;
-import no.kjelli.generic.gui.GUIComponent;
+import no.kjelli.generic.main.Main;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
@@ -39,9 +36,7 @@ public class Screen {
 
 	private static Cursor blankCursor;
 	private static HashSet<Clickable> mouseOverEventObjects;
-	private static ArrayList<GUIComponent> guiComponents;
-	private static ArrayList<GUIComponent> addQueue;
-	private static ArrayList<GUIComponent> removeQueue;
+	private static HashSet<Clickable> mouseOverEventObjectsRemoveQueue;
 
 	private static int debug_cooldown;
 	private static final int DEBUG_COOLDOWN_MAX = 30;
@@ -61,9 +56,7 @@ public class Screen {
 		setTransparency(1.0f);
 
 		mouseOverEventObjects = new HashSet<>();
-		guiComponents = new ArrayList<>();
-		addQueue = new ArrayList<>();
-		removeQueue = new ArrayList<>();
+		mouseOverEventObjectsRemoveQueue = new HashSet<>();
 
 		try {
 			blankCursor = new Cursor(1, 1, 0, 0, 1,
@@ -74,12 +67,14 @@ public class Screen {
 	}
 
 	public static void render() {
-		glClear(GL_COLOR_BUFFER_BIT);
+
 		World.render();
-		renderGUI();
 		if (debug_draw) {
-			Draw.rect(x, y, width - 1, height - 1, Color.white);
+			Draw.rect(x, y, width - 1, height - 1);
 			Physics.quadtree.render();
+			Draw.string("FPS: " + Main.framesPerSecond + "\nObjects: "
+					+ World.getObjects().size(), 1, Screen.getHeight()
+					- Sprite.CHAR_HEIGHT - 1, Color.yellow,true);
 		}
 	}
 
@@ -102,45 +97,22 @@ public class Screen {
 			offsetY = 0;
 		}
 
-		for (GUIComponent g : addQueue) {
-			guiComponents.add(g);
-		}
-		for (GUIComponent g : removeQueue) {
-			guiComponents.remove(g);
-		}
-
-		addQueue.clear();
-		removeQueue.clear();
-
-		for (GUIComponent g : guiComponents)
-			g.update();
-
 		Mouse.poll();
 		while (Mouse.next()) {
+			for (Clickable c : mouseOverEventObjectsRemoveQueue) {
+				mouseOverEventObjects.remove(c);
+			}
+			mouseOverEventObjectsRemoveQueue.clear();
 			releaseMouseOverObjects();
-			checkGUIMouseEvents();
 			checkWorldMouseEvents();
 		}
 
 	}
 
-	private static void checkGUIMouseEvents() {
-		for (GUIComponent g : guiComponents) {
-			if (!(g instanceof Clickable))
-				continue;
-
-			if (g.contains(Mouse.getX(), Mouse.getY())) {
-				Clickable src = (Clickable) g;
-				doMouseEvents(src);
-
-			}
-		}
-	}
-
 	private static void checkWorldMouseEvents() {
 		HashSet<GameObject> returnObjects = new HashSet<>();
 		World.retrieveAll(returnObjects,
-				new Rectangle(Mouse.getX() - 1, Mouse.getY() - 1, 2, 2));
+				new Rectangle(Mouse.getX(), Mouse.getY(), 1, 1));
 		for (GameObject obj : returnObjects) {
 			if (obj instanceof Clickable) {
 				Clickable src = (Clickable) obj;
@@ -156,6 +128,7 @@ public class Screen {
 				src.onMousePressed(button);
 			else
 				src.onMouseReleased(button);
+			return;
 		}
 
 		if (!mouseOverEventObjects.contains(src)) {
@@ -165,21 +138,9 @@ public class Screen {
 		}
 	}
 
-	public static void add(GUIComponent g) {
-		addQueue.add(g);
-	}
-
-	public static void remove(GUIComponent g) {
-		removeQueue.add(g);
-	}
-
-	public static void clearGUI() {
-		removeQueue.addAll(guiComponents);
-	}
-
-	private static void renderGUI() {
-		for (Drawable d : guiComponents)
-			d.draw();
+	public static void centerOn(GameObject object) {
+		setX((int) (object.getCenterX() - getWidth() / 2));
+		setY((int) (object.getCenterY() - getHeight() / 2));
 	}
 
 	public static boolean contains(GameObject object) {
@@ -280,9 +241,17 @@ public class Screen {
 	public static void releaseMouseOverObjects() {
 		for (Clickable c : mouseOverEventObjects) {
 			if (!(c.contains(Mouse.getX(), Mouse.getY()))) {
-				mouseOverEventObjects.remove(c);
+				mouseOverEventObjectsRemoveQueue.add(c);
 				c.onExit();
 			}
 		}
+	}
+
+	public static float getCenterX() {
+		return getX() + getWidth() / 2;
+	}
+	
+	public static float getCenterY() {
+		return getY() + getHeight() / 2;
 	}
 }
