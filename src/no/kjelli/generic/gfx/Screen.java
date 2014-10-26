@@ -10,7 +10,7 @@ import no.kjelli.generic.Physics;
 import no.kjelli.generic.World;
 import no.kjelli.generic.gameobjects.Clickable;
 import no.kjelli.generic.gameobjects.GameObject;
-import no.kjelli.generic.main.Main;
+import no.kjelli.generic.main.Launcher;
 import no.kjelli.mathmania.MathMania;
 
 import org.lwjgl.BufferUtils;
@@ -25,8 +25,8 @@ public class Screen {
 
 	public static final int MOUSE_LEFT = 0, MOUSE_RIGHT = 1;
 
-	private static int x;
-	private static int y;
+	private static float x;
+	private static float y;
 	private static int width;
 	private static int height;
 	private static Color backgroundColor;
@@ -46,8 +46,6 @@ public class Screen {
 	private static HashSet<Clickable> mouseOverEventObjects;
 	private static HashSet<Clickable> mouseOverEventObjectsRemoveQueue;
 
-	private static int debug_cooldown;
-	private static final int DEBUG_COOLDOWN_MAX = 30;
 	private static boolean debug_draw = false;
 
 	public static void init(int x, int y, int width, int height) {
@@ -78,28 +76,23 @@ public class Screen {
 		Screen.scale = 1 / scale;
 	}
 
-public static void render() {
+	public static void render() {
 		glScalef(1 / scale, 1 / scale, 1.0f);
 		World.render();
 		if (debug_draw) {
-			Draw.rect(x, y, getWidth() - 1, getHeight() - 1);
+			Draw.rect(x, y, 4.0f, getWidth() - 1, getHeight() - 1);
 			Physics.quadtree.render();
-			Draw.string("FPS: " + Main.framesPerSecond + "\nObjects: "
+			Draw.string("FPS: " + Launcher.framesPerSecond + "\nObjects: "
 					+ World.getObjects().size(), 1, Screen.getHeight()
-					- Sprite.CHAR_HEIGHT - 1, 1, 1, Color.yellow, true);
+					- Sprite.CHAR_HEIGHT - 1, 4.2f, 1, 1, Color.yellow, true);
 		}
 	}
 
 	public static void toggleDebugDraw() {
-		if (debug_cooldown == 0) {
-			debug_draw = !debug_draw;
-			debug_cooldown = DEBUG_COOLDOWN_MAX;
-		}
+		debug_draw = !debug_draw;
 	}
 
 	public static void update() {
-		if (debug_cooldown > 0)
-			debug_cooldown--;
 		if (shakeTimer > 0) {
 			offsetX = (int) (2 * Math.random() * shakeMagnitude - shakeMagnitude);
 			offsetY = (int) (2 * Math.random() * shakeMagnitude - shakeMagnitude);
@@ -124,10 +117,10 @@ public static void render() {
 	}
 
 	private static void followCenterTarget() {
-		velocity_x = (centerTarget.getCenterX() - getCenterX()) / 5;
-		velocity_y = (centerTarget.getCenterY() - getCenterY()) / 5;
-		setX((int) (getX() + velocity_x));
-		setY((int) (getY() + velocity_y));
+		velocity_x = (centerTarget.getCenterX() - getCenterX()) / 10;
+		velocity_y = (centerTarget.getCenterY() - getCenterY()) / 10;
+		setX((getX() + velocity_x));
+		setY((getY() + velocity_y));
 	}
 
 	private static void checkWorldMouseEvents() {
@@ -175,19 +168,19 @@ public static void render() {
 		return inXBounds && inYBounds;
 	}
 
-	public static int getX() {
+	public static float getX() {
 		return x + offsetX;
 	}
 
-	public static void setX(int x) {
+	public static void setX(float x) {
 		Screen.x = x;
 	}
 
-	public static int getY() {
+	public static float getY() {
 		return y + offsetY;
 	}
 
-	public static void setY(int y) {
+	public static void setY(float y) {
 		Screen.y = y;
 	}
 

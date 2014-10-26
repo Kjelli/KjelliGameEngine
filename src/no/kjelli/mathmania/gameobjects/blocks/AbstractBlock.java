@@ -4,6 +4,7 @@ import no.kjelli.generic.World;
 import no.kjelli.generic.gameobjects.AbstractCollidable;
 import no.kjelli.generic.gfx.Draw;
 import no.kjelli.generic.gfx.Sprite;
+import no.kjelli.generic.gfx.textures.TextureAtlas;
 import no.kjelli.mathmania.MathMania;
 import no.kjelli.mathmania.gameobjects.Combo;
 import no.kjelli.mathmania.gameobjects.Question;
@@ -19,30 +20,40 @@ public abstract class AbstractBlock extends AbstractCollidable implements Block 
 	protected Color textColor = new Color(1.0f, 1.0f, 1.0f, 0.0f);
 	public final int x_index, y_index;
 	protected final int difficulty;
+	protected final int encryptKey;
 	protected Level level;
+	protected boolean encrypted;
+
+	protected Color encryptedColor = new Color(Color.white);
+	protected static final Sprite encryptedSprite = new Sprite(
+			TextureAtlas.objects, 160, 32, SPRITE_SIZE, SPRITE_SIZE);
 
 	protected float highlight = 0.0f;
 
 	public AbstractBlock(int x_index, int y_index) {
-		this(x_index, y_index, -1);
+		this(x_index, y_index, -1, 0);
 	}
 
-	public AbstractBlock(int x_index, int y_index, int difficulty) {
+	public AbstractBlock(int x_index, int y_index, int difficulty,
+			int encryptKey) {
 		super(x_index * SIZE, y_index * SIZE, SIZE, SIZE);
-		this.difficulty = difficulty;
 		this.x_index = x_index;
 		this.y_index = y_index;
 
+		this.difficulty = difficulty;
+		this.encryptKey = encryptKey;
+		encrypted = (encryptKey != 0);
+
 		tag(MathMania.tag_playfield);
-		if (difficulty > Level.getDifficulty())
-			color = new Color(Color.green);
-		else
-			color = new Color(Color.white);
 	}
 
 	@Override
 	public void onCreate() {
 		setVisible(true);
+		if (difficulty > Level.getDifficulty())
+			sprite.setColor(new Color(Color.green));
+		else
+			sprite.setColor(new Color(Color.white));
 	}
 
 	@Override
@@ -50,7 +61,7 @@ public abstract class AbstractBlock extends AbstractCollidable implements Block 
 		if (selected) {
 			if (highlight < 1.0f) {
 				highlight += 0.20;
-				color.b += 0.20;
+				sprite.getColor().b += 0.20;
 				textColor.a += 0.20;
 				textColor.b += 0.20;
 				backgroundColor.a += 0.20;
@@ -59,17 +70,24 @@ public abstract class AbstractBlock extends AbstractCollidable implements Block 
 		} else {
 			if (highlight > 0.0f) {
 				highlight -= 0.05;
-				color.b -= 0.05;
+				sprite.getColor().b -= 0.05;
 				textColor.a -= 0.05;
 				textColor.b -= 0.05;
 				backgroundColor.a -= 0.05;
 				backgroundColor.b -= 0.05;
 			}
 		}
-		Draw.sprite(this, 0f, 0f, 0f, SCALE, SCALE, false);
-
-		color.a = 0.8f + 0.2f * (float) Math.abs(Math
+		Draw.sprite(sprite, x, y, z);
+		// TODO: random glow
+		sprite.getColor().a = 0.8f + 0.2f * (float) Math.abs(Math
 				.sin((float) (MathMania.ticks + x * y) / 100));
+
+		if (isEncrypted()) {
+			encryptedColor.a = 0.5f * (float) Math
+					.sin((float) MathMania.ticks / 20) + 0.5f;
+			Draw.sprite(encryptedSprite, x, y, 1.1f, 1.0f, xScale, yScale,
+					false);
+		}
 
 	}
 
@@ -102,6 +120,18 @@ public abstract class AbstractBlock extends AbstractCollidable implements Block 
 					- BlockParticle.SPRITE_SIZE / 2,
 					(float) (i * Math.PI / (particles / 2))));
 		}
+	}
+
+	public int getEncryptKey() {
+		return encryptKey;
+	}
+
+	public void decrypt() {
+		encrypted = false;
+	}
+
+	public boolean isEncrypted() {
+		return encrypted;
 	}
 
 }

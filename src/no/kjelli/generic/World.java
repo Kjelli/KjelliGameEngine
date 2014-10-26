@@ -16,7 +16,6 @@ public class World {
 	private static ArrayList<GameObject> removeQueue = new ArrayList<>();
 	private static ArrayList<GameObject> addQueue = new ArrayList<>();
 	private static ArrayList<GameObject> objects = new ArrayList<>();
-	private static boolean newItems = false;
 
 	public static void init(int width, int height) {
 		setWidth(width);
@@ -28,16 +27,9 @@ public class World {
 		return objects;
 	}
 
-	public static void add(GameObject object) {
-		add(object, FOREGROUND);
-	}
 
-	public static void add(GameObject object, int layer) {
-		if (object instanceof Drawable)
-			object.setLayer(layer);
+	public static void add(GameObject object) {
 		addQueue.add(object);
-		object.onCreate();
-		newItems = true;
 	}
 
 	public static int size() {
@@ -58,6 +50,7 @@ public class World {
 			System.err.println("World has an invalid dimension!");
 			System.exit(0);
 		}
+		Collections.sort(objects);
 		for (GameObject object : objects) {
 			if (object instanceof Drawable && object.isVisible())
 				((Drawable) object).draw();
@@ -71,10 +64,8 @@ public class World {
 			objects.remove(oldObject);
 		}
 		for (GameObject newObject : addQueue) {
-			if (newObject.getLayer() == FOREGROUND)
-				objects.add(newObject);
-			else if (newObject.getLayer() == BACKGROUND)
-				objects.add(0, newObject);
+			objects.add(newObject);
+			newObject.onCreate();
 		}
 
 		addQueue.clear();
@@ -127,7 +118,7 @@ public class World {
 			if (o.hasTag(tag))
 				o.pause(pause);
 	}
-	
+
 	public static void hide(int tag, boolean visible) {
 		for (GameObject o : objects)
 			if (o.hasTag(tag))

@@ -46,7 +46,6 @@ public class SoundPlayer {
 			return;
 		}
 		Audio soundToPlay = sounds.get(soundName).getAudio();
-
 		if (play_cooldown > 0 && soundToPlay.isPlaying())
 			return;
 		sounds.get(soundName).play(pitch, gain, loop);

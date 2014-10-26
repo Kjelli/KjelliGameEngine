@@ -1,8 +1,5 @@
 package no.kjelli.mathmania.gameobjects;
 
-import static org.lwjgl.input.Keyboard.KEY_SPACE;
-import static org.lwjgl.input.Keyboard.isKeyDown;
-
 import org.newdawn.slick.Color;
 
 import no.kjelli.generic.gameobjects.AbstractGameObject;
@@ -25,12 +22,16 @@ public class Question extends AbstractGameObject implements ComboItem {
 	private int term1, term2, ans;
 	private final int difficulty;
 	private Block containingBlock;
+	private final boolean encrypted;
+	private String scrambledString;
 
-	public Question(TYPE type, int difficulty, Block containingBlock) {
+	public Question(TYPE type, int difficulty, boolean encrypted,
+			Block containingBlock) {
 		super(Screen.getCenterX(), Screen.getCenterY(), 0, Sprite.CHAR_HEIGHT);
 		this.containingBlock = containingBlock;
 		this.type = type;
 		this.difficulty = difficulty;
+		this.encrypted = encrypted;
 		switch (type) {
 		case ADD:
 			add();
@@ -45,6 +46,9 @@ public class Question extends AbstractGameObject implements ComboItem {
 			divide();
 			break;
 		}
+		if (encrypted) {
+			scrambledString = scramble(this.toString());
+		}
 		setWidth(this.toString().length() * Sprite.CHAR_WIDTH);
 	}
 
@@ -55,23 +59,23 @@ public class Question extends AbstractGameObject implements ComboItem {
 	}
 
 	private void divide() {
-		term2 = (int) (Math.random() * 2.5 * difficulty + 1);
-		term1 = term2 * (int) (Math.random() * 10);
+		term2 = (int) ((Math.random()) * 2.5 * difficulty + 1);
+		term1 = term2 * (int) ((Math.random()) * difficulty * 5);
 
 		ans = term1 / term2;
 	}
 
 	private void subtract() {
 		do {
-			term1 = (int) (Math.random() * 10 * difficulty) + 1;
-			term2 = (int) (Math.random() * 10 * difficulty);
+			term1 = (int) ((Math.random() + 1) * 2 * difficulty);
+			term2 = (int) ((Math.random() + 1) * 2 * difficulty);
 		} while (term2 > term1);
 		ans = term1 - term2;
 	}
 
 	private void add() {
-		term1 = (int) (Math.random() * 10 * difficulty);
-		term2 = (int) (Math.random() * 10 * difficulty);
+		term1 = (int) ((Math.random() + 1) * 2 * difficulty);
+		term2 = (int) ((Math.random() + 1) * 2 * difficulty);
 		ans = term1 + term2;
 	}
 
@@ -82,21 +86,37 @@ public class Question extends AbstractGameObject implements ComboItem {
 
 	@Override
 	public void update() {
-		if (isKeyDown(KEY_SPACE))
-			MathMania.resumeGameplay();
-
+		if (MathMania.ticks % 25 == 0) {
+			scrambledString = scramble(this.toString());
+		}
 	}
 
 	@Override
 	public void draw() {
 		Draw.fillRect(Screen.getCenterX() - getWidth() / 2 - 10,
-				Screen.getCenterY() - getHeight() / 2 + 40, getWidth() + 20,
-				getHeight() + 20, Color.black);
+				Screen.getCenterY() - getHeight() / 2 + 41, 1.0f, getWidth() + 19,
+				getHeight() + 19, 0.0f, Color.black, false);
 		Draw.rect(Screen.getCenterX() - getWidth() / 2 - 10,
-				Screen.getCenterY() - getHeight() / 2 + 40, getWidth() + 20,
-				getHeight() + 20, Color.white);
-		Draw.string(this.toString(), Screen.getCenterX() - getWidth() / 2,
-				Screen.getCenterY() - getHeight() / 2 + 50);
+				Screen.getCenterY() - getHeight() / 2 + 40, 1.1f,
+				getWidth() + 20, getHeight() + 20, 0.0f, Color.white, false);
+		if (!encrypted)
+			Draw.string(this.toString(), Screen.getCenterX() - getWidth() / 2,
+					Screen.getCenterY() - getHeight() / 2 + 50, 2.0f);
+		if (encrypted)
+			Draw.string(scrambledString, Screen.getCenterX() - getWidth() / 2,
+					Screen.getCenterY() - getHeight() / 2 + 50, 2.0f);
+	}
+
+	private String scramble(String string) {
+		StringBuilder sb = new StringBuilder();
+		for (char c : this.toString().toCharArray()) {
+			if (Math.random() > 0.2f) {
+				sb.append((char) (48 + Math.random() * (42)));
+			} else {
+				sb.append(c);
+			}
+		}
+		return sb.toString();
 	}
 
 	public String toString() {

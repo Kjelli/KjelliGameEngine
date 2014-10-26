@@ -16,22 +16,23 @@ public class Collision {
 		this.source = source;
 		this.target = target;
 		impactDirection = 0;
-		boolean above = target.contains(source.getX() + 1, source.getY()
+		boolean above = target.contains(source.getX()+1, source.getY()
 				+ source.getHeight() + 1)
-				|| target.contains(source.getX() + source.getWidth() - 2,
+				|| target.contains(source.getX() + source.getWidth()-1,
 						source.getY() + source.getHeight() + 1);
-		boolean below = target.contains(source.getX() + 1, source.getY() - 1)
-				|| target.contains(source.getX() + source.getWidth() - 2,
+		
+		boolean below = target.contains(source.getX()+1, source.getY() - 1)
+				|| target.contains(source.getX() + source.getWidth()-1,
 						source.getY() - 1);
 
 		boolean right = target.contains(source.getX() + source.getWidth() + 1,
-				source.getY() + 1)
+				source.getY()+1)
 				|| target.contains(source.getX() + source.getWidth() + 1,
-						source.getY() + source.getHeight() - 2);
+						source.getY() + source.getHeight() - 1);
 
-		boolean left = target.contains(source.getX() - 1, source.getY() + 1)
+		boolean left = target.contains(source.getX() - 1, source.getY()+1)
 				|| target.contains(source.getX() - 1,
-						source.getY() + source.getHeight() - 2);
+						source.getY() + source.getHeight() - 1);
 		if (above)
 			impactDirection += ABOVE;
 		if (below)

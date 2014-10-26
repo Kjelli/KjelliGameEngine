@@ -26,6 +26,8 @@ public class Combo extends AbstractGameObject {
 	private static float drawingWidth;
 	private static float targetWidth;
 
+	private static Color color;
+	
 	private static final float HEIGHT = 20;
 	private static final float HEIGHT_MODIFIER_MAX = 5;
 	private static float heightModifier;
@@ -55,8 +57,8 @@ public class Combo extends AbstractGameObject {
 					/ HEIGHT_MODIFIER_MAX);
 			color.b = Math.max(getPercentage(), heightModifier
 					/ HEIGHT_MODIFIER_MAX);
-			SoundPlayer.setGain("musicadd", getPercentage());
-			SoundPlayer.setGain("musicbeat", getPercentage() * 2 - 0.5f);
+			SoundPlayer.setGain("musicadd", getPercentage() * 2);
+			SoundPlayer.setGain("musicbeat", getPercentage() * 4 - 3f);
 
 		} else if (timer <= 0 && count > 0) {
 			clearCombo();
@@ -94,16 +96,16 @@ public class Combo extends AbstractGameObject {
 	public static void clearCombo() {
 		if (count > 0) {
 			Score.addToScore((long) Math.pow(count, 1.5) * 100);
+			SoundPlayer.play("comboexpire",
+					0.5f + Math.max(0, Math.min((float) count / 10, 0.5f)),
+					((float) count / 10));
+			SoundPlayer.setGain("musicadd", 0);
+			SoundPlayer.setGain("musicbeat", 0);
+			topWidth = 0;
+			timerDelta = 1.0f;
+			timer = 0;
+			count = 0;
 		}
-		SoundPlayer.play("comboexpire",
-				0.5f + Math.max(0, Math.min((float) count / 10, 0.5f)),
-				((float) count / 10));
-		SoundPlayer.setGain("musicadd", 0);
-		SoundPlayer.setGain("musicbeat", 0);
-		topWidth = 0;
-		timerDelta = 1.0f;
-		timer = 0;
-		count = 0;
 	}
 
 	@Override

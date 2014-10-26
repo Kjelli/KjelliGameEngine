@@ -12,11 +12,10 @@ public class SubtractBlock extends AbstractBlock {
 
 	public static final int base_x = 128, base_y = 32;
 
-	public SubtractBlock(int x_index, int y_index, int difficulty) {
-		super(x_index, y_index, difficulty);
+	public SubtractBlock(int x_index, int y_index, int difficulty, int encryptKey) {
+		super(x_index, y_index, difficulty, encryptKey);
 		sprite = new Sprite(TextureAtlas.objects, base_x, base_y, SPRITE_SIZE,
 				SPRITE_SIZE);
-		color = color.darker();
 	}
 
 	@Override
@@ -30,7 +29,7 @@ public class SubtractBlock extends AbstractBlock {
 
 	@Override
 	public Question getQuestion() {
-		return new Question(Question.TYPE.SUBTRACT, difficulty, this);
+		return new Question(Question.TYPE.SUBTRACT, difficulty, isEncrypted(), this);
 	}
 
 	@Override

@@ -20,9 +20,7 @@ import no.kjelli.mathmania.levels.Level;
 public class Player extends AbstractCollidable {
 
 	private static final int base_x = 0, base_y = 64;
-	public static final int SPRITE_SIZE = 16;
-	public static final float SCALE = 1f;
-	public static final float SIZE = SPRITE_SIZE * SCALE;
+	public static final int SPRITE_WIDTH = 16, SPRITE_HEIGHT = 16;
 
 	private static final double ACCELERATION = 0.5f;
 	private static final double MAX_SPEED = 3.0;
@@ -30,9 +28,9 @@ public class Player extends AbstractCollidable {
 	public Block selection;
 
 	public Player(float x, float y) {
-		super(x, y, SIZE, SIZE);
-		sprite = new Sprite(TextureAtlas.objects, base_x, base_y, SPRITE_SIZE,
-				SPRITE_SIZE);
+		super(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
+		sprite = new Sprite(TextureAtlas.objects, base_x, base_y, SPRITE_WIDTH,
+				SPRITE_HEIGHT);
 		tag(MathMania.tag_playfield);
 	}
 
@@ -72,7 +70,7 @@ public class Player extends AbstractCollidable {
 		move();
 
 		if (selection != null) {
-			if (getDistance(selection) > 2 * Block.SIZE) {
+			if (getDistance(selection) > 2 * Block.SPRITE_SIZE) {
 				selection.select(false);
 				selection = null;
 			}
@@ -80,7 +78,7 @@ public class Player extends AbstractCollidable {
 	}
 
 	private void animate() {
-		sprite.setSpriteInAtlas(base_x, base_y, SPRITE_SIZE, SPRITE_SIZE);
+		sprite.setTextureCoords(base_x, base_y, SPRITE_WIDTH, SPRITE_HEIGHT);
 	}
 
 	private void handleInput() {
@@ -123,7 +121,7 @@ public class Player extends AbstractCollidable {
 
 	@Override
 	public void draw() {
-		Draw.sprite(this, 0f, 0f, 0f, SCALE, SCALE, false);
+		Draw.drawable(this, 0f, 0f, 0f, 0f, false);
 	}
 
 }

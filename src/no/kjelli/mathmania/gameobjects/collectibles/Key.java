@@ -1,7 +1,5 @@
 package no.kjelli.mathmania.gameobjects.collectibles;
 
-import org.newdawn.slick.Color;
-
 import no.kjelli.generic.World;
 import no.kjelli.generic.gfx.Draw;
 import no.kjelli.generic.gfx.Screen;
@@ -16,32 +14,31 @@ import no.kjelli.mathmania.gameobjects.particles.EncryptionParticle;
 import no.kjelli.mathmania.gameobjects.particles.GlitterParticle;
 import no.kjelli.mathmania.levels.Level;
 
-public class Coin extends AbstractCollectible {
-	private static final int base_x = 0, base_y = 64;
+public class Key extends AbstractCollectible {
+	private static final int base_x = 48, base_y = 80;
 	public static final int SPRITE_SIZE = 16;
-	public static final float SCALE = 0.5f;
-	public static final float SIZE = SPRITE_SIZE * SCALE;
+	public static final float SIZE = SPRITE_SIZE * 0.5f;
 
 	public static final int NUM_PARTICLES = 20;
 
-	public float scoreMultiplier;
 	public boolean isCollected = false;
 
-	public Coin(float x, float y, float scoreMultiplier) {
+	protected final int encryptKey;
+
+	public Key(float x, float y, int encryptKey) {
 		super(x + Block.SIZE / 2 - SIZE / 2, y + Block.SIZE / 2 - SIZE / 2,
 				SIZE, SIZE);
-		this.scoreMultiplier = scoreMultiplier;
+		this.encryptKey = encryptKey;
+		xScale = 0.5f;
+		yScale = 0.5f;
 		sprite = new Sprite(TextureAtlas.objects, base_x, base_y, SPRITE_SIZE,
 				SPRITE_SIZE);
-		sprite.setColor(new Color(Color.yellow));
-		xScale = SCALE;
-		yScale = SCALE;
 		tag(MathMania.tag_playfield);
 	}
 
 	@Override
 	public int getScore() {
-		return (int) (100 * scoreMultiplier);
+		return 100;
 	}
 
 	@Override
@@ -50,18 +47,25 @@ public class Coin extends AbstractCollectible {
 		Score.addToScore(getScore());
 		SoundPlayer.play("coin", ((float) Combo.getCount() / 30) + 1.0f);
 		Combo.addToCombo(this);
+		if (encryptKey != 0) {
+			Level.decrypt(encryptKey);
+			for (int i = 0; i < NUM_PARTICLES; i++) {
+				World.add(new EncryptionParticle(x, y,
+						(float) (i * Math.PI / ((float) NUM_PARTICLES / 2))));
+			}
+		}
 		destroy();
 	}
 
 	@Override
 	public void update() {
-		sprite.getColor().r = (float) Math.sin((float) MathMania.ticks / 100);
-		sprite.getColor().g = (float) Math.sin((float) MathMania.ticks / 100 + 2 * Math.PI
-				/ 3);
-		sprite.getColor().b = (float) Math.sin((float) MathMania.ticks / 100 + 4 * Math.PI
-				/ 3);
+		sprite.getColor().r = (float) Math.sin((float) MathMania.ticks / 100 + x * y);
+		sprite.getColor().g = (float) Math.sin((float) MathMania.ticks / 100 + x * y + 2
+				* Math.PI / 3);
+		sprite.getColor().b = (float) Math.sin((float) MathMania.ticks / 100 + x * y + 4
+				* Math.PI / 3);
 
-		if (Math.random() < scoreMultiplier / 500 && Screen.contains(this))
+		if (Math.random() < 0.001f && Screen.contains(this))
 			World.add(new GlitterParticle((float) (x + Math.random() * width)
 					- width / 2, (float) (y + Math.random() * height) - height
 					/ 2, this));

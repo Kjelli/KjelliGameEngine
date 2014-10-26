@@ -18,7 +18,7 @@ public abstract class AbstractCollidable extends AbstractGameObject implements
 	private boolean colBelow;
 
 	protected void stop(int impactDirection) {
-		colLeft = ((impactDirection & Collision.LEFT) > 0  || (colLeft));
+		colLeft = ((impactDirection & Collision.LEFT) > 0 || (colLeft));
 		colAbove = ((impactDirection & Collision.ABOVE) > 0 || (colAbove));
 		colRight = ((impactDirection & Collision.RIGHT) > 0 || (colRight));
 		colBelow = ((impactDirection & Collision.BELOW) > 0 || (colBelow));
@@ -27,64 +27,76 @@ public abstract class AbstractCollidable extends AbstractGameObject implements
 
 	@Override
 	public void move() {
-		colLeft = false;
-		colRight = false;
-		xStep();
-		colAbove = false;
-		colBelow = false;
-		yStep();
+		move(velocity_x, velocity_y);
 	}
 
-	private void xStep() {
+	public void move(double velocity_x, double velocity_y) {
+		colAbove = false;
+		colBelow = false;
+		yStep(velocity_y);
+		colLeft = false;
+		colRight = false;
+		xStep(velocity_x);
+	}
+
+	private void xStep(double velocity_x) {
 		xStep += velocity_x;
 
 		while (xStep >= 1) {
 			xStep--;
 			x++;
-			Physics.getCollisions((Collidable) this);
+			Physics.getCollisions(this);
 			if (colRight) {
 				x--;
 				xStep = 0;
 				return;
 			}
+			microStep();
 
 		}
 		while (xStep <= -1) {
 			xStep++;
 			x--;
-			Physics.getCollisions((Collidable) this);
+			Physics.getCollisions(this);
 			if (colLeft) {
 				x++;
 				xStep = 0;
 				return;
 
 			}
+			microStep();
 		}
 	}
 
-	public void yStep() {
+	// To be overridden
+	protected void microStep() {
+	};
+
+	public void yStep(double velocity_y) {
 		yStep += velocity_y;
 
 		while (yStep >= 1) {
 			yStep--;
 			y++;
-			Physics.getCollisions((Collidable) this);
+			Physics.getCollisions(this);
 			if (colAbove) {
 				y--;
 				yStep = 0;
 				return;
 
 			}
+			microStep();
 		}
 		while (yStep <= -1) {
 			yStep++;
 			y--;
-			Physics.getCollisions((Collidable) this);
+			Physics.getCollisions(this);
 			if (colBelow) {
 				y++;
 				yStep = 0;
 				return;
 			}
+			microStep();
 		}
 	}
 

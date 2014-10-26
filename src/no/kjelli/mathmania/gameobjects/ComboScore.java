@@ -12,6 +12,8 @@ public class ComboScore extends AbstractGameObject {
 	private int comboCount;
 	private static final int TIME_TO_LIVE_MAX = 200;
 	private int timetolive = TIME_TO_LIVE_MAX;
+	
+	private Color color;
 
 	public boolean fadeout = false;
 
@@ -46,7 +48,7 @@ public class ComboScore extends AbstractGameObject {
 	public void draw() {
 		Draw.string("combo x" + comboCount, x
 				- (7 + String.valueOf(comboCount).length()) * Sprite.CHAR_WIDTH
-				* scale / 2, y - Sprite.CHAR_HEIGHT / 2, scale, scale, color,
-				false);
+				* scale / 2, y - Sprite.CHAR_HEIGHT / 2, 2.0f, scale, scale,
+				color, false);
 	}
 }

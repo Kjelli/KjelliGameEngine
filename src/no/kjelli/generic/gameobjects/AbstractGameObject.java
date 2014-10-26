@@ -1,6 +1,7 @@
 package no.kjelli.generic.gameobjects;
 
 import no.kjelli.generic.World;
+import no.kjelli.generic.gfx.Drawable;
 import no.kjelli.generic.gfx.Sprite;
 
 import org.lwjgl.util.Rectangle;
@@ -9,19 +10,17 @@ import org.newdawn.slick.Color;
 public abstract class AbstractGameObject implements GameObject {
 	protected float x;
 	protected float y;
+	protected float z = 0;
 	protected float width;
 	protected float height;
-	
-	protected float scale = 1.0f;
+
+	protected float xScale = 1.0f;
+	protected float yScale = 1.0f;
 
 	protected Sprite sprite;
-	protected Color color;
-
-	private int layer;
 
 	protected double velocity_x;
 	protected double velocity_y;
-	protected float speed;
 
 	protected boolean isVisible;
 
@@ -33,7 +32,6 @@ public abstract class AbstractGameObject implements GameObject {
 		setY(y);
 		setWidth(width);
 		setHeight(height);
-		color = new Color(Color.white);
 	}
 
 	public abstract void update();
@@ -61,6 +59,14 @@ public abstract class AbstractGameObject implements GameObject {
 		this.y = y;
 	}
 
+	public float getZ() {
+		return z;
+	}
+
+	public void setZ(float z) {
+		this.z = z;
+	}
+
 	public double getDistance(GameObject other) {
 		return Math.abs(Math.hypot(this.getCenterX() - other.getCenterX(),
 				this.getCenterY() - other.getCenterY()));
@@ -75,7 +81,7 @@ public abstract class AbstractGameObject implements GameObject {
 	}
 
 	public float getWidth() {
-		return width * scale;
+		return width * xScale;
 	}
 
 	public void setWidth(float width) {
@@ -83,7 +89,7 @@ public abstract class AbstractGameObject implements GameObject {
 	}
 
 	public float getHeight() {
-		return height * scale;
+		return height * xScale;
 	}
 
 	public void setHeight(float height) {
@@ -104,10 +110,6 @@ public abstract class AbstractGameObject implements GameObject {
 
 	public double getVelocityY() {
 		return velocity_y;
-	}
-
-	public float getSpeed() {
-		return speed;
 	}
 
 	private boolean valueInRange(float value, float min, float max) {
@@ -141,32 +143,11 @@ public abstract class AbstractGameObject implements GameObject {
 		return sprite;
 	}
 
-	public void setLayer(int layer) {
-		if (layer != World.BACKGROUND && layer != World.FOREGROUND) {
-			System.err.println("INVALID LAYER");
-			return;
-		}
-		this.layer = layer;
-	}
-
-	public int getLayer() {
-		return layer;
-	}
-
 	public void destroy() {
 		if (sprite != null)
 			sprite.destroy();
 		setVisible(false);
 		World.remove(this);
-	}
-
-	public Color getColor() {
-		return color;
-	}
-
-	@Override
-	public int compareTo(GameObject that) {
-		return Integer.compare(this.layer, that.getLayer());
 	}
 
 	public boolean intersects(Rectangle bounds) {
@@ -200,6 +181,23 @@ public abstract class AbstractGameObject implements GameObject {
 
 	public boolean isPaused() {
 		return pause;
+	}
+
+	public float getXScale() {
+		return xScale;
+	}
+
+	public float getYScale() {
+		return yScale;
+	}
+
+	public int compareTo(AbstractGameObject that) {
+		return 1;
+	}
+
+	@Override
+	public int compareTo(Drawable that) {
+		return Float.compare(getZ(), that.getZ());
 	}
 
 }

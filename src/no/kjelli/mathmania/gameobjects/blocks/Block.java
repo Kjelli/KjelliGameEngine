@@ -5,8 +5,7 @@ import no.kjelli.mathmania.levels.Level;
 
 public interface Block extends Collidable {
 	public static final int SPRITE_SIZE = 32;
-	public static final float SCALE = 1.0f;
-	public static final float SIZE = SPRITE_SIZE * SCALE;
+	public static final int SIZE = 32;
 
 	public void question();
 
@@ -15,4 +14,10 @@ public interface Block extends Collidable {
 	public void select(boolean bool);
 
 	public boolean isObstructionBlock();
+	
+	public boolean isEncrypted();
+
+	public int getEncryptKey();
+
+	public void decrypt();
 }

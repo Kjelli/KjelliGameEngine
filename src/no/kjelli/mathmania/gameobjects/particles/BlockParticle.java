@@ -2,6 +2,7 @@ package no.kjelli.mathmania.gameobjects.particles;
 
 import org.newdawn.slick.Color;
 
+import no.kjelli.generic.gfx.AbstractParticle;
 import no.kjelli.generic.gfx.Draw;
 import no.kjelli.generic.gfx.Sprite;
 import no.kjelli.generic.gfx.textures.TextureAtlas;
@@ -16,15 +17,14 @@ public class BlockParticle extends AbstractParticle {
 	private float angle;
 	private float speed;
 
-	private static final long MAX_TIME_TO_LIVE = 200;
+	private static final long MAX_TIME_TO_LIVE = 100;
 	private static final float MAX_SPEED = 3.0f;
 	private float INITIAL_SPEED;
-	private long timetolive;
 
 	private static final float INITIAL_SCALE = 1.0f;
 
 	public BlockParticle(float x, float y, float angle) {
-		super(x, y, SPRITE_SIZE, SPRITE_SIZE);
+		super(x, y, SPRITE_SIZE, SPRITE_SIZE, MAX_TIME_TO_LIVE);
 		this.angle = angle % 360;
 		INITIAL_SPEED = (float) (Math.random() * MAX_SPEED);
 		speed = INITIAL_SPEED;
@@ -35,31 +35,27 @@ public class BlockParticle extends AbstractParticle {
 		float r = (float) (component + (1 - component) * Math.random()), g = (float) (component + (1 - component)
 				* Math.random()), b = (float) (component + (1 - component)
 				* Math.random());
-		color = new Color(r, g, b);
+		sprite.setColor(new Color(r, g, b));
 
-		timetolive = (long) ((float) (Math.random() * Combo.getCount()) / 5 * MAX_TIME_TO_LIVE);
+		timeToLive = (long) ((Math.random() * Math.min(
+				(float) Combo.getCount() / 5, 3)) * MAX_TIME_TO_LIVE);
 	}
 
 	@Override
-	public void update() {
-		if (timetolive > 0)
-			timetolive--;
-		else {
-			destroy();
-			return;
-		}
-		scale = ((float) timetolive / MAX_TIME_TO_LIVE) * INITIAL_SCALE;
+	public void updateParticle() {
+		xScale = ((float) timeToLive / MAX_TIME_TO_LIVE) * INITIAL_SCALE;
+		yScale = ((float) timeToLive / MAX_TIME_TO_LIVE) * INITIAL_SCALE;
 		angle += Math.random() * 0.5f - 0.25f;
 		velocity_x = speed * Math.cos(angle);
 		velocity_y = speed * Math.sin(angle);
-		speed = ((float) timetolive / MAX_TIME_TO_LIVE) * INITIAL_SPEED;
+		speed = ((float) timeToLive / MAX_TIME_TO_LIVE) * INITIAL_SPEED;
 		move();
 	}
 
 	@Override
 	public void draw() {
-		Draw.sprite(this, 0f, 0f, (MathMania.ticks * INITIAL_SPEED * 10) % 360,
-				scale, scale, false);
+		Draw.drawable(this, 0f, 0f, 0f,
+				(MathMania.ticks * INITIAL_SPEED * 10) % 360, false);
 	}
 
 }

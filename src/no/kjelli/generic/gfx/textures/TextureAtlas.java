@@ -5,9 +5,9 @@ import java.util.HashSet;
 import org.newdawn.slick.opengl.Texture;
 
 public class TextureAtlas {
-	
+
 	public static final HashSet<TextureAtlas> list = new HashSet<>();
-	
+
 	public static TextureAtlas objects = new TextureAtlas("res\\objects.png");
 	public static TextureAtlas font = new TextureAtlas("res\\fontsmall.png");
 
@@ -29,14 +29,17 @@ public class TextureAtlas {
 		return new TextureRegion(atlasTexture, x, y, width, height);
 	}
 
+	public TextureRegion getTextureRegion(float u, float u2, float v, float v2) {
+		return new TextureRegion(atlasTexture, u, u2, v, v2);
+	}
+
 	public Texture getTextureAtlas() {
 		return atlasTexture;
 	}
-	
-	public static void destroy(){
-		for(TextureAtlas ta : list){
+
+	public static void destroy() {
+		for (TextureAtlas ta : list) {
 			ta.atlasTexture.release();
-			System.out.println("Destroyed atlas");
 		}
 	}
 

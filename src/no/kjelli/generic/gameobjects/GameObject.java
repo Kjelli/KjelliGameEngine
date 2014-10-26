@@ -4,7 +4,7 @@ import no.kjelli.generic.gfx.Drawable;
 
 import org.lwjgl.util.Rectangle;
 
-public interface GameObject extends Drawable, Comparable<GameObject> {
+public interface GameObject extends Drawable{
 
 	public float getX();
 
@@ -53,4 +53,5 @@ public interface GameObject extends Drawable, Comparable<GameObject> {
 	public void removeTags();
 
 	public boolean isPaused();
+
 }

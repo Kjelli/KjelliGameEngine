@@ -2,11 +2,9 @@ package no.kjelli.generic.main;
 
 import static org.lwjgl.opengl.GL11.*;
 
-import java.io.File;
-
 import no.kjelli.generic.Game;
-import no.kjelli.generic.Physics;
 import no.kjelli.generic.World;
+import no.kjelli.generic.applet.AppletLauncher;
 import no.kjelli.generic.gfx.Screen;
 import no.kjelli.generic.gfx.textures.TextureAtlas;
 import no.kjelli.generic.sound.SoundPlayer;
@@ -18,26 +16,62 @@ import org.lwjgl.openal.AL;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 
-public class Main {
+public class Launcher {
 
 	private static final int FRAME_RATE = 60;
 	private static Game game;
+	public static Thread gameThread;
 
-	public Main(Game game, String title, int width, int height,
+	String title;
+	int width, height;
+	boolean fullscreen;
+
+	boolean running = false;
+
+	public Launcher(Game game, String title, int width, int height,
 			boolean fullscreen) {
-		Main.game = game;
-		initDisplay(width, height, fullscreen);
-		Display.setTitle(title);
-		initInput();
-		initGL();
-
-		initGame();
-
-		gameLoop();
-		cleanUp();
+		Launcher.game = game;
+		this.title = title;
+		this.width = width;
+		this.height = height;
+		launch();
 	}
 
-	private static void initInput() {
+	public Launcher(Game game, String title, boolean fullscreen,
+			AppletLauncher appletLauncher) {
+		Launcher.game = game;
+		this.title = title;
+		this.width = (int) appletLauncher.getAppletSize().getWidth();
+		this.height = (int) appletLauncher.getAppletSize().getHeight();
+		try {
+			Display.setParent(appletLauncher.getDisplay_parent());
+		} catch (LWJGLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void stop() {
+		running = false;
+	}
+
+	public void launch() {
+		running = true;
+		gameThread = new Thread() {
+			public void run() {
+				initDisplay(width, height, fullscreen);
+				Display.setTitle(title);
+				initInput();
+				initGL();
+				initGame();
+				gameLoop();
+				cleanUp();
+			}
+
+		};
+		gameThread.start();
+	}
+
+	private void initInput() {
 		try {
 			Keyboard.create();
 			Mouse.create();
@@ -46,7 +80,7 @@ public class Main {
 		}
 	}
 
-	private static void initDisplay(int width, int height, boolean fullscreen) {
+	private void initDisplay(int width, int height, boolean fullscreen) {
 		try {
 			setDisplayMode(width, height, fullscreen);
 			Display.setVSyncEnabled(true);
@@ -67,7 +101,7 @@ public class Main {
 	 * @param fullscreen
 	 *            True if we want fullscreen mode
 	 */
-	public static void setDisplayMode(int width, int height, boolean fullscreen) {
+	public void setDisplayMode(int width, int height, boolean fullscreen) {
 
 		// return if requested DisplayMode is already set
 		if ((Display.getDisplayMode().getWidth() == width)
@@ -131,13 +165,15 @@ public class Main {
 		}
 	}
 
-	private static void initGL() {
+	private void initGL() {
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 		glViewport(0, 0, Display.getWidth(), Display.getHeight());
-		glOrtho(0, Display.getWidth(), 0, Display.getHeight(), -1, 1);
+		glOrtho(0, Display.getWidth(), 0, Display.getHeight(), -5, 5);
 		glMatrixMode(GL_MODELVIEW);
 
+		glEnable(GL_DEPTH_TEST);
+		glEnable(GL_ALPHA_TEST);
 		glEnable(GL_TEXTURE_2D);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -146,19 +182,22 @@ public class Main {
 
 	}
 
-	private static void initGame() {
+	private void initGame() {
 		Screen.init(0, 0, Display.getWidth(), Display.getHeight());
 		World.init(Display.getWidth(), Display.getHeight());
 		game.init();
 	}
 
-	private static void getInput() {
+	private void getInput() {
 		game.getInput();
 
 	}
 
-	private static void gameLoop() {
-		while (!Display.isCloseRequested()) {
+	private void gameLoop() {
+		while (running) {
+			if (Display.isCloseRequested()) {
+				running = false;
+			}
 			getInput();
 			update();
 			render();
@@ -166,12 +205,12 @@ public class Main {
 		}
 	}
 
-	static long lastTime = System.nanoTime();
-	static long incrementer;
-	static long frameCounter;
+	long lastTime = System.nanoTime();
+	long incrementer;
+	long frameCounter;
 	public static long framesPerSecond;
 
-	private static void calculateFrameRate() {
+	private void calculateFrameRate() {
 		long now = System.nanoTime();
 		double diff = now - lastTime;
 		lastTime = now;
@@ -184,13 +223,14 @@ public class Main {
 		}
 	}
 
-	private static void update() {
+	private void update() {
 		SoundPlayer.update();
 		game.update();
 	}
 
-	private static void render() {
-		glClear(GL_COLOR_BUFFER_BIT);
+	private void render() {
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glAlphaFunc(GL_GREATER, 0);
 		glLoadIdentity();
 
 		game.render();
@@ -201,13 +241,37 @@ public class Main {
 		Display.sync(FRAME_RATE);
 	}
 
-	private static void cleanUp() {
+	private void cleanUp() {
+
+		long start = System.currentTimeMillis();
 		game.destroy();
+		System.out.println("Game took " + (System.currentTimeMillis() - start)
+				+ " millis");
+		start = System.currentTimeMillis();
 		TextureAtlas.destroy();
+		System.out.println("Textureatlas took "
+				+ (System.currentTimeMillis() - start) + " millis");
+		start = System.currentTimeMillis();
 		Keyboard.destroy();
+		System.out.println("Keyboard took "
+				+ (System.currentTimeMillis() - start) + " millis");
+		start = System.currentTimeMillis();
 		Mouse.destroy();
+		System.out.println("Mouse took " + (System.currentTimeMillis() - start)
+				+ " millis");
+		start = System.currentTimeMillis();
 		Display.destroy();
+		System.out.println("Display took "
+				+ (System.currentTimeMillis() - start) + " millis");
+		start = System.currentTimeMillis();
 		AL.destroy();
+		start = System.currentTimeMillis();
+		System.out.println("AL took " + (System.currentTimeMillis() - start)
+				+ " millis");
+	}
+
+	public Game getGame() {
+		return game;
 	}
 
 }

@@ -9,7 +9,7 @@ import no.kjelli.generic.World;
 import no.kjelli.generic.gameobjects.GameObject;
 import no.kjelli.generic.gameobjects.Tagger;
 import no.kjelli.generic.gfx.Screen;
-import no.kjelli.generic.main.Main;
+import no.kjelli.generic.main.Launcher;
 import no.kjelli.generic.sound.SoundPlayer;
 import no.kjelli.mathmania.gameobjects.Combo;
 import no.kjelli.mathmania.gameobjects.Input;
@@ -18,12 +18,13 @@ import no.kjelli.mathmania.gameobjects.Score;
 import no.kjelli.mathmania.gameobjects.Timer;
 import no.kjelli.mathmania.levels.Level;
 
+import org.lwjgl.opengl.GLContext;
 import org.newdawn.slick.Color;
 
 public class MathMania implements Game {
 	public static int tag_playfield = Tagger.uniqueTag();
 	public static Question currentQuestion;
-	public static Input input = new Input();
+	public static Input input;
 	public static Timer timer;
 
 	public static int question_cooldown = 0;
@@ -85,7 +86,11 @@ public class MathMania implements Game {
 		Screen.zoom(2.0f);
 
 		combo = new Combo();
+		Combo.clearCombo();
 		World.add(combo);
+
+		Score.clearScore();
+
 		timer = new Timer();
 		World.add(timer);
 
@@ -94,7 +99,7 @@ public class MathMania implements Game {
 
 		timer.start();
 
-		Level.init("1");
+		Level.init("test");
 		Level.start();
 
 		SoundPlayer.music("music", 1.0f, 1.0f);
@@ -123,14 +128,12 @@ public class MathMania implements Game {
 	}
 
 	public static void resumeGameplay() {
-		if (question_cooldown > 0)
-			return;
 		playstate = PLAYSTATE.PLAYFIELD;
 		World.pause(tag_playfield, false);
 		// World.hide(tag_playfield, false);
 
-		input.destroy();
 		currentQuestion.destroy();
+		input.destroy();
 
 		question_cooldown = QUESTION_COOLDOWN;
 	}
@@ -150,6 +153,10 @@ public class MathMania implements Game {
 		case MENU:
 			break;
 		case PLAYING:
+			if (isKeyDown(KEY_R)) {
+				destroy();
+				initGame();
+			}
 			if (isKeyDown(KEY_U))
 				SoundPlayer.setGain("music", 1.0f);
 			if (isKeyDown(KEY_J))
@@ -191,7 +198,7 @@ public class MathMania implements Game {
 	}
 
 	public static void main(String[] args) {
-		new Main(new MathMania(), "MathMania", 800, 600, false);
+		new Launcher(new MathMania(), "MathMania", 800, 600, true);
 	}
 
 	@Override
@@ -200,5 +207,4 @@ public class MathMania implements Game {
 			go.destroy();
 		}
 	}
-
 }
