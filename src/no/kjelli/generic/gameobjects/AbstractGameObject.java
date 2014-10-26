@@ -11,6 +11,8 @@ public abstract class AbstractGameObject implements GameObject {
 	protected float y;
 	protected float width;
 	protected float height;
+	
+	protected float scale = 1.0f;
 
 	protected Sprite sprite;
 	protected Color color;
@@ -73,7 +75,7 @@ public abstract class AbstractGameObject implements GameObject {
 	}
 
 	public float getWidth() {
-		return width;
+		return width * scale;
 	}
 
 	public void setWidth(float width) {
@@ -81,7 +83,7 @@ public abstract class AbstractGameObject implements GameObject {
 	}
 
 	public float getHeight() {
-		return height;
+		return height * scale;
 	}
 
 	public void setHeight(float height) {
@@ -89,11 +91,11 @@ public abstract class AbstractGameObject implements GameObject {
 	}
 
 	public float getCenterY() {
-		return y + height / 2;
+		return y + getHeight() / 2;
 	}
 
 	public float getCenterX() {
-		return x + width / 2;
+		return x + getWidth() / 2;
 	}
 
 	public double getVelocityX() {

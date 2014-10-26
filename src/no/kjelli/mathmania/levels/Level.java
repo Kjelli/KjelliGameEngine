@@ -6,63 +6,48 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import no.kjelli.generic.World;
-import no.kjelli.generic.gameobjects.AbstractGameObject;
-import no.kjelli.mathmania.gameobjects.Block;
-import no.kjelli.mathmania.gameobjects.DivideBlock;
-import no.kjelli.mathmania.gameobjects.MultiplyBlock;
+import no.kjelli.generic.gameobjects.GameObject;
 import no.kjelli.mathmania.gameobjects.Player;
-import no.kjelli.mathmania.gameobjects.ObstructingBlock;
+import no.kjelli.mathmania.gameobjects.blocks.AddBlock;
+import no.kjelli.mathmania.gameobjects.blocks.Block;
+import no.kjelli.mathmania.gameobjects.blocks.DivideBlock;
+import no.kjelli.mathmania.gameobjects.blocks.MultiplyBlock;
+import no.kjelli.mathmania.gameobjects.blocks.ObstructingBlock;
+import no.kjelli.mathmania.gameobjects.blocks.SubtractBlock;
+import no.kjelli.mathmania.gameobjects.collectibles.Coin;
 
-public class Level extends AbstractGameObject {
+public class Level {
+	public static final char FLOOR = '.', BLOCK = '#', ADD = 'A',
+			SUBTRACT = 'S', MULTIPLY = 'M', DIVIDE = 'D', PLAYER = 'P',
+			COIN = 'C';
 
-	public static final char FLOOR = ' ', BLOCK = '#', MULTIPLY = 'M',
-			DIVIDE = 'D', PLAYER = 'P';
+	private static int width, height;
+	private static int difficulty;
+	private static ArrayList<GameObject> blocks;
 
-	public ArrayList<Block> blocks;
+	private static Player player;
 
-	public Player player;
-
-	public Level(String name) {
-		super(0, 0, 0, 0);
-		loadFromFile(name);
+	public static void init(String filename) {
+		loadFromFile(filename);
+		for (GameObject b : blocks)
+			World.add(b, World.BACKGROUND);
 	}
 
-	@Override
-	public void onCreate() {
-		for (Block b : blocks)
-			World.add(b);
-	}
-
-	public void setVisible(boolean visible) {
-		isVisible = visible;
-		player.setVisible(visible);
-		for (Block b : blocks)
-			b.setVisible(visible);
-	}
-
-	public void start() {
+	public static void start() {
 		World.add(player);
-		World.add(this);
-		World.init((int)getWidth(), (int)getHeight());
-		setVisible(true);
+		World.init((int) getWidth(), (int) getHeight());
 	}
 
-	public void end() {
+	public static void end() {
 		player.destroy();
-		for (Block b : blocks)
+		for (GameObject b : blocks)
 			b.destroy();
-	}
-
-	@Override
-	public void update() {
-		// TODO Auto-generated method stub
-
 	}
 
 	public void draw() {
 	}
 
-	public void loadFromFile(String name) {
+	public static void loadFromFile(String name) {
 		BufferedReader br = null;
 		blocks = new ArrayList<>();
 		try {
@@ -70,10 +55,10 @@ public class Level extends AbstractGameObject {
 
 			int width = Integer.parseInt(br.readLine());
 			int height = Integer.parseInt(br.readLine());
-			int difficulty = Integer.parseInt(br.readLine());
+			difficulty = Integer.parseInt(br.readLine());
 
-			setWidth(width * Block.SIZE);
-			setHeight(height * Block.SIZE);
+			setWidth((int) (width * Block.SIZE));
+			setHeight((int) (height * Block.SIZE));
 
 			int x = 0;
 			int y = 0;
@@ -81,27 +66,49 @@ public class Level extends AbstractGameObject {
 			String line;
 			while ((line = br.readLine()) != null) {
 				x = 0;
-				for (char c : line.toCharArray()) {
+				for (String c : line.split(" ")) {
 					if (x > width || y > height) {
 						System.err
 								.println("Inconsistent dimensions in lev file!");
 						br.close();
 						return;
 					}
-					switch (c) {
+
+					int difficultyModifier = 1;
+					if (c.length() > 1) {
+						difficultyModifier = Integer.parseInt(c.substring(1,
+								c.length()));
+					}
+
+					switch (c.charAt(0)) {
 					case BLOCK:
-						blocks.add(new ObstructingBlock(x, height - 1 - y, this));
+						blocks.add(new ObstructingBlock(x, height - 1 - y));
 						break;
 					case MULTIPLY:
-						blocks.add(new MultiplyBlock(x, height - 1 - y, difficulty, this));
+						blocks.add(new MultiplyBlock(x, height - 1 - y,
+								difficulty * difficultyModifier));
 						break;
 					case DIVIDE:
-						blocks.add(new DivideBlock(x, height - 1 - y, difficulty, this));
+						blocks.add(new DivideBlock(x, height - 1 - y,
+								difficulty * difficultyModifier));
+						break;
+					case ADD:
+						blocks.add(new AddBlock(x, height - 1 - y, difficulty
+								* difficultyModifier));
+						break;
+					case SUBTRACT:
+						blocks.add(new SubtractBlock(x, height - 1 - y,
+								difficulty * difficultyModifier));
+						break;
+					case COIN:
+						blocks.add(new Coin(x * Block.SIZE, (height - 1 - y)
+								* Block.SIZE, difficultyModifier));
 						break;
 					case FLOOR:
 						break;
 					case PLAYER:
-						player = new Player(x * Block.SIZE + Player.SIZE / 2, (height - 1 - y) * Block.SIZE + Player.SIZE / 2, this);
+						player = new Player(x * Block.SIZE + Player.SIZE / 2,
+								(height - 1 - y) * Block.SIZE + Player.SIZE / 2);
 						break;
 					default:
 						break;
@@ -122,5 +129,33 @@ public class Level extends AbstractGameObject {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	private static void setHeight(int height) {
+		if (height <= 0)
+			throw new IllegalArgumentException();
+		Level.height = height;
+	}
+
+	private static void setWidth(int width) {
+		if (width <= 0)
+			throw new IllegalArgumentException();
+		Level.width = width;
+	}
+
+	public static int getWidth() {
+		return width;
+	}
+
+	public static int getHeight() {
+		return height;
+	}
+
+	public static Player getPlayer() {
+		return player;
+	}
+
+	public static int getDifficulty() {
+		return difficulty;
 	}
 }

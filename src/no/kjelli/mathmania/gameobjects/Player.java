@@ -14,6 +14,7 @@ import no.kjelli.generic.gfx.Screen;
 import no.kjelli.generic.gfx.Sprite;
 import no.kjelli.generic.gfx.textures.TextureAtlas;
 import no.kjelli.mathmania.MathMania;
+import no.kjelli.mathmania.gameobjects.blocks.Block;
 import no.kjelli.mathmania.levels.Level;
 
 public class Player extends AbstractCollidable {
@@ -26,13 +27,10 @@ public class Player extends AbstractCollidable {
 	private static final double ACCELERATION = 0.5f;
 	private static final double MAX_SPEED = 3.0;
 
-	private final Level level;
-
 	public Block selection;
 
-	public Player(float x, float y, Level level) {
+	public Player(float x, float y) {
 		super(x, y, SIZE, SIZE);
-		this.level = level;
 		sprite = new Sprite(TextureAtlas.objects, base_x, base_y, SPRITE_SIZE,
 				SPRITE_SIZE);
 		tag(MathMania.tag_playfield);
@@ -40,20 +38,21 @@ public class Player extends AbstractCollidable {
 
 	@Override
 	public void onCreate() {
+		setVisible(true);
 	}
 
 	@Override
 	public void onCollision(Collision collision) {
 		Collidable target = collision.getTarget();
-		stop(collision.getImpactDirection());
-		if ((collision.getImpactDirection() & (Collision.LEFT | Collision.RIGHT)) > 0) {
-			velocity_x *= 0;
-		}
-		if ((collision.getImpactDirection() & (Collision.ABOVE | Collision.BELOW)) > 0) {
-			velocity_y *= 0;
-		}
 
 		if (target instanceof Block) {
+			stop(collision.getImpactDirection());
+			if ((collision.getImpactDirection() & (Collision.LEFT | Collision.RIGHT)) > 0) {
+				velocity_x *= 0;
+			}
+			if ((collision.getImpactDirection() & (Collision.ABOVE | Collision.BELOW)) > 0) {
+				velocity_y *= 0;
+			}
 			if (((Block) target).isObstructionBlock())
 				return;
 			if (selection != null) {
@@ -78,17 +77,10 @@ public class Player extends AbstractCollidable {
 				selection = null;
 			}
 		}
-
-		Screen.centerOn(this);
 	}
 
-	private long xOff;
-
 	private void animate() {
-		xOff = (int) Math.abs(Math.sin(MathMania.ticks / (10 * Math.PI)) * 11)
-				* SPRITE_SIZE;
-		sprite.setSpriteInAtlas((int) (base_x + xOff), base_y, SPRITE_SIZE,
-				SPRITE_SIZE);
+		sprite.setSpriteInAtlas(base_x, base_y, SPRITE_SIZE, SPRITE_SIZE);
 	}
 
 	private void handleInput() {

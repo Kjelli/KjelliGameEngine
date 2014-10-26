@@ -1,7 +1,6 @@
 package no.kjelli.mathmania;
 
-import static org.lwjgl.input.Keyboard.KEY_Q;
-import static org.lwjgl.input.Keyboard.isKeyDown;
+import static org.lwjgl.input.Keyboard.*;
 
 import java.io.IOException;
 
@@ -12,9 +11,12 @@ import no.kjelli.generic.gameobjects.Tagger;
 import no.kjelli.generic.gfx.Screen;
 import no.kjelli.generic.main.Main;
 import no.kjelli.generic.sound.SoundPlayer;
-import no.kjelli.mathmania.levels.Input;
+import no.kjelli.mathmania.gameobjects.Combo;
+import no.kjelli.mathmania.gameobjects.Input;
+import no.kjelli.mathmania.gameobjects.Question;
+import no.kjelli.mathmania.gameobjects.Score;
+import no.kjelli.mathmania.gameobjects.Timer;
 import no.kjelli.mathmania.levels.Level;
-import no.kjelli.mathmania.levels.Question;
 
 import org.newdawn.slick.Color;
 
@@ -22,6 +24,7 @@ public class MathMania implements Game {
 	public static int tag_playfield = Tagger.uniqueTag();
 	public static Question currentQuestion;
 	public static Input input = new Input();
+	public static Timer timer;
 
 	public static int question_cooldown = 0;
 	public static final int QUESTION_COOLDOWN = 20;
@@ -39,13 +42,34 @@ public class MathMania implements Game {
 	public static long ticks = 0;
 
 	private static int cooldown = 0;
-	private static Level currentLevel;
+
+	public Combo combo;
+	private Score score;
 
 	@Override
 	public void init() {
 		loadSounds();
 		initIntro();
 		initGame();
+	}
+
+	@Override
+	public void loadSounds() {
+		try {
+			SoundPlayer.load("bounce.wav");
+			SoundPlayer.load("win.wav");
+			SoundPlayer.load("coin.wav");
+			SoundPlayer.load("combo.wav");
+			SoundPlayer.load("wrong.wav");
+			SoundPlayer.load("right.wav");
+			SoundPlayer.load("lose.wav");
+			SoundPlayer.load("music.wav");
+			SoundPlayer.load("comboexpire.wav");
+			SoundPlayer.load("musicadd.wav");
+			SoundPlayer.load("musicbeat.wav");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void initIntro() {
@@ -58,9 +82,26 @@ public class MathMania implements Game {
 		state = STATE.PLAYING;
 
 		Screen.setBackgroundColor(Color.black);
+		Screen.zoom(2.0f);
 
-		currentLevel = new Level("1");
-		currentLevel.start();
+		combo = new Combo();
+		World.add(combo);
+		timer = new Timer();
+		World.add(timer);
+
+		score = new Score();
+		World.add(score);
+
+		timer.start();
+
+		Level.init("1");
+		Level.start();
+
+		SoundPlayer.music("music", 1.0f, 1.0f);
+		SoundPlayer.play("musicadd", 1.0f, 0.0f, true);
+		SoundPlayer.play("musicbeat", 1.0f, 0.0f, true);
+
+		Screen.centerOn(Level.getPlayer());
 	}
 
 	public static void initQuestion(Question q) {
@@ -70,9 +111,9 @@ public class MathMania implements Game {
 		playstate = PLAYSTATE.QUESTION;
 
 		World.pause(tag_playfield, true);
-		World.hide(tag_playfield, true);
+		// World.hide(tag_playfield, true);
 
-		input = new Input(Screen.getCenterX(), Screen.getCenterY(), q);
+		input = new Input(q);
 		World.add(input);
 
 		currentQuestion = q;
@@ -86,23 +127,12 @@ public class MathMania implements Game {
 			return;
 		playstate = PLAYSTATE.PLAYFIELD;
 		World.pause(tag_playfield, false);
-		World.hide(tag_playfield, false);
+		// World.hide(tag_playfield, false);
 
 		input.destroy();
 		currentQuestion.destroy();
 
 		question_cooldown = QUESTION_COOLDOWN;
-	}
-
-	@Override
-	public void loadSounds() {
-		try {
-			SoundPlayer.load("res\\bounce.wav");
-			SoundPlayer.load("res\\win.wav");
-			SoundPlayer.load("res\\lose.wav");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 	@Override
@@ -120,6 +150,10 @@ public class MathMania implements Game {
 		case MENU:
 			break;
 		case PLAYING:
+			if (isKeyDown(KEY_U))
+				SoundPlayer.setGain("music", 1.0f);
+			if (isKeyDown(KEY_J))
+				SoundPlayer.setGain("music", 0.1f);
 			if (isKeyDown(KEY_Q))
 				Screen.toggleDebugDraw();
 			break;
@@ -157,7 +191,7 @@ public class MathMania implements Game {
 	}
 
 	public static void main(String[] args) {
-		new Main(new MathMania(), "MathMania", 1366, 768, true);
+		new Main(new MathMania(), "MathMania", 800, 600, false);
 	}
 
 	@Override

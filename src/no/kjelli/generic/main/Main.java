@@ -1,6 +1,9 @@
 package no.kjelli.generic.main;
 
 import static org.lwjgl.opengl.GL11.*;
+
+import java.io.File;
+
 import no.kjelli.generic.Game;
 import no.kjelli.generic.Physics;
 import no.kjelli.generic.World;
@@ -131,6 +134,7 @@ public class Main {
 	private static void initGL() {
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
+		glViewport(0, 0, Display.getWidth(), Display.getHeight());
 		glOrtho(0, Display.getWidth(), 0, Display.getHeight(), -1, 1);
 		glMatrixMode(GL_MODELVIEW);
 
@@ -190,7 +194,7 @@ public class Main {
 		glLoadIdentity();
 
 		game.render();
-		
+
 		glFlush();
 
 		Display.update();
