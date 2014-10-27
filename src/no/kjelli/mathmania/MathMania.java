@@ -18,7 +18,6 @@ import no.kjelli.mathmania.gameobjects.Score;
 import no.kjelli.mathmania.gameobjects.Timer;
 import no.kjelli.mathmania.levels.Level;
 
-import org.lwjgl.opengl.GLContext;
 import org.newdawn.slick.Color;
 
 public class MathMania implements Game {
