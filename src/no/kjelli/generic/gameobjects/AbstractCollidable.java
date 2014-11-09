@@ -19,7 +19,7 @@ public abstract class AbstractCollidable extends AbstractGameObject implements
 
 	protected void stop(int impactDirection) {
 		colLeft = ((impactDirection & Collision.LEFT) > 0 || (colLeft));
-		colAbove = ((impactDirection & Collision.ABOVE) > 0 || (colAbove));
+		colAbove = ((impactDirection & Collision.UP) > 0 || (colAbove));
 		colRight = ((impactDirection & Collision.RIGHT) > 0 || (colRight));
 		colBelow = ((impactDirection & Collision.BELOW) > 0 || (colBelow));
 

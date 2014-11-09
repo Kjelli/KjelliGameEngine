@@ -29,6 +29,11 @@ public class Draw {
 			float rot, Color color, boolean followScreen) {
 		fillRect(x, y, 0, width, height, rot, color, followScreen);
 	}
+	
+	public static void fillRect(float x, float y, float z, float width,
+			float height, Color color) {
+		fillRect(x, y, z, width, height, 0, color, false);
+	}
 
 	public static void fillRect(float x, float y, float z, float width,
 			float height, float rot, Color color) {
@@ -109,7 +114,14 @@ public class Draw {
 
 	public static void sprite(Sprite sprite, float x, float y, float z,
 			float rot, float xScale, float yScale, boolean followScreen) {
+		sprite(sprite, x, y, z, 0.0f, 1.0f, 1.0f, false, false, false);
+	}
+
+	public static void sprite(Sprite sprite, float x, float y, float z,
+			float rot, float xScale, float yScale, boolean xFlip,
+			boolean yFlip, boolean followScreen) {
 		glPushMatrix();
+
 		{
 			if (followScreen) {
 				x += Screen.getX();
@@ -120,7 +132,9 @@ public class Draw {
 					y - Screen.getY() + sprite.getHeight() / 2, z);
 			glRotatef(rot, 0, 0, 1.0f);
 			glTranslatef(-sprite.getWidth() / 2, -sprite.getHeight() / 2, 0);
-			glScalef(xScale, yScale, 1.0f);
+			glScalef(xScale * (xFlip ? -1 : 1), yScale * (yFlip ? -1 : 1), 1.0f);
+			if (xFlip)
+				glTranslatef(-sprite.getWidth()-1, 0.0f, 0.0f);
 
 			Color color = sprite.getColor();
 
@@ -202,13 +216,13 @@ public class Draw {
 				object.getHeight() - 1, 0.0f, color, false);
 	}
 
-	public static void rect(float x, float y, float width, float height) {
-		rect(x, y, 0, width, height, 0, Draw.DEFAULT_COLOR, false);
+	public static void rect(float x, float y,float z, float width, float height) {
+		rect(x, y, z, width, height, 0, Draw.DEFAULT_COLOR, false);
 	}
 
-	public static void rect(float x, float y, float width, float height,
+	public static void rect(float x, float y, float z, float width, float height,
 			float rot) {
-		rect(x, y, 0, width, height, rot, Draw.DEFAULT_COLOR, false);
+		rect(x, y, z, width, height, rot, Draw.DEFAULT_COLOR, false);
 	}
 
 	public static void rect(float x, float y, float width, float height,
@@ -252,7 +266,7 @@ public class Draw {
 	}
 
 	public static void rect(GameObject object, float xOffset, float yOffset) {
-		rect(object.getX() + xOffset, object.getY() + yOffset,
+		rect(object.getX() + xOffset, object.getY() + yOffset, 0,
 				object.getWidth(), object.getHeight());
 	}
 

@@ -1,7 +1,6 @@
 package no.kjelli.generic.main;
 
 import static org.lwjgl.opengl.GL11.*;
-
 import no.kjelli.generic.Game;
 import no.kjelli.generic.World;
 import no.kjelli.generic.applet.AppletLauncher;
@@ -15,6 +14,7 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.openal.AL;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
+import org.lwjgl.opengl.GLContext;
 
 public class Launcher {
 
@@ -34,12 +34,14 @@ public class Launcher {
 		this.title = title;
 		this.width = width;
 		this.height = height;
+		this.fullscreen = fullscreen;
 		launch();
 	}
 
 	public Launcher(Game game, String title, boolean fullscreen,
 			AppletLauncher appletLauncher) {
 		Launcher.game = game;
+		this.fullscreen = fullscreen;
 		this.title = title;
 		this.width = (int) appletLauncher.getAppletSize().getWidth();
 		this.height = (int) appletLauncher.getAppletSize().getHeight();
@@ -66,7 +68,6 @@ public class Launcher {
 				gameLoop();
 				cleanUp();
 			}
-
 		};
 		gameThread.start();
 	}

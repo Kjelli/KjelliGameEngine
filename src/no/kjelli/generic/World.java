@@ -1,7 +1,10 @@
 package no.kjelli.generic;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 
+import no.kjelli.generic.gameobjects.Collidable;
 import no.kjelli.generic.gameobjects.GameObject;
 import no.kjelli.generic.gfx.Drawable;
 
@@ -26,7 +29,6 @@ public class World {
 	public static ArrayList<GameObject> getObjects() {
 		return objects;
 	}
-
 
 	public static void add(GameObject object) {
 		addQueue.add(object);
@@ -72,15 +74,18 @@ public class World {
 		removeQueue.clear();
 
 		Physics.quadtree.clear();
-		Physics.addObjects(objects);
+		for (GameObject gameObject : objects) {
+			if (gameObject instanceof Collidable)
+				Physics.quadtree.insert((Collidable) gameObject);
+		}
 		for (GameObject gameObject : objects) {
 			if (!gameObject.isPaused())
 				gameObject.update();
 		}
 	}
 
-	public static HashSet<GameObject> retrieveCollidables(
-			HashSet<GameObject> returnObjects, Rectangle bounds) {
+	public static HashSet<Collidable> retrieveCollidables(
+			HashSet<Collidable> returnObjects, Rectangle bounds) {
 		return Physics.quadtree.retrieve(returnObjects, bounds);
 	}
 
@@ -119,10 +124,10 @@ public class World {
 				o.pause(pause);
 	}
 
-	public static void hide(int tag, boolean visible) {
+	public static void hide(int tag, boolean hidden) {
 		for (GameObject o : objects)
 			if (o.hasTag(tag))
-				o.setVisible(!visible);
+				o.setVisible(!hidden);
 	}
 
 }

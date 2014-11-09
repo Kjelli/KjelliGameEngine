@@ -126,7 +126,7 @@ public class Screen {
 	private static void checkWorldMouseEvents() {
 		HashSet<GameObject> returnObjects = new HashSet<>();
 		World.retrieveAll(returnObjects,
-				new Rectangle(Mouse.getX(), Mouse.getY(), 1, 1));
+				new Rectangle((int)(Mouse.getX()*scale),(int)( Mouse.getY()*scale), 1, 1));
 		for (GameObject obj : returnObjects) {
 			if (obj instanceof Clickable) {
 				Clickable src = (Clickable) obj;
@@ -253,7 +253,7 @@ public class Screen {
 
 	public static void releaseMouseOverObjects() {
 		for (Clickable c : mouseOverEventObjects) {
-			if (!(c.contains(Mouse.getX(), Mouse.getY()))) {
+			if (!(c.contains(Mouse.getX()*scale, Mouse.getY()*scale))) {
 				mouseOverEventObjectsRemoveQueue.add(c);
 				c.onExit();
 			}

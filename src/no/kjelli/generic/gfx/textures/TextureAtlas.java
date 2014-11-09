@@ -7,8 +7,8 @@ import org.newdawn.slick.opengl.Texture;
 public class TextureAtlas {
 
 	public static final HashSet<TextureAtlas> list = new HashSet<>();
-
 	public static TextureAtlas objects = new TextureAtlas("res\\objects.png");
+	public static TextureAtlas partybombs = new TextureAtlas("res\\partybomb.png");
 	public static TextureAtlas font = new TextureAtlas("res\\fontsmall.png");
 
 	Texture atlasTexture;
@@ -21,7 +21,7 @@ public class TextureAtlas {
 		list.add(this);
 	}
 
-	private TextureAtlas(String location) {
+	public TextureAtlas(String location) {
 		this(Textures.load(location));
 	}
 

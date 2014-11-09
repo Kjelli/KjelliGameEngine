@@ -3,7 +3,7 @@ package no.kjelli.generic;
 import no.kjelli.generic.gameobjects.Collidable;
 
 public class Collision {
-	public static final int ABOVE = 1;
+	public static final int UP = 1;
 	public static final int BELOW = 2;
 	public static final int LEFT = 4;
 	public static final int RIGHT = 8;
@@ -34,7 +34,7 @@ public class Collision {
 				|| target.contains(source.getX() - 1,
 						source.getY() + source.getHeight() - 1);
 		if (above)
-			impactDirection += ABOVE;
+			impactDirection += UP;
 		if (below)
 			impactDirection += BELOW;
 		if (right)
@@ -61,7 +61,7 @@ public class Collision {
 				+ " and "
 				+ target
 				+ " direction: "
-				+ (((impactDirection & ABOVE) > 0 ? "ABOVE " : "")
+				+ (((impactDirection & UP) > 0 ? "ABOVE " : "")
 						+ ((impactDirection & LEFT) > 0 ? "LEFT " : "")
 						+ ((impactDirection & BELOW) > 0 ? "BELOW " : "") + ((impactDirection & RIGHT) > 0 ? "RIGHT "
 						: ""));

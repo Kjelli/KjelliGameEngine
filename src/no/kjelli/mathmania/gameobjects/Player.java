@@ -48,7 +48,7 @@ public class Player extends AbstractCollidable {
 			if ((collision.getImpactDirection() & (Collision.LEFT | Collision.RIGHT)) > 0) {
 				velocity_x *= 0;
 			}
-			if ((collision.getImpactDirection() & (Collision.ABOVE | Collision.BELOW)) > 0) {
+			if ((collision.getImpactDirection() & (Collision.UP | Collision.BELOW)) > 0) {
 				velocity_y *= 0;
 			}
 			if (((Block) target).isObstructionBlock())

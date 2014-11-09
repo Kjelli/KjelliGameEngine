@@ -4,6 +4,7 @@ import no.kjelli.generic.gameobjects.AbstractGameObject;
 
 public abstract class AbstractParticle extends AbstractGameObject {
 	protected long timeToLive;
+	private boolean sustain = false;
 
 	public AbstractParticle(float x, float y, float width, float height,
 			long timeToLive) {
@@ -14,6 +15,10 @@ public abstract class AbstractParticle extends AbstractGameObject {
 			throw new IllegalArgumentException("Illegal TTL: " + timeToLive);
 	}
 
+	protected void sustain(boolean sustain) {
+		this.sustain = sustain;
+	}
+
 	@Override
 	public void onCreate() {
 		setVisible(true);
@@ -21,10 +26,10 @@ public abstract class AbstractParticle extends AbstractGameObject {
 
 	@Override
 	public void update() {
-		if (timeToLive > 0) {
+		updateParticle();
+		if (timeToLive > 0 && !sustain) {
 			timeToLive--;
-			updateParticle();
-		} else
+		} else if (!sustain)
 			destroy();
 	}
 

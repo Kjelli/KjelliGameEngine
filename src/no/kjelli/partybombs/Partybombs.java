@@ -1,8 +1,9 @@
 package no.kjelli.partybombs;
 
-import static org.lwjgl.input.Keyboard.KEY_Q;
+import static org.lwjgl.input.Keyboard.*;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 import no.kjelli.generic.Game;
 import no.kjelli.generic.World;
@@ -11,11 +12,21 @@ import no.kjelli.generic.gameobjects.Tagger;
 import no.kjelli.generic.gfx.Screen;
 import no.kjelli.generic.main.Launcher;
 import no.kjelli.generic.sound.SoundPlayer;
+import no.kjelli.partybombs.gameobjects.Player;
+import no.kjelli.partybombs.levels.Level;
 
 import org.lwjgl.input.Keyboard;
 import org.newdawn.slick.Color;
+
+import com.esotericsoftware.kryonet.Client;
+import com.esotericsoftware.kryonet.Connection;
+import com.esotericsoftware.kryonet.Listener;
+import com.esotericsoftware.kryonet.Server;
+
 public class Partybombs implements Game {
+
 	public static int tag_playfield = Tagger.uniqueTag();
+	public static int block_size = 16;
 
 	public static enum STATE {
 		INTRO, MENU, LOADING, PLAYING
@@ -58,8 +69,10 @@ public class Partybombs implements Game {
 	public void initGame() {
 		World.clear();
 		state = STATE.PLAYING;
-		Screen.zoom(4.0f);
-		Screen.setBackgroundColor(new Color(0.2f,0.8f,0.2f));
+		Screen.zoom(3.0f);
+		Screen.setBackgroundColor(new Color(0.0f, 0.0f, 0.0f));
+		Level.init("level");
+		Level.start();
 	}
 
 	@Override
@@ -75,6 +88,10 @@ public class Partybombs implements Game {
 			int key = Keyboard.getEventKey();
 			boolean state = Keyboard.getEventKeyState();
 			switch (key) {
+			case KEY_0:
+				break;
+			case KEY_1:
+				break;
 			case KEY_Q:
 				if (state)
 					Screen.toggleDebugDraw();
@@ -112,6 +129,7 @@ public class Partybombs implements Game {
 		for (GameObject go : World.getObjects()) {
 			go.destroy();
 		}
+
 	}
 
 	public static void main(String[] args) {

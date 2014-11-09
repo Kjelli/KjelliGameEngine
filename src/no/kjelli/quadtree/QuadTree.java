@@ -11,8 +11,8 @@ import no.kjelli.generic.gfx.Draw;
 import org.lwjgl.util.Rectangle;
 import org.newdawn.slick.Color;
 
-public class QuadTree<E extends GameObject> {
-	public static final int MAX_CAPACITY = 5;
+public class QuadTree<E extends Collidable> {
+	public static final int MAX_CAPACITY = 10;
 	public static final int MAX_DEPTH = 5;
 
 	public static final int Q1 = 1;
@@ -189,12 +189,12 @@ public class QuadTree<E extends GameObject> {
 	 */
 
 	public void render() {
-		Draw.rect(borderLeft, borderBottom, width, height);
+		Draw.rect(borderLeft, borderBottom, 5f, width, height);
 		for (E object : objects) {
-			Draw.line(borderLeft + width / 2, borderBottom + height / 2, 4.1f,
+			Draw.line(borderLeft + width / 2, borderBottom + height / 2, 5f,
 					object.getX() + object.getWidth() / 2, object.getY()
 							+ object.getHeight() / 2, Color.red, false);
-			Draw.rect(object, 4.1f);
+			Draw.rect(object, 5f);
 		}
 		if (nodes[0] != null) {
 			for (int i = 0; i < nodes.length; i++) {

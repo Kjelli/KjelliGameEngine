@@ -99,10 +99,10 @@ public class Player extends AbstractCollidable {
 				stop(Collision.BELOW);
 				hitGround();
 				jumpTimer = 0;
-			} else if ((collision.getImpactDirection() & Collision.ABOVE) > 0) {
+			} else if ((collision.getImpactDirection() & Collision.UP) > 0) {
 				jumpTimer = 0;
 				velocity_y = -1.0f;
-				stop(Collision.ABOVE);
+				stop(Collision.UP);
 			}
 			if ((collision.getImpactDirection() & (Collision.LEFT | Collision.RIGHT)) > 0) {
 				stop(Collision.LEFT | Collision.RIGHT);
