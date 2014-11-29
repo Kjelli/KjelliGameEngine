@@ -6,6 +6,7 @@ import no.kjelli.generic.World;
 import no.kjelli.generic.applet.AppletLauncher;
 import no.kjelli.generic.gfx.Screen;
 import no.kjelli.generic.gfx.textures.TextureAtlas;
+import no.kjelli.generic.input.Input;
 import no.kjelli.generic.sound.SoundPlayer;
 
 import org.lwjgl.LWJGLException;
@@ -28,21 +29,20 @@ public class Launcher {
 
 	boolean running = false;
 
-	public Launcher(Game game, String title, int width, int height,
-			boolean fullscreen) {
+	public Launcher(Game game, boolean fullscreen) {
 		Launcher.game = game;
-		this.title = title;
-		this.width = width;
-		this.height = height;
+		this.title = game.getTitle();
+		this.width = (int) game.getWidth();
+		this.height = (int) game.getHeight();
 		this.fullscreen = fullscreen;
 		launch();
 	}
 
-	public Launcher(Game game, String title, boolean fullscreen,
+	public Launcher(Game game,boolean fullscreen,
 			AppletLauncher appletLauncher) {
 		Launcher.game = game;
 		this.fullscreen = fullscreen;
-		this.title = title;
+		this.title = game.getTitle();
 		this.width = (int) appletLauncher.getAppletSize().getWidth();
 		this.height = (int) appletLauncher.getAppletSize().getHeight();
 		try {
@@ -85,6 +85,8 @@ public class Launcher {
 		try {
 			setDisplayMode(width, height, fullscreen);
 			Display.setVSyncEnabled(true);
+
+			Display.setResizable(true);
 			Display.create();
 
 		} catch (LWJGLException e) {
@@ -189,17 +191,19 @@ public class Launcher {
 		game.init();
 	}
 
-	private void getInput() {
-		game.getInput();
-
+	private void pollInput() {
+		Input.pollInput();
 	}
 
 	private void gameLoop() {
 		while (running) {
-			if (Display.isCloseRequested()) {
+			if (Display.wasResized()) {
+				glViewport(0, 0, Display.getWidth(), Display.getHeight());
+			}
+			if (Display.isCloseRequested() || game.isCloseRequested()) {
 				running = false;
 			}
-			getInput();
+			pollInput();
 			update();
 			render();
 			calculateFrameRate();
@@ -243,32 +247,12 @@ public class Launcher {
 	}
 
 	private void cleanUp() {
-
-		long start = System.currentTimeMillis();
 		game.destroy();
-		System.out.println("Game took " + (System.currentTimeMillis() - start)
-				+ " millis");
-		start = System.currentTimeMillis();
 		TextureAtlas.destroy();
-		System.out.println("Textureatlas took "
-				+ (System.currentTimeMillis() - start) + " millis");
-		start = System.currentTimeMillis();
 		Keyboard.destroy();
-		System.out.println("Keyboard took "
-				+ (System.currentTimeMillis() - start) + " millis");
-		start = System.currentTimeMillis();
 		Mouse.destroy();
-		System.out.println("Mouse took " + (System.currentTimeMillis() - start)
-				+ " millis");
-		start = System.currentTimeMillis();
 		Display.destroy();
-		System.out.println("Display took "
-				+ (System.currentTimeMillis() - start) + " millis");
-		start = System.currentTimeMillis();
 		AL.destroy();
-		start = System.currentTimeMillis();
-		System.out.println("AL took " + (System.currentTimeMillis() - start)
-				+ " millis");
 	}
 
 	public Game getGame() {

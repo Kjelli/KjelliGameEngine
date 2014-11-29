@@ -8,10 +8,16 @@ public interface Game {
 
 	public void render();
 
-	public void getInput();
-
 	public void update();
 
 	public void destroy();
+	
+	public double getWidth();
+	
+	public double getHeight();
+
+	public boolean isCloseRequested();
+
+	public String getTitle();
 
 }

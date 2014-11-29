@@ -14,7 +14,7 @@ public class Sprite {
 			'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q',
 			'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'æ', 'ø', 'å', '.',
 			',', '?', ':', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-			'+', '/', '-', '=', '_' };
+			'+', '/', '-', '=', '_','!','@','(',')','[',']','<','>' };
 
 	private static Sprite[] initializeFont() {
 		Sprite[] temp = new Sprite[charList.length];

@@ -25,6 +25,7 @@ public class MathMania implements Game {
 	public static Question currentQuestion;
 	public static Input input;
 	public static Timer timer;
+	private static boolean isCloseRequested = false;
 
 	public static int question_cooldown = 0;
 	public static final int QUESTION_COOLDOWN = 20;
@@ -143,33 +144,6 @@ public class MathMania implements Game {
 	}
 
 	@Override
-	public void getInput() {
-		switch (state) {
-		case INTRO:
-			break;
-		case LOADING:
-			break;
-		case MENU:
-			break;
-		case PLAYING:
-			if (isKeyDown(KEY_R)) {
-				destroy();
-				initGame();
-			}
-			if (isKeyDown(KEY_U))
-				SoundPlayer.setGain("music", 1.0f);
-			if (isKeyDown(KEY_J))
-				SoundPlayer.setGain("music", 0.1f);
-			if (isKeyDown(KEY_Q))
-				Screen.toggleDebugDraw();
-			break;
-		default:
-			break;
-
-		}
-	}
-
-	@Override
 	public void update() {
 		ticks++;
 		if (question_cooldown > 0)
@@ -197,7 +171,7 @@ public class MathMania implements Game {
 	}
 
 	public static void main(String[] args) {
-		new Launcher(new MathMania(), "MathMania", 800, 600, true);
+		new Launcher(new MathMania(), true);
 	}
 
 	@Override
@@ -205,5 +179,25 @@ public class MathMania implements Game {
 		for (GameObject go : World.getObjects()) {
 			go.destroy();
 		}
+	}
+
+	@Override
+	public boolean isCloseRequested() {
+		return isCloseRequested;
+	}
+
+	@Override
+	public double getWidth() {
+		return 480;
+	}
+
+	@Override
+	public double getHeight() {
+		return 600;
+	}
+
+	@Override
+	public String getTitle() {
+		return "MathMania";
 	}
 }

@@ -27,6 +27,7 @@ public class Partybombs implements Game {
 
 	public static int tag_playfield = Tagger.uniqueTag();
 	public static int block_size = 16;
+	private static boolean isCloseRequested = false;
 
 	public static enum STATE {
 		INTRO, MENU, LOADING, PLAYING
@@ -81,28 +82,6 @@ public class Partybombs implements Game {
 	}
 
 	@Override
-	public void getInput() {
-		Keyboard.poll();
-
-		while (Keyboard.next()) {
-			int key = Keyboard.getEventKey();
-			boolean state = Keyboard.getEventKeyState();
-			switch (key) {
-			case KEY_0:
-				break;
-			case KEY_1:
-				break;
-			case KEY_Q:
-				if (state)
-					Screen.toggleDebugDraw();
-				break;
-			default:
-				break;
-			}
-		}
-	}
-
-	@Override
 	public void update() {
 		ticks++;
 		switch (state) {
@@ -132,7 +111,27 @@ public class Partybombs implements Game {
 
 	}
 
+	@Override
+	public boolean isCloseRequested() {
+		return isCloseRequested;
+	}
+
+	@Override
+	public double getWidth() {
+		return 640;
+	}
+
+	@Override
+	public double getHeight() {
+		return 480;
+	}
+
+	@Override
+	public String getTitle() {
+		return "Partybombs";
+	}
+
 	public static void main(String[] args) {
-		new Launcher(new Partybombs(), "Partybombs", 640, 480, false);
+		new Launcher(new Partybombs(), false);
 	}
 }

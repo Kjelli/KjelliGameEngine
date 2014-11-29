@@ -4,11 +4,8 @@ import static org.lwjgl.input.Keyboard.*;
 
 import java.io.IOException;
 
-import org.lwjgl.input.Keyboard;
-
 import no.kjelli.generic.Game;
 import no.kjelli.generic.World;
-import no.kjelli.generic.applet.AppletLauncher;
 import no.kjelli.generic.gameobjects.GameObject;
 import no.kjelli.generic.gameobjects.Tagger;
 import no.kjelli.generic.gfx.Screen;
@@ -16,9 +13,9 @@ import no.kjelli.generic.main.Launcher;
 import no.kjelli.generic.sound.SoundPlayer;
 import no.kjelli.platformer.gameobjects.MovingOnewayPlatform;
 import no.kjelli.platformer.gameobjects.OnewayPlatform;
-import no.kjelli.platformer.gameobjects.AbstractPlatform;
 import no.kjelli.platformer.gameobjects.Player;
-import no.kjelli.platformer.gameobjects.SolidPlatform;
+
+import org.lwjgl.input.Keyboard;
 
 public class Platformer implements Game {
 	public static int tag_playfield = Tagger.uniqueTag();
@@ -29,6 +26,7 @@ public class Platformer implements Game {
 
 	public static STATE state;
 	public static long ticks = 0;
+	private static boolean isCloseRequested = false;
 
 	@Override
 	public void init() {
@@ -83,24 +81,6 @@ public class Platformer implements Game {
 	}
 
 	@Override
-	public void getInput() {
-		Keyboard.poll();
-
-		while (Keyboard.next()) {
-			int key = Keyboard.getEventKey();
-			boolean state = Keyboard.getEventKeyState();
-			switch (key) {
-			case KEY_Q:
-				if (state)
-					Screen.toggleDebugDraw();
-				break;
-			default:
-				break;
-			}
-		}
-	}
-
-	@Override
 	public void update() {
 		ticks++;
 		switch (state) {
@@ -129,7 +109,27 @@ public class Platformer implements Game {
 		}
 	}
 
+	@Override
+	public boolean isCloseRequested() {
+		return isCloseRequested;
+	}
+
+	@Override
+	public double getWidth() {
+		return 640;
+	}
+
+	@Override
+	public double getHeight() {
+		return 480;
+	}
+
+	@Override
+	public String getTitle() {
+		return "Platformer";
+	}
+
 	public static void main(String[] args) {
-		new Launcher(new Platformer(), "Platformer", 640, 480, false);
+		new Launcher(new Platformer(), false);
 	}
 }

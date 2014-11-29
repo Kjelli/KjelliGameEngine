@@ -27,9 +27,18 @@ public abstract class AbstractGameObject implements GameObject {
 	private int tag;
 	private boolean pause = false;
 
+	@Deprecated
 	public AbstractGameObject(float x, float y, float width, float height) {
 		setX(x);
 		setY(y);
+		setWidth(width);
+		setHeight(height);
+	}
+	
+	public AbstractGameObject(float x, float y, float z, float width, float height) {
+		setX(x);
+		setY(y);
+		setZ(z);
 		setWidth(width);
 		setHeight(height);
 	}
