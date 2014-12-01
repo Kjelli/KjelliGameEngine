@@ -1,4 +1,4 @@
-package no.kjelli.generic.gfx;
+package no.kjelli.generic.gfx.texts;
 
 import org.lwjgl.opengl.Display;
 import org.newdawn.slick.Color;
@@ -8,6 +8,7 @@ import no.kjelli.generic.gfx.Draw;
 import no.kjelli.generic.gfx.Screen;
 import no.kjelli.generic.gfx.Sprite;
 
+//TODO extend TextStatic for consistency
 public class TextScrolling extends AbstractGameObject {
 	private static final float scale = 1.0f;
 	private String text;

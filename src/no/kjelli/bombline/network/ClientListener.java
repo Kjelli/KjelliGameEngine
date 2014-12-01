@@ -1,9 +1,9 @@
 package no.kjelli.bombline.network;
 
 import no.kjelli.bombline.BombermanOnline;
-import no.kjelli.bombline.levels.Level;
+import no.kjelli.bombline.levels.LevelWrapper;
 import no.kjelli.generic.World;
-import no.kjelli.generic.gfx.TextScrolling;
+import no.kjelli.generic.gfx.texts.TextScrolling;
 
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
@@ -33,6 +33,7 @@ public class ClientListener extends Listener {
 				if (p.accepted) {
 					client.sendTCP(new PacketPlayerCredentials(client.getID(),
 							BombermanOnline.name, true));
+					LevelWrapper.setReceiving(true);
 					client.sendTCP(new PacketLevelRequest(client.getID()));
 				} else {
 					BombermanOnline.initIntro();
@@ -41,7 +42,7 @@ public class ClientListener extends Listener {
 					World.add(new TextScrolling("Game already started!"));
 				}
 			} else {
-				Level.addPacket((Packet) object);
+				LevelWrapper.addPacket((Packet) object);
 			}
 		}
 	}

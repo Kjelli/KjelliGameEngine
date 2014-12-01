@@ -4,7 +4,7 @@ import no.kjelli.bombline.BombermanOnline;
 import no.kjelli.bombline.gameobjects.powerups.PowerupBomb;
 import no.kjelli.bombline.gameobjects.powerups.PowerupFire;
 import no.kjelli.bombline.gameobjects.powerups.PowerupSpeed;
-import no.kjelli.bombline.levels.Level;
+import no.kjelli.bombline.levels.LevelWrapper;
 import no.kjelli.bombline.network.Network;
 import no.kjelli.generic.Collision;
 import no.kjelli.generic.World;
@@ -67,7 +67,7 @@ public class Destructible extends AbstractCollidable {
 		if (!destroying) {
 			destroying = true;
 			Floor floor = new Floor(x_index, y_index, true);
-			Level.addGameObject(floor);
+			LevelWrapper.addGameObject(floor);
 			World.add(floor);
 			sprite.setTextureCoords(blow_x, blow_y, SPRITE_WIDTH, SPRITE_HEIGHT);
 			if (Network.isHosting())
