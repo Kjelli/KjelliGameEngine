@@ -4,7 +4,7 @@ import org.newdawn.slick.Color;
 
 import no.kjelli.bombline.BombermanOnline;
 import no.kjelli.bombline.gameobjects.Fire;
-import no.kjelli.bombline.levels.LevelWrapper;
+import no.kjelli.bombline.levels.Level;
 import no.kjelli.generic.Collision;
 import no.kjelli.generic.Physics;
 import no.kjelli.generic.World;
@@ -51,7 +51,7 @@ public class Bomb extends AbstractCollidable {
 		this.isSuper = isSuper;
 		sprite = new Sprite(TextureAtlas.partybombs, base_x, base_y,
 				SPRITE_WIDTH, SPRITE_HEIGHT);
-		z = 2.0f - y / LevelWrapper.getHeight();
+		z = 2.0f - y / Level.getHeight();
 		tag(BombermanOnline.tag_playfield);
 
 		if (isSuper)

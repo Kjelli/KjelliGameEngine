@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.newdawn.slick.Color;
 
 import no.kjelli.bombline.gameobjects.particles.BombParticle;
-import no.kjelli.bombline.levels.LevelWrapper;
+import no.kjelli.bombline.levels.Level;
 import no.kjelli.bombline.menu.ConnectButton;
 import no.kjelli.bombline.menu.InputConnect;
 import no.kjelli.bombline.menu.HostButton;
@@ -17,9 +17,9 @@ import no.kjelli.generic.World;
 import no.kjelli.generic.gameobjects.GameObject;
 import no.kjelli.generic.gameobjects.Tagger;
 import no.kjelli.generic.gfx.Screen;
+import no.kjelli.generic.gfx.TextScrolling;
 import no.kjelli.generic.gfx.Sprite;
-import no.kjelli.generic.gfx.texts.TextScrolling;
-import no.kjelli.generic.gfx.texts.TextStatic;
+import no.kjelli.generic.gfx.TextStatic;
 import no.kjelli.generic.main.Launcher;
 import no.kjelli.generic.sound.SoundPlayer;
 
@@ -110,7 +110,7 @@ public class BombermanOnline implements Game {
 			if (Network.hostServer()) {
 				World.clear();
 
-				LevelWrapper.init("level");
+				Level.init("level");
 
 				World.add(new TextScrolling("Hosting (" + Network.TCP_PORT
 						+ ")"));
@@ -194,7 +194,7 @@ public class BombermanOnline implements Game {
 			break;
 		}
 
-		LevelWrapper.parsePackets();
+		Level.parsePackets();
 		World.update();
 		Screen.update();
 

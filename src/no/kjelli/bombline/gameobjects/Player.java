@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import no.kjelli.bombline.BombermanOnline;
-import no.kjelli.bombline.levels.LevelWrapper;
+import no.kjelli.bombline.levels.Level;
 import no.kjelli.bombline.network.Network;
 import no.kjelli.bombline.network.PacketPlayerLoseLife;
 import no.kjelli.bombline.network.PacketPlayerPlaceBomb;
@@ -23,9 +23,9 @@ import no.kjelli.generic.gameobjects.Collidable;
 import no.kjelli.generic.gfx.Draw;
 import no.kjelli.generic.gfx.Screen;
 import no.kjelli.generic.gfx.Sprite;
-import no.kjelli.generic.gfx.texts.TextFading;
-import no.kjelli.generic.gfx.texts.TextScrolling;
-import no.kjelli.generic.gfx.texts.TextStatic;
+import no.kjelli.generic.gfx.TextFading;
+import no.kjelli.generic.gfx.TextScrolling;
+import no.kjelli.generic.gfx.TextStatic;
 import no.kjelli.generic.gfx.textures.TextureAtlas;
 import no.kjelli.generic.input.InputListener;
 import no.kjelli.mathmania.gameobjects.particles.GlitterParticle;
@@ -277,7 +277,7 @@ public class Player extends AbstractCollidable {
 		horizontalAcceleration();
 		verticalAcceleration();
 		if (velocity_x != 0 || velocity_y != 0) {
-			z = 2.0f - y / LevelWrapper.getHeight();
+			z = 2.0f - y / Level.getHeight();
 			move();
 			playerName.setX(x + width / 2 - name.length() * Sprite.CHAR_WIDTH
 					/ 2);
@@ -486,17 +486,13 @@ public class Player extends AbstractCollidable {
 	public void setName(String name) {
 		this.name = name;
 
-		if (playerName != null) {
-			playerName.setText(name);
-			playerName.setX(x + width / 2 - name.length() * Sprite.CHAR_WIDTH
-					/ 2);
-			playerName.setY(y + 2 * Sprite.CHAR_HEIGHT);
-		} else {
-			playerName = new TextStatic(getName(), getX() + getWidth() / 2
-					- name.length() * Sprite.CHAR_WIDTH / 2, getY() + 2
-					* Sprite.CHAR_HEIGHT, Color.white, false);
-			World.add(playerName);
-		}
+		if (playerName != null)
+			playerName.destroy();
+
+		playerName = new TextStatic(getName(), getX() + getWidth() / 2
+				- name.length() * Sprite.CHAR_WIDTH / 2, getY() + 2
+				* Sprite.CHAR_HEIGHT, Color.white, false);
+		World.add(playerName);
 	}
 
 	public String getName() {
@@ -505,12 +501,6 @@ public class Player extends AbstractCollidable {
 
 	public void displayName(boolean display) {
 		playerName.setVisible(display);
-	}
-	
-	@Override
-	public void destroy() {
-		playerName.destroy();
-		super.destroy();
 	}
 
 }

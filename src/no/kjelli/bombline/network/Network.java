@@ -6,7 +6,7 @@ import no.kjelli.bombline.BombermanOnline;
 import no.kjelli.bombline.BombermanOnline.STATE;
 import no.kjelli.bombline.gameobjects.PlayerMP;
 import no.kjelli.generic.World;
-import no.kjelli.generic.gfx.texts.TextScrolling;
+import no.kjelli.generic.gfx.TextScrolling;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Client;
