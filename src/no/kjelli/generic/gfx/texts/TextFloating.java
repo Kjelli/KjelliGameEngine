@@ -1,4 +1,4 @@
-package no.kjelli.generic.gfx;
+package no.kjelli.generic.gfx.texts;
 
 import no.kjelli.bombline.BombermanOnline;
 

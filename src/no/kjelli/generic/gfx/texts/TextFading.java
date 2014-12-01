@@ -1,27 +1,22 @@
-package no.kjelli.generic.gfx;
+package no.kjelli.generic.gfx.texts;
 
 import org.newdawn.slick.Color;
-
 import no.kjelli.generic.gameobjects.AbstractGameObject;
 import no.kjelli.generic.gfx.Draw;
 import no.kjelli.generic.gfx.Sprite;
 
-public class TextStatic extends AbstractGameObject {
+public class TextFading extends AbstractGameObject {
 	private static final float scale = 1.0f;
 	private String text;
 	private Color color;
-	private boolean followScreen;
+	private int timeToLiveMax;
+	private int timeToLive;
 
-	public TextStatic(String text, float x, float y, Color color) {
-		this(text, x, y, color, true);
-	}
-
-	public TextStatic(String text, float x, float y, Color color,
-			boolean followScreen) {
+	public TextFading(String text, float x, float y, Color color, int timeToLive) {
 		super(x, y, 4f, Sprite.CHAR_WIDTH * text.length(), Sprite.CHAR_HEIGHT
 				* scale);
+		this.timeToLiveMax = this.timeToLive = timeToLive;
 		this.text = text;
-		this.followScreen = followScreen;
 		this.color = new Color(color);
 	}
 
@@ -32,10 +27,16 @@ public class TextStatic extends AbstractGameObject {
 
 	@Override
 	public void update() {
+		if (timeToLive > 0) {
+			timeToLive--;
+			color.a = (float) timeToLive / timeToLiveMax;
+		} else {
+			destroy();
+		}
 	}
 
 	@Override
 	public void draw() {
-		Draw.string(text, x, y, z, scale, scale, color, followScreen);
+		Draw.string(text, x, y, z, scale, scale, color, false);
 	}
 }
