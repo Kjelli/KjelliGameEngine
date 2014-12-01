@@ -23,13 +23,12 @@ public abstract class InputBox extends AbstractUIObject implements Focusable,
 	private boolean symbolsAllowed = true, numbersAllowed = true,
 			alphanumericAllowed = true, spaceAllowed = true;
 
-	public InputBox(float x, float y, int maxLength, String defaultText,
-			Color foreground, Color background, Color bghighlight,
-			Color fghighlight) {
+	public InputBox(float x, float y, int maxLength, Color foreground,
+			Color background, Color bghighlight, Color fghighlight) {
 		super(x, y, 4f, Sprite.CHAR_WIDTH * maxLength + 2,
 				Sprite.CHAR_HEIGHT + 2);
-		this.defaultText = defaultText;
-		input = defaultText;
+		this.defaultText = getDefaultText();
+		this.input = defaultText;
 		this.foreground = foreground;
 		this.background = background;
 		this.fghighlight = fghighlight;
@@ -125,6 +124,8 @@ public abstract class InputBox extends AbstractUIObject implements Focusable,
 			initialEdit = false;
 		}
 	}
+
+	protected abstract String getDefaultText();
 
 	protected abstract void onInputComplete();
 

@@ -10,7 +10,8 @@ public class PlayerMP extends Player {
 	int id;
 
 	public PlayerMP(int id, String name) {
-		super(LevelWrapper.getPlayerSpawnX(id), LevelWrapper.getPlayerSpawnY(id));
+		super(LevelWrapper.getLevel().getPlayerSpawnX(id), LevelWrapper
+				.getLevel().getPlayerSpawnY(id));
 		this.invincibillity_timer = INVINCIBILLITY_TIMER_MAX;
 		this.id = id;
 		System.out.println("Setting name to " + name);
@@ -37,7 +38,7 @@ public class PlayerMP extends Player {
 			walkingFrame = 0;
 			animationChange = true;
 		}
-		z = 2.0f - y / LevelWrapper.getHeight();
+		z = 2.0f - y / LevelWrapper.getLevel().getHeight();
 	}
 
 	public int getID() {

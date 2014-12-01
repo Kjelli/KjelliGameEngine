@@ -47,6 +47,8 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.Rectangle;
 import org.newdawn.slick.Color;
 
+import com.esotericsoftware.kryonet.FrameworkMessage;
+
 public class LevelWrapper {
 	private static final String HOST_PLAYERS_MESSAGE = "Waiting for players: ";
 	private static final String HOST_MESSAGE = "Press space to play!";
@@ -80,8 +82,8 @@ public class LevelWrapper {
 				}
 			}
 			if (eventKey == Keyboard.KEY_V) {
-				getPlayer().displayName(false);
-				for (Player p : getPlayersMP()) {
+				level.getPlayer().displayName(false);
+				for (Player p : level.getPlayersMP()) {
 					p.displayName(false);
 				}
 			}
@@ -91,8 +93,8 @@ public class LevelWrapper {
 		@Override
 		public void keyDown(int eventKey) {
 			if (eventKey == Keyboard.KEY_V) {
-				getPlayer().displayName(true);
-				for (Player p : getPlayersMP()) {
+				level.getPlayer().displayName(true);
+				for (Player p : level.getPlayersMP()) {
 					p.displayName(true);
 				}
 			}
@@ -105,7 +107,9 @@ public class LevelWrapper {
 	}
 
 	public static void init(String filename) {
-		LevelImports.loadFromFile(filename);
+		if (level != null)
+			level.end();
+		level = LevelImports.loadFromFile(filename);
 		lastLoadedLevel = filename;
 		prepareLevel();
 	}
@@ -114,6 +118,7 @@ public class LevelWrapper {
 
 		World.pause(BombermanOnline.tag_playfield, true);
 		World.init((int) level.getWidth(), (int) level.getHeight());
+
 		level.addObjectsToWorld();
 
 		// TODO validate/improve this zooming method
@@ -179,7 +184,7 @@ public class LevelWrapper {
 			} else if (packet instanceof PacketPlayerUpdate) {
 				updatePlayerMP((PacketPlayerUpdate) packet);
 			} else if (packet instanceof PacketPlayerUpdateRequest) {
-				if (level.getPlayer() != null) {
+				if (level != null && level.getPlayer() != null) {
 					level.getPlayer().sendInfo();
 				} else {
 					incomingPackets.add(incomingPackets.remove(0));
@@ -201,7 +206,7 @@ public class LevelWrapper {
 				loseLife((PacketPlayerLoseLife) packet);
 			} else if (packet instanceof PacketLevelStart) {
 				start();
-			} else {
+			}  else {
 				System.err.println("Unknown packet: " + packet);
 			}
 			incomingPackets.remove(0);
@@ -295,7 +300,10 @@ public class LevelWrapper {
 	}
 
 	private static void receiveLevel(PacketLevelResponse packet) {
-		LevelImports.loadFromMap(packet);
+		if (level != null)
+			level.end();
+
+		level = LevelImports.loadFromMap(packet);
 		setReceiving(false);
 		prepareLevel();
 	}
@@ -350,6 +358,10 @@ public class LevelWrapper {
 
 	public static void setReceiving(boolean receiving) {
 		LevelWrapper.receiving = receiving;
+	}
+
+	public static Level getLevel() {
+		return level;
 	}
 
 }

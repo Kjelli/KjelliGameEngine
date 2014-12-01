@@ -110,7 +110,7 @@ public class BombermanOnline implements Game {
 			if (Network.hostServer()) {
 				World.clear();
 
-				LevelWrapper.init("level");
+				LevelWrapper.init("level2");
 
 				World.add(new TextScrolling("Hosting (" + Network.TCP_PORT
 						+ ")"));

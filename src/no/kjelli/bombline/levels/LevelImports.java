@@ -24,7 +24,7 @@ public class LevelImports {
 	private static int[] playerSpawnY;
 	private static char[][] map;
 
-	public static void loadFromFile(String name) {
+	public static Level loadFromFile(String name) {
 		BufferedReader br = null;
 		objects = new ArrayList<>();
 		try {
@@ -48,7 +48,7 @@ public class LevelImports {
 						System.err
 								.println("Inconsistent dimensions in lev file!");
 						br.close();
-						return;
+						return null;
 					}
 					char blocktype = ' ';
 					if (block.length() > 1) {
@@ -79,7 +79,7 @@ public class LevelImports {
 				}
 				y++;
 			}
-			return;
+			return buildLevel();
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -90,11 +90,14 @@ public class LevelImports {
 				e.printStackTrace();
 			}
 		}
+		return null;
 
 	}
 
-	public static void loadFromMap(PacketLevelResponse packet) {
-		char[][] map = packet.levelMap;
+	public static Level loadFromMap(PacketLevelResponse packet) {
+		map = packet.levelMap;
+		width = map.length;
+		height = map[0].length;
 		maxPlayers = packet.maxPlayers;
 		playerSpawnX = new int[maxPlayers];
 		playerSpawnY = new int[maxPlayers];
@@ -105,6 +108,7 @@ public class LevelImports {
 				determineBlock(blocktype, x, y);
 			}
 		}
+		return buildLevel();
 	}
 
 	private static void determineBlock(char blocktype, int x, int y) {
@@ -147,5 +151,12 @@ public class LevelImports {
 			objects.add(player);
 		}
 		objects.add(new Floor(x, y));
+	}
+
+	private static Level buildLevel() {
+		Level newLevel = new Level(width, height, objects, player, maxPlayers,
+				playerSpawnX, playerSpawnY, map);
+		return newLevel;
+
 	}
 }

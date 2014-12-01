@@ -51,7 +51,7 @@ public class Bomb extends AbstractCollidable {
 		this.isSuper = isSuper;
 		sprite = new Sprite(TextureAtlas.partybombs, base_x, base_y,
 				SPRITE_WIDTH, SPRITE_HEIGHT);
-		z = 2.0f - y / LevelWrapper.getHeight();
+		z = (float) (2.0f - y / BombermanOnline.getGameHeight());
 		tag(BombermanOnline.tag_playfield);
 
 		if (isSuper)

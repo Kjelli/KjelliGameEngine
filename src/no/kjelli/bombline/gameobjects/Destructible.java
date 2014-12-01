@@ -67,7 +67,6 @@ public class Destructible extends AbstractCollidable {
 		if (!destroying) {
 			destroying = true;
 			Floor floor = new Floor(x_index, y_index, true);
-			LevelWrapper.addGameObject(floor);
 			World.add(floor);
 			sprite.setTextureCoords(blow_x, blow_y, SPRITE_WIDTH, SPRITE_HEIGHT);
 			if (Network.isHosting())
@@ -81,9 +80,9 @@ public class Destructible extends AbstractCollidable {
 
 		if (determinant < 10) {
 			World.add(new PowerupBomb(x_index, y_index));
-		}else if(determinant < 20){
+		} else if (determinant < 20) {
 			World.add(new PowerupSpeed(x_index, y_index));
-		}else if(determinant < 30){
+		} else if (determinant < 30) {
 			World.add(new PowerupFire(x_index, y_index));
 		}
 

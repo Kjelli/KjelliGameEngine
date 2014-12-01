@@ -277,7 +277,7 @@ public class Player extends AbstractCollidable {
 		horizontalAcceleration();
 		verticalAcceleration();
 		if (velocity_x != 0 || velocity_y != 0) {
-			z = 2.0f - y / LevelWrapper.getHeight();
+			z = 2.0f - y / LevelWrapper.getLevel().getHeight();
 			move();
 			playerName.setX(x + width / 2 - name.length() * Sprite.CHAR_WIDTH
 					/ 2);
