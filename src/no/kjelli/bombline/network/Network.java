@@ -3,10 +3,10 @@ package no.kjelli.bombline.network;
 import java.io.IOException;
 
 import no.kjelli.bombline.BombermanOnline;
+import no.kjelli.bombline.BombermanOnline.STATE;
 import no.kjelli.bombline.gameobjects.PlayerMP;
-import no.kjelli.bombline.levels.Level;
 import no.kjelli.generic.World;
-import no.kjelli.generic.gfx.ScrollingText;
+import no.kjelli.generic.gfx.TextScrolling;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Client;
@@ -14,8 +14,8 @@ import com.esotericsoftware.kryonet.Server;
 import com.esotericsoftware.minlog.Log;
 
 public class Network {
-	public static Client client;
-	public static Server server;
+	private static Client client;
+	private static Server server;
 
 	public static final int TCP_PORT = 4567;
 	public static final int UDP_PORT = 4568;
@@ -28,13 +28,19 @@ public class Network {
 
 	public static void register(Kryo kryo) {
 		kryo.register(PlayerMP.class);
-		kryo.register(PacketPlayerAdd.class);
 		kryo.register(PacketPlayerRemove.class);
 		kryo.register(PacketPlayerPlaceBomb.class);
+		kryo.register(PacketPlayerLoseLife.class);
 		kryo.register(PacketPlayerUpdate.class);
+		kryo.register(PacketLevelStart.class);
+		kryo.register(PacketPlayerCredentials.class);
+		kryo.register(PacketPlayerJoinRequest.class);
+		kryo.register(PacketPlayerJoinResponse.class);
 		kryo.register(PacketPlayerUpdateRequest.class);
 		kryo.register(PacketLevelRequest.class);
 		kryo.register(PacketLevelResponse.class);
+		kryo.register(PacketPowerupSpawn.class);
+		kryo.register(PacketPowerupGain.class);
 		kryo.register(char[].class);
 		kryo.register(char[][].class);
 	}
@@ -47,14 +53,16 @@ public class Network {
 		register(server.getKryo());
 		server.addListener(new ServerListener(server));
 		try {
+			BombermanOnline.state = STATE.WAITING_FOR_PLAYERS;
 			server.bind(TCP_PORT, UDP_PORT);
 			connect(TIMEOUT, "localhost", TCP_PORT, UDP_PORT);
 			return true;
 		} catch (IOException e) {
 			server.stop();
 			server = null;
-			World.add(new ScrollingText(e.getClass().getSimpleName()));
+			World.add(new TextScrolling(e.getClass().getSimpleName()));
 			e.printStackTrace();
+			BombermanOnline.state = STATE.INTRO;
 			return false;
 		}
 	}
@@ -93,10 +101,26 @@ public class Network {
 		} catch (IOException e) {
 			client.stop();
 			client = null;
-			World.add(new ScrollingText(e.getClass().getSimpleName()));
+			World.add(new TextScrolling(e.getClass().getSimpleName()));
 			e.printStackTrace();
 			return false;
 		}
+	}
+
+	public static boolean isOnline() {
+		return Network.client != null && Network.client.isConnected();
+	}
+
+	public static boolean isHosting() {
+		return server != null && isOnline();
+	}
+	
+	public static Server getServer(){
+		return server;
+	}
+	
+	public static Client getClient(){
+		return client;
 	}
 
 }

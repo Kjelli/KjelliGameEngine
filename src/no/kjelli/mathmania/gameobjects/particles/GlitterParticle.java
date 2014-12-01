@@ -28,6 +28,16 @@ public class GlitterParticle extends AbstractParticle {
 		velocity_y = -0.1f;
 	}
 
+	public GlitterParticle(float x, float y, float z, GameObject object) {
+		super(x, y, z, SIZE, SIZE, TIME_TO_LIVE_MAX);
+		sprite = new Sprite(TextureAtlas.objects, BASE_X, BASE_Y, SPRITE_SIZE,
+				SPRITE_SIZE);
+		sprite.setColor(object.getSprite().getColor().brighter());
+		rotVel = (float) Math.random() * 10 - 5;
+
+		velocity_y = -0.1f;
+	}
+
 	@Override
 	public void updateParticle() {
 		rot = (rot + rotVel) % 360;

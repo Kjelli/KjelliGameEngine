@@ -1,5 +1,7 @@
 package no.kjelli.bombline.network;
 
+import no.kjelli.bombline.BombermanOnline;
+
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
@@ -13,13 +15,7 @@ public class ServerListener extends Listener {
 
 	@Override
 	public void connected(Connection connection) {
-		PacketPlayerAdd ppa = new PacketPlayerAdd(connection.getID());
-		server.sendToAllExceptTCP(connection.getID(), ppa);
-		for (Connection c : server.getConnections()) {
-			if (c.getID() == connection.getID())
-				continue;
-			server.sendToTCP(connection.getID(), new PacketPlayerAdd(c.getID()));
-		}
+
 	}
 
 	@Override
@@ -30,16 +26,35 @@ public class ServerListener extends Listener {
 
 	@Override
 	public void received(Connection connection, Object object) {
-		if (object instanceof PacketPlayerUpdate
-				|| object instanceof PacketPlayerPlaceBomb) {
-			server.sendToAllExceptUDP(connection.getID(), object);
-		} else if (object instanceof PacketLevelRequest) {
-			server.sendToTCP(1, object);
-		} else if (object instanceof PacketPlayerUpdateRequest) {
-			server.sendToTCP(((PacketPlayerUpdateRequest) object).id, object);
-		} else if (object instanceof PacketLevelResponse) {
-			PacketLevelResponse packet = (PacketLevelResponse) object;
-			server.sendToTCP(packet.receiverID, packet);
+		if (object instanceof Packet) {
+			Packet packet = (Packet) object;
+			if (packet instanceof PacketPlayerJoinRequest) {
+				handleJoinRequest((PacketPlayerJoinRequest) packet);
+			} else if (packet instanceof PacketPlayerUpdate
+					|| packet instanceof PacketPlayerPlaceBomb) {
+				server.sendToAllExceptUDP(connection.getID(), packet);
+			} else if (packet instanceof PacketLevelRequest) {
+				server.sendToTCP(1, packet);
+			} else if (packet instanceof PacketPlayerUpdateRequest) {
+				server.sendToTCP(((PacketPlayerUpdateRequest) packet).id,
+						packet);
+			} else if (packet instanceof PacketLevelResponse) {
+				PacketLevelResponse plr = (PacketLevelResponse) packet;
+				server.sendToTCP(plr.receiverID, packet);
+			} else if (packet instanceof PacketPlayerCredentials) {
+				server.sendToAllExceptTCP(connection.getID(), packet);
+			}
+		} else {
+			System.err.println("Unknown packet: " + object);
+		}
+	}
+
+	private void handleJoinRequest(PacketPlayerJoinRequest packet) {
+		// TODO Auto-generated method stub
+		if (BombermanOnline.state == BombermanOnline.STATE.WAITING_FOR_PLAYERS) {
+			server.sendToTCP(packet.id, new PacketPlayerJoinResponse(true));
+		} else {
+			server.sendToTCP(packet.id, new PacketPlayerJoinResponse(false));
 		}
 	}
 }

@@ -1,6 +1,7 @@
 package no.kjelli.generic.input;
 
 import no.kjelli.generic.gfx.AbstractUIObject;
+import no.kjelli.generic.gfx.Clickable;
 import no.kjelli.generic.gfx.Draw;
 import no.kjelli.generic.gfx.Focusable;
 import no.kjelli.generic.gfx.Sprite;
@@ -9,15 +10,30 @@ import static org.lwjgl.input.Keyboard.*;
 import org.lwjgl.input.Keyboard;
 import org.newdawn.slick.Color;
 
-public abstract class InputBox extends AbstractUIObject implements Focusable {
+public abstract class InputBox extends AbstractUIObject implements Focusable,
+		Clickable {
 	private String input;
 	private int maxLength = 8;
 	private int ticks = 0;
+	private Color foreground, background, bghighlight, fghighlight;
+	boolean highlighted = false;
+	boolean initialEdit = true;
+	String defaultText;
 
-	public InputBox(float x, float y, int maxLength) {
+	private boolean symbolsAllowed = true, numbersAllowed = true,
+			alphanumericAllowed = true, spaceAllowed = true;
+
+	public InputBox(float x, float y, int maxLength, String defaultText,
+			Color foreground, Color background, Color bghighlight,
+			Color fghighlight) {
 		super(x, y, 4f, Sprite.CHAR_WIDTH * maxLength + 2,
 				Sprite.CHAR_HEIGHT + 2);
-		input = "";
+		this.defaultText = defaultText;
+		input = defaultText;
+		this.foreground = foreground;
+		this.background = background;
+		this.fghighlight = fghighlight;
+		this.bghighlight = bghighlight;
 		this.maxLength = maxLength;
 		Keyboard.enableRepeatEvents(true);
 		Input.register(new InputListener() {
@@ -37,11 +53,19 @@ public abstract class InputBox extends AbstractUIObject implements Focusable {
 	protected void keyPress(int eventKey) {
 		String s = getKeyName(eventKey);
 		if (s.length() < 2 && input.length() < maxLength) {
+			try {
+				Integer.parseInt(s);
+				if (!numbersAllowed)
+					return;
+			} catch (Exception e) {
+				if (!alphanumericAllowed)
+					return;
+			}
 			input += s;
 		} else {
 			switch (eventKey) {
 			case KEY_PERIOD:
-				if (input.length() >= maxLength)
+				if (input.length() >= maxLength || !symbolsAllowed)
 					return;
 
 				if (Input.shift())
@@ -50,13 +74,13 @@ public abstract class InputBox extends AbstractUIObject implements Focusable {
 					input += ".";
 				break;
 			case KEY_SPACE:
-				if (input.length() >= maxLength)
+				if (input.length() >= maxLength || !spaceAllowed)
 					return;
 
 				input += " ";
 				break;
 			case KEY_MINUS:
-				if (input.length() >= maxLength)
+				if (input.length() >= maxLength || !symbolsAllowed)
 					return;
 
 				input += "-";
@@ -87,6 +111,21 @@ public abstract class InputBox extends AbstractUIObject implements Focusable {
 		return input;
 	}
 
+	public void onLostFocus() {
+		if (input.isEmpty() && !defaultText.isEmpty()) {
+			input = defaultText;
+			initialEdit = true;
+		}
+	}
+
+	public void onFocus() {
+
+		if (initialEdit && input.equals(defaultText)) {
+			input = "";
+			initialEdit = false;
+		}
+	}
+
 	protected abstract void onInputComplete();
 
 	@Override
@@ -96,19 +135,71 @@ public abstract class InputBox extends AbstractUIObject implements Focusable {
 
 	@Override
 	public void draw() {
-		Draw.fillRect(x, y, width, height, Color.black);
-		Draw.rect(x, y, 4f, width, height, Color.white);
+		Draw.fillRect(x, y, width, height, highlighted ? bghighlight
+				: background);
+		Draw.rect(x, y, 4f, width, height, highlighted ? fghighlight
+				: foreground);
 
 		Draw.string(getDrawString(), (x + width / 2 - Sprite.CHAR_WIDTH / 2)
 				- (input.length() < maxLength ? input.length()
 						: input.length() - 1) * Sprite.CHAR_WIDTH / 2, (y
 				+ height / 2 - Sprite.CHAR_HEIGHT / 2) + 1, 2.0f, 1.0f, 1.0f,
-				Color.white, true);
+				highlighted ? fghighlight : foreground, true);
 	}
 
 	private String getDrawString() {
 		return input
 				+ (((ticks % 25) > 12 && input.length() < maxLength && hasFocus()) ? "_"
 						: "");
+	}
+
+	@Override
+	public void onMousePressed(int mouseButton) {
+	}
+
+	@Override
+	public void onMouseReleased(int mouseButton) {
+	}
+
+	@Override
+	public void onEnter() {
+		highlighted = true;
+	}
+
+	@Override
+	public void onExit() {
+		highlighted = false;
+	}
+
+	public boolean isSymbolsAllowed() {
+		return symbolsAllowed;
+	}
+
+	public void setSymbolsAllowed(boolean symbolsAllowed) {
+		this.symbolsAllowed = symbolsAllowed;
+	}
+
+	public boolean isNumbersAllowed() {
+		return numbersAllowed;
+	}
+
+	public void setNumbersAllowed(boolean numbersAllowed) {
+		this.numbersAllowed = numbersAllowed;
+	}
+
+	public boolean isAlphanumericAllowed() {
+		return alphanumericAllowed;
+	}
+
+	public void setAlphanumericAllowed(boolean alphanumericAllowed) {
+		this.alphanumericAllowed = alphanumericAllowed;
+	}
+
+	public boolean isSpaceAllowed() {
+		return spaceAllowed;
+	}
+
+	public void setSpaceAllowed(boolean spaceAllowed) {
+		this.spaceAllowed = spaceAllowed;
 	}
 }

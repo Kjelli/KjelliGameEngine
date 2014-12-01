@@ -1,20 +1,21 @@
 package no.kjelli.generic.gfx;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.glClearColor;
+import static org.lwjgl.opengl.GL11.glScalef;
 
 import java.util.HashSet;
-
-import javax.swing.plaf.basic.BasicInternalFrameTitlePane.MoveAction;
 
 import no.kjelli.generic.Physics;
 import no.kjelli.generic.World;
 import no.kjelli.generic.gameobjects.GameObject;
+import no.kjelli.generic.input.Input;
+import no.kjelli.generic.input.InputListener;
 import no.kjelli.generic.main.Launcher;
-import no.kjelli.mathmania.MathMania;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Cursor;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.Rectangle;
@@ -71,6 +72,21 @@ public class Screen {
 		} catch (LWJGLException e) {
 			e.printStackTrace();
 		}
+		Input.register(new InputListener() {
+
+			@Override
+			public void keyUp(int eventKey) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void keyDown(int eventKey) {
+				if (eventKey == Keyboard.KEY_Q) {
+					Screen.toggleDebugDraw();
+				}
+			}
+		});
 	}
 
 	public static void zoom(float scale) {

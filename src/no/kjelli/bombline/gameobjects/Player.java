@@ -13,6 +13,7 @@ import java.util.Iterator;
 import no.kjelli.bombline.BombermanOnline;
 import no.kjelli.bombline.levels.Level;
 import no.kjelli.bombline.network.Network;
+import no.kjelli.bombline.network.PacketPlayerLoseLife;
 import no.kjelli.bombline.network.PacketPlayerPlaceBomb;
 import no.kjelli.bombline.network.PacketPlayerUpdate;
 import no.kjelli.generic.Collision;
@@ -22,7 +23,12 @@ import no.kjelli.generic.gameobjects.Collidable;
 import no.kjelli.generic.gfx.Draw;
 import no.kjelli.generic.gfx.Screen;
 import no.kjelli.generic.gfx.Sprite;
+import no.kjelli.generic.gfx.TextFading;
+import no.kjelli.generic.gfx.TextScrolling;
+import no.kjelli.generic.gfx.TextStatic;
 import no.kjelli.generic.gfx.textures.TextureAtlas;
+import no.kjelli.generic.input.InputListener;
+import no.kjelli.mathmania.gameobjects.particles.GlitterParticle;
 
 import org.newdawn.slick.Color;
 
@@ -31,38 +37,53 @@ public class Player extends AbstractCollidable {
 	public static final int SPRITE_WIDTH = 16, SPRITE_HEIGHT = 16;
 	public static final int SPRITE_OFFSET = 16;
 	public static final int DRAW_X_OFFSET = -2, DRAW_Y_OFFSET = 0;
-	private static final double MAX_VELOCITY = 5f;
-	private static final double DECCELERATION_X = 0;
 	protected static final int FRAME_DURATION = 8;
 	protected static final int FRAME_COUNT = 3;
-	private static final Color deadColor = new Color(0.1f, 0.1f, 0.1f);
-	private static final int INVINCIBILLITY_TIMER_MAX = 100;
-	private static final int FADEOUT_TIMER_MAX = 300;
+
+	protected static final int FADEOUT_TIMER_MAX = 300;
+	protected static final int INVINCIBILLITY_TIMER_MAX = 100;
+	protected static final int BOMB_COOLDOWN_MAX = 20;
+	protected static final int BOMB_CAPACITY_INITIAL = 1;
+	protected static final int LIVES_INITIAL = 3;
+	protected static final int SPEED_INITIAL = 1;
+
+	protected static final Color deadColor = new Color(0.1f, 0.1f, 0.1f);
+	protected static final float DELTA_SPEED = 0.15f;
 	protected int walkingFrame;
 	protected long steps;
-	protected DIRECTION direction = DIRECTION.RIGHT;
+	protected DIRECTION direction = DIRECTION.DOWN;
 	protected ANIMATION animation = ANIMATION.STANDING;
 
-	protected boolean directionChange = false;
+	protected boolean directionChange = true;
 	protected boolean animationChange = false;
 
 	private ArrayList<Bomb> bombOverlaps;
 	private boolean dead = false;
 
-	public int speed = 1;
-	public int power = 2;
-	public int lives = 1;
-	public int invincibillity_timer = 0;
-	public int fadeout_timer = FADEOUT_TIMER_MAX;
-	public boolean superBomb = false;
+	protected String name;
+
+	protected int lives = LIVES_INITIAL;
+	protected float speed = SPEED_INITIAL;
+	protected int bombcapacity = BOMB_CAPACITY_INITIAL;
+	protected int bombs = bombcapacity;
+	protected int power = 1;
+	protected int bomb_cooldown = BOMB_COOLDOWN_MAX;
+	protected int invincibillity_timer = INVINCIBILLITY_TIMER_MAX;
+	protected int fadeout_timer = FADEOUT_TIMER_MAX;
+	protected boolean superBomb = false;
+
+	protected TextStatic playerName;
 
 	public Player(int x_index, int y_index) {
-		super(x_index * BombermanOnline.block_size, y_index * BombermanOnline.block_size,
-				12, 12);
+		super(x_index * BombermanOnline.block_size - DRAW_X_OFFSET, y_index
+				* BombermanOnline.block_size - DRAW_Y_OFFSET, 2.0f, 12, 12);
 		sprite = new Sprite(TextureAtlas.partybombs, base_x, base_y,
 				SPRITE_WIDTH, SPRITE_HEIGHT);
+
+		// Initial call to animationLogic to make the player face downwards
+		animationLogic();
+
 		sprite.setColor(new Color(Color.white));
-		z = 2.0f;
 		bombOverlaps = new ArrayList<Bomb>();
 		tag(BombermanOnline.tag_playfield);
 	}
@@ -86,21 +107,34 @@ public class Player extends AbstractCollidable {
 			}
 		}
 		if (target instanceof Fire) {
-			if (invincibillity_timer == 0) {
+			if (Network.isHosting()) {
 				loseLife();
 			}
 		}
 	}
 
-	private void loseLife() {
+	public void loseLife() {
+		if (invincibillity_timer > 0)
+			return;
 		lives--;
+
 		if (lives > 0) {
 			invincibillity_timer = INVINCIBILLITY_TIMER_MAX;
-		} else if (!dead) {
-			fadeout_timer = FADEOUT_TIMER_MAX;
-			dead = true;
-			sprite.setColor(new Color(deadColor));
+		} else {
+			if (!dead) {
+				fadeout_timer = FADEOUT_TIMER_MAX;
+				dead = true;
+			}
 		}
+
+		if (Network.isHosting()) {
+			Network.getServer().sendToAllExceptTCP(Network.getClient().getID(),
+					new PacketPlayerLoseLife(getID()));
+		}
+	}
+
+	public int getID() {
+		return Network.getClient().getID();
 	}
 
 	@Override
@@ -126,11 +160,21 @@ public class Player extends AbstractCollidable {
 	}
 
 	private void bombLogic() {
+		if (dead)
+			return;
+
+		if (bomb_cooldown > 0) {
+			bomb_cooldown--;
+			return;
+		}
+
 		bombOverlapCheck();
-		if (isKeyDown(KEY_SPACE)) {
+		if (isKeyDown(KEY_SPACE) && getBombs() > 0) {
 			if (bombOverlaps.isEmpty()) {
-				World.add(new Bomb(getXIndex(), getYIndex(), this, power, superBomb));
-				if (online())
+				World.add(new Bomb(getXIndex(), getYIndex(), this, power,
+						superBomb));
+				setBombs(getBombs() - 1);
+				if (Network.isOnline())
 					sendBombInfo();
 			}
 		}
@@ -229,13 +273,15 @@ public class Player extends AbstractCollidable {
 	private void movementLogic() {
 		if (dead)
 			return;
-		if (speed > MAX_VELOCITY)
-			speed = (int) MAX_VELOCITY;
+
 		horizontalAcceleration();
 		verticalAcceleration();
 		if (velocity_x != 0 || velocity_y != 0) {
 			z = 2.0f - y / Level.getHeight();
 			move();
+			playerName.setX(x + width / 2 - name.length() * Sprite.CHAR_WIDTH
+					/ 2);
+			playerName.setY(y + 2 * Sprite.CHAR_HEIGHT);
 		}
 
 	}
@@ -270,7 +316,7 @@ public class Player extends AbstractCollidable {
 				walkingFrame = 0;
 				animationChange = true;
 
-				if (online())
+				if (Network.isOnline())
 					sendInfo();
 			}
 		}
@@ -290,10 +336,6 @@ public class Player extends AbstractCollidable {
 		animationChange = directionChange = false;
 	}
 
-	private boolean online() {
-		return Network.client != null && Network.client.isConnected();
-	}
-
 	@Override
 	public void move() {
 		if (velocity_x != 0 || velocity_y != 0) {
@@ -304,19 +346,21 @@ public class Player extends AbstractCollidable {
 			}
 		}
 		super.move();
-		if (online()) {
+		if (Network.isOnline()) {
 			sendInfo();
 		}
 	}
 
 	public void sendInfo() {
-		Network.client.sendUDP(new PacketPlayerUpdate(Network.client.getID(),
-				x, y, direction.getID(), animation.getID()));
+		Network.getClient().sendUDP(
+				new PacketPlayerUpdate(Network.getClient().getID(), x, y,
+						direction.getID(), animation.getID()));
 	}
 
 	private void sendBombInfo() {
-		Network.client.sendTCP(new PacketPlayerPlaceBomb(
-				Network.client.getID(), getXIndex(), getYIndex()));
+		Network.getClient().sendTCP(
+				new PacketPlayerPlaceBomb(Network.getClient().getID(),
+						getXIndex(), getYIndex()));
 	}
 
 	private void accelerateRight() {
@@ -390,4 +434,73 @@ public class Player extends AbstractCollidable {
 	public void overlapsBomb(Bomb bomb) {
 		bombOverlaps.add(bomb);
 	}
+
+	public void setPower(int power) {
+		if (power < 1)
+			throw new IllegalArgumentException("Illegal bomb-power: " + power);
+		this.power = power;
+	}
+
+	public int getPower() {
+		return power;
+	}
+
+	public void setSuperBomb(boolean superBomb) {
+		this.superBomb = superBomb;
+	}
+
+	public boolean hasSuperBomb() {
+		return superBomb;
+	}
+
+	public int getBombs() {
+		return bombs;
+	}
+
+	public void setBombs(int bombs) {
+		this.bombs = bombs;
+	}
+
+	public int getBombCapacity() {
+		return bombcapacity;
+	}
+
+	public void setBombCapacity(int bombcapacity) {
+		this.bombcapacity = bombcapacity;
+	}
+
+	public void debug_highlight() {
+		for (int count = 0; count < 20; count++) {
+			World.add(new GlitterParticle(x, y, 4.0f, this));
+		}
+	}
+
+	public float getSpeed() {
+		return speed;
+	}
+
+	public void increaseSpeed() {
+		speed += DELTA_SPEED;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+
+		if (playerName != null)
+			playerName.destroy();
+
+		playerName = new TextStatic(getName(), getX() + getWidth() / 2
+				- name.length() * Sprite.CHAR_WIDTH / 2, getY() + 2
+				* Sprite.CHAR_HEIGHT, Color.white, false);
+		World.add(playerName);
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void displayName(boolean display) {
+		playerName.setVisible(display);
+	}
+
 }

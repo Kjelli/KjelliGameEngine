@@ -33,22 +33,22 @@ public class Bomb extends AbstractCollidable {
 	private boolean newlyCreated = false;
 	private boolean ticking;
 
-	public Bomb(int x_index, int y_index, Player source, int power, boolean isSuper) {
-		this(x_index, y_index, source, power, isSuper,true);
+	public Bomb(int x_index, int y_index, Player source, int power,
+			boolean isSuper) {
+		this(x_index, y_index, source, power, isSuper, true);
 	}
 
-	public Bomb(int x_index, int y_index, Player source, int power, boolean isSuper,
-			boolean ticking) {
-		super(
-				x_index * BombermanOnline.block_size + BombermanOnline.block_size / 2 - 6,
-				y_index * BombermanOnline.block_size + BombermanOnline.block_size / 2 - 6,
-				12, 12);
+	public Bomb(int x_index, int y_index, Player source, int power,
+			boolean isSuper, boolean ticking) {
+		super(x_index * BombermanOnline.block_size + BombermanOnline.block_size
+				/ 2 - 6, y_index * BombermanOnline.block_size
+				+ BombermanOnline.block_size / 2 - 6, -1f, 12, 12);
 		this.x_index = x_index;
 		this.y_index = y_index;
 		this.source = source;
 		this.power = power;
 		this.ticking = ticking;
-		isSuper = isSuper;
+		this.isSuper = isSuper;
 		sprite = new Sprite(TextureAtlas.partybombs, base_x, base_y,
 				SPRITE_WIDTH, SPRITE_HEIGHT);
 		z = 2.0f - y / Level.getHeight();
@@ -89,6 +89,8 @@ public class Bomb extends AbstractCollidable {
 			blowUp();
 		}
 		if (hasBlownUp) {
+			if (source != null)
+				source.setBombs(source.getBombs() + 1);
 			makeFire();
 			destroy();
 		}
@@ -106,7 +108,8 @@ public class Bomb extends AbstractCollidable {
 	}
 
 	private void makeFire() {
-		World.add(new Fire(x_index, y_index, source, power, Fire.ORIGIN, isSuper));
+		World.add(new Fire(x_index, y_index, source, power, Fire.ORIGIN,
+				isSuper));
 	}
 
 	@Override

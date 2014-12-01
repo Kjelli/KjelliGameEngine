@@ -1,6 +1,7 @@
 package no.kjelli.bombline.gameobjects;
 
 import no.kjelli.bombline.BombermanOnline;
+import no.kjelli.bombline.gameobjects.powerups.Powerup;
 import no.kjelli.generic.Collision;
 import no.kjelli.generic.Physics;
 import no.kjelli.generic.World;
@@ -57,10 +58,9 @@ public class Fire extends AbstractCollidable {
 
 	public Fire(int x_index, int y_index, Player source, int power,
 			int direction, boolean passThrough) {
-		super(
-				x_index * BombermanOnline.block_size + BombermanOnline.block_size / 2 - 6,
-				y_index * BombermanOnline.block_size + BombermanOnline.block_size / 2 - 6,
-				12, 12);
+		super(x_index * BombermanOnline.block_size + BombermanOnline.block_size
+				/ 2 - 6, y_index * BombermanOnline.block_size
+				+ BombermanOnline.block_size / 2 - 6, 1.5f, 12, 12);
 		this.x_index = x_index;
 		this.y_index = y_index;
 		if (power == 0) {
@@ -108,7 +108,6 @@ public class Fire extends AbstractCollidable {
 		this.power = power;
 		this.direction = direction;
 		this.passThrough = passThrough;
-		z = 1.5f;
 		tag(BombermanOnline.tag_playfield);
 	}
 
@@ -147,6 +146,9 @@ public class Fire extends AbstractCollidable {
 		} else if (collision.getTarget() instanceof Bomb) {
 			spread = false;
 			((Bomb) collision.getTarget()).blowUp();
+		} else if (collision.getTarget() instanceof Powerup) {
+			spread = false;
+			((Powerup) collision.getTarget()).blowUp();
 		}
 	}
 

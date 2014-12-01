@@ -8,8 +8,9 @@ import no.kjelli.generic.gameobjects.AbstractGameObject;
 import no.kjelli.generic.gfx.Clickable;
 import no.kjelli.generic.gfx.Draw;
 import no.kjelli.generic.gfx.Sprite;
+import no.kjelli.generic.input.AbstractButton;
 
-public class QuitButton extends Button {
+public class QuitButton extends AbstractButton {
 	public static final int width = 100, height = 50;
 	
 	public QuitButton(float x, float y) {

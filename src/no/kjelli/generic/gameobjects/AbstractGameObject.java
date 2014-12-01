@@ -5,7 +5,6 @@ import no.kjelli.generic.gfx.Drawable;
 import no.kjelli.generic.gfx.Sprite;
 
 import org.lwjgl.util.Rectangle;
-import org.newdawn.slick.Color;
 
 public abstract class AbstractGameObject implements GameObject {
 	protected float x;
@@ -34,8 +33,9 @@ public abstract class AbstractGameObject implements GameObject {
 		setWidth(width);
 		setHeight(height);
 	}
-	
-	public AbstractGameObject(float x, float y, float z, float width, float height) {
+
+	public AbstractGameObject(float x, float y, float z, float width,
+			float height) {
 		setX(x);
 		setY(y);
 		setZ(z);
@@ -46,6 +46,10 @@ public abstract class AbstractGameObject implements GameObject {
 	public abstract void update();
 
 	public void move() {
+		move(velocity_x, velocity_y);
+	}
+
+	public void move(double velocity_x, double velocity_y) {
 		x += velocity_x;
 		y += velocity_y;
 	}

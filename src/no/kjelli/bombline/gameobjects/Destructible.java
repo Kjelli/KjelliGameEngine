@@ -1,7 +1,11 @@
 package no.kjelli.bombline.gameobjects;
 
 import no.kjelli.bombline.BombermanOnline;
+import no.kjelli.bombline.gameobjects.powerups.PowerupBomb;
+import no.kjelli.bombline.gameobjects.powerups.PowerupFire;
+import no.kjelli.bombline.gameobjects.powerups.PowerupSpeed;
 import no.kjelli.bombline.levels.Level;
+import no.kjelli.bombline.network.Network;
 import no.kjelli.generic.Collision;
 import no.kjelli.generic.World;
 import no.kjelli.generic.gameobjects.AbstractCollidable;
@@ -23,8 +27,8 @@ public class Destructible extends AbstractCollidable {
 	public int x_index, y_index;
 
 	public Destructible(int x_index, int y_index) {
-		super(x_index * BombermanOnline.block_size, y_index * BombermanOnline.block_size,
-				16, 16);
+		super(x_index * BombermanOnline.block_size, y_index
+				* BombermanOnline.block_size, 16, 16);
 		this.x_index = x_index;
 		this.y_index = y_index;
 		sprite = new Sprite(TextureAtlas.partybombs, base_x, base_y,
@@ -66,13 +70,28 @@ public class Destructible extends AbstractCollidable {
 			Level.addGameObject(floor);
 			World.add(floor);
 			sprite.setTextureCoords(blow_x, blow_y, SPRITE_WIDTH, SPRITE_HEIGHT);
+			if (Network.isHosting())
+				powerupRoulette();
 		}
+	}
+
+	// TODO sort powerup chances
+	private void powerupRoulette() {
+		double determinant = Math.random() * 100;
+
+		if (determinant < 10) {
+			World.add(new PowerupBomb(x_index, y_index));
+		}else if(determinant < 20){
+			World.add(new PowerupSpeed(x_index, y_index));
+		}else if(determinant < 30){
+			World.add(new PowerupFire(x_index, y_index));
+		}
+
 	}
 
 	@Override
 	public void draw() {
 		Draw.sprite(sprite, x, y);
-
 	}
 
 }

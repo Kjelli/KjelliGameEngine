@@ -15,6 +15,7 @@ public class World {
 
 	private static int width;
 	private static int height;
+	private static int paused;
 
 	private static ArrayList<GameObject> removeQueue = new ArrayList<>();
 	private static ArrayList<GameObject> addQueue = new ArrayList<>();
@@ -43,8 +44,12 @@ public class World {
 	}
 
 	public static void clear() {
+		paused = 0;
 		addQueue.clear();
 		removeQueue.addAll(objects);
+		for (GameObject object : objects) {
+			object.destroy();
+		}
 	}
 
 	public static void render() {
@@ -61,17 +66,17 @@ public class World {
 	}
 
 	public static void update() {
-
 		for (GameObject oldObject : removeQueue) {
 			objects.remove(oldObject);
 		}
+		removeQueue.clear();
 		for (GameObject newObject : addQueue) {
 			objects.add(newObject);
+			if (newObject.hasTag(paused))
+				newObject.pause(true);
 			newObject.onCreate();
 		}
-
 		addQueue.clear();
-		removeQueue.clear();
 
 		Physics.quadtree.clear();
 		for (GameObject gameObject : objects) {
@@ -119,6 +124,9 @@ public class World {
 	}
 
 	public static void pause(int tag, boolean pause) {
+		if ((pause && (paused & tag) == 0) || (!pause && (paused & tag) >= 0)) {
+			paused ^= tag;
+		}
 		for (GameObject o : objects)
 			if (o.hasTag(tag))
 				o.pause(pause);

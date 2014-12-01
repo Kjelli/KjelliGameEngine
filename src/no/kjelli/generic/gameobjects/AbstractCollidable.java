@@ -5,8 +5,14 @@ import no.kjelli.generic.Physics;
 
 public abstract class AbstractCollidable extends AbstractGameObject implements
 		Collidable {
+	@Deprecated
 	public AbstractCollidable(float x, float y, float width, float height) {
 		super(x, y, width, height);
+	}
+
+	public AbstractCollidable(float x, float y, float z, float width,
+			float height) {
+		super(x, y, z, width, height);
 	}
 
 	private float xStep;

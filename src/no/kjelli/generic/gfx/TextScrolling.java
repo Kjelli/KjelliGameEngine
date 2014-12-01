@@ -8,18 +8,18 @@ import no.kjelli.generic.gfx.Draw;
 import no.kjelli.generic.gfx.Screen;
 import no.kjelli.generic.gfx.Sprite;
 
-public class ScrollingText extends AbstractGameObject {
+public class TextScrolling extends AbstractGameObject {
 	private static final float scale = 1.0f;
 	private String text;
 	private Color color;
 	public static final int HORIZONTAL = 0, VERTICAL = 1;
 	public static final float DEFAULT_SPEED = -1f;
 
-	public ScrollingText(String text) {
+	public TextScrolling(String text) {
 		this(text, VERTICAL, DEFAULT_SPEED, Sprite.DEFAULT_COLOR);
 	}
 
-	public ScrollingText(String text, int direction, float speed, Color color) {
+	public TextScrolling(String text, int direction, float speed, Color color) {
 		super(determineX(text, speed, direction), determineY(text, speed,
 				direction), 4f, Sprite.CHAR_WIDTH * text.length(),
 				Sprite.CHAR_HEIGHT * scale);

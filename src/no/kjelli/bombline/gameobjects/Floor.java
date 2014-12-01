@@ -20,14 +20,12 @@ public class Floor extends AbstractGameObject {
 	}
 
 	public Floor(int x_index, int y_index, boolean blownForth) {
-		super(x_index * BombermanOnline.block_size, y_index * BombermanOnline.block_size,
-				16, 16);
+		super(x_index * BombermanOnline.block_size, y_index
+				* BombermanOnline.block_size, 0, 16, 16);
 		if (blownForth)
 			growTimer = GROW_TIMER_MAX;
 		sprite = new Sprite(TextureAtlas.partybombs, 0, base_y, SPRITE_WIDTH,
 				SPRITE_HEIGHT);
-		z = 0.0f;
-		tag(BombermanOnline.tag_playfield);
 	}
 
 	@Override

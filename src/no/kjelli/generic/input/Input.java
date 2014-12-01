@@ -10,7 +10,6 @@ public class Input {
 	static HashSet<InputListener> listeners = new HashSet<>();
 	static HashSet<InputListener> removeQueue = new HashSet<>();
 	static HashSet<InputListener> addQueue = new HashSet<>();
-	private static boolean wasRecentlyCleared = false;
 	private static boolean shift = false;
 	private static boolean control = false;
 
@@ -25,9 +24,6 @@ public class Input {
 		}
 		Keyboard.poll();
 		while (Keyboard.next()) {
-			if (wasRecentlyCleared) {
-				wasRecentlyCleared = false;
-			}
 			if (Keyboard.getEventKey() == Keyboard.KEY_LSHIFT
 					|| Keyboard.getEventKey() == Keyboard.KEY_RSHIFT) {
 				shift = Keyboard.getEventKeyState();
@@ -41,10 +37,6 @@ public class Input {
 				} else {
 					l.keyUp(Keyboard.getEventKey());
 				}
-				if (wasRecentlyCleared) {
-					wasRecentlyCleared = false;
-					return;
-				}
 			}
 
 		}
@@ -56,13 +48,6 @@ public class Input {
 
 	public static void unregister(InputListener listener) {
 		removeQueue.add(listener);
-	}
-
-	public static void clear() {
-		addQueue.clear();
-		removeQueue.clear();
-		listeners.clear();
-		wasRecentlyCleared = true;
 	}
 
 	public static boolean shift() {
