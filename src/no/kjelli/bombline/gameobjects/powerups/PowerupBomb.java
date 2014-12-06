@@ -14,7 +14,7 @@ public class PowerupBomb extends AbstractPowerup {
 	}
 
 	@Override
-	public void powerUp(Player player) {
+	public void powerUpEffect(Player player) {
 		player.setBombs(player.getBombs() + 1);
 		player.setBombCapacity(player.getBombCapacity() + 1);
 	}

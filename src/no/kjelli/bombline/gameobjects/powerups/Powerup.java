@@ -12,7 +12,8 @@ public interface Powerup extends GameObject {
 	public static final int SPRITE_WIDTH = 16, SPRITE_HEIGHT = 16;
 	public static final int DRAW_X_OFFSET = -2, DRAW_Y_OFFSET = -2;
 
-	void powerUp(Player player);
+	void collect(Player player);
+	void powerUpEffect(Player player);
 	void blowUp();
 
 	int getType();

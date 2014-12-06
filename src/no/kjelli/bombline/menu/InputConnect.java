@@ -7,9 +7,8 @@ import no.kjelli.generic.input.InputBox;
 
 public class InputConnect extends InputBox {
 
-	public InputConnect(float x, float y, float width, float height,
-			int maxLength) {
-		super(x, y, maxLength, Color.white, Color.black, Color.gray,
+	public InputConnect(float x, float y) {
+		super(x, y, 32, Color.white, Color.black, Color.gray,
 				Color.white);
 	}
 

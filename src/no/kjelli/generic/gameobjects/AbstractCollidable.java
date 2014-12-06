@@ -5,6 +5,7 @@ import no.kjelli.generic.Physics;
 
 public abstract class AbstractCollidable extends AbstractGameObject implements
 		Collidable {
+	private static final float stepSize = 0.01f;
 	@Deprecated
 	public AbstractCollidable(float x, float y, float width, float height) {
 		super(x, y, width, height);
@@ -48,61 +49,53 @@ public abstract class AbstractCollidable extends AbstractGameObject implements
 	private void xStep(double velocity_x) {
 		xStep += velocity_x;
 
-		while (xStep >= 1) {
-			xStep--;
-			x++;
+		while (xStep >= stepSize) {
+			xStep-= stepSize;
+			x+= stepSize;
 			Physics.getCollisions(this);
 			if (colRight) {
-				x--;
+				x-= stepSize;
 				xStep = 0;
 				return;
 			}
-			microStep();
 
 		}
-		while (xStep <= -1) {
-			xStep++;
-			x--;
+		while (xStep <= -stepSize) {
+			xStep+= stepSize;
+			x-= stepSize;
 			Physics.getCollisions(this);
 			if (colLeft) {
-				x++;
+				x+= stepSize;
 				xStep = 0;
 				return;
 
 			}
-			microStep();
 		}
 	}
-
-	// To be overridden
-	protected void microStep() {
-	};
 
 	public void yStep(double velocity_y) {
 		yStep += velocity_y;
 
-		while (yStep >= 1) {
-			yStep--;
-			y++;
+		while (yStep >= stepSize) {
+			yStep-= stepSize;
+			y+= stepSize;
 			Physics.getCollisions(this);
 			if (colAbove) {
-				y--;
+				y-= stepSize;
 				yStep = 0;
 				return;
 
 			}
-			microStep();
 		}
-		while (yStep <= -1) {
-			yStep++;
-			y--;
+		while (yStep <= -stepSize) {
+			yStep+= stepSize;
+			y-= stepSize;
 			Physics.getCollisions(this);
 			if (colBelow) {
-				y++;
+				y+= stepSize;
 				yStep = 0;
 				return;
 			}
-			microStep();
 		}
 	}
 

@@ -22,6 +22,8 @@ import org.lwjgl.util.Rectangle;
 import org.newdawn.slick.Color;
 
 public class Screen {
+	private static final int DEBUG_DRAW_MODES = 3; // off, objects, objects +
+													// quad
 
 	public static final int MOUSE_LEFT = 0, MOUSE_RIGHT = 1;
 
@@ -47,8 +49,9 @@ public class Screen {
 	private static Cursor blankCursor;
 	private static HashSet<Clickable> mouseOverEventObjects;
 	private static HashSet<Clickable> mouseOverEventObjectsRemoveQueue;
+	private static float damping;
 
-	private static boolean debug_draw = false;
+	private static int debug_draw_mode = 0;
 
 	public static void init(int x, int y, int width, int height) {
 		init(x, y, width, height, Color.black);
@@ -97,17 +100,17 @@ public class Screen {
 		glScalef(1 / scale, 1 / scale, 1.0f);
 		World.render();
 
-		if (debug_draw) {
-			Draw.rect(x, y, 4.0f, getWidth(), getHeight());
-			Physics.quadtree.render();
+		if (debug_draw_mode > 0) {
 			Draw.string("FPS: " + Launcher.framesPerSecond + "\nObjects: "
 					+ World.getObjects().size(), 1, Screen.getHeight()
 					- Sprite.CHAR_HEIGHT - 1, 4.2f, 1, 1, Color.yellow, true);
 		}
+		if (debug_draw_mode > 1)
+			Physics.quadtree.render();
 	}
 
 	public static void toggleDebugDraw() {
-		debug_draw = !debug_draw;
+		debug_draw_mode = (debug_draw_mode + 1) % DEBUG_DRAW_MODES;
 	}
 
 	public static void update() {
@@ -135,8 +138,8 @@ public class Screen {
 	}
 
 	private static void followCenterTarget() {
-		velocity_x = (centerTarget.getCenterX() - getCenterX()) / 10;
-		velocity_y = (centerTarget.getCenterY() - getCenterY()) / 10;
+		velocity_x = (centerTarget.getCenterX() - getCenterX()) / damping;
+		velocity_y = (centerTarget.getCenterY() - getCenterY()) / damping;
 		setX((getX() + velocity_x));
 		setY((getY() + velocity_y));
 	}
@@ -187,7 +190,12 @@ public class Screen {
 	}
 
 	public static void centerOn(GameObject object) {
+		centerOn(object, 10);
+	}
+
+	public static void centerOn(GameObject object, int damping) {
 		centerTarget = object;
+		Screen.damping = damping;
 	}
 
 	public static boolean contains(GameObject object) {

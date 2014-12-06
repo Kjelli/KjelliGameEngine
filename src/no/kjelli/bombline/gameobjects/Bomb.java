@@ -12,6 +12,7 @@ import no.kjelli.generic.gameobjects.AbstractCollidable;
 import no.kjelli.generic.gfx.Draw;
 import no.kjelli.generic.gfx.Sprite;
 import no.kjelli.generic.gfx.textures.TextureAtlas;
+import no.kjelli.generic.sound.SoundPlayer;
 
 public class Bomb extends AbstractCollidable {
 
@@ -51,7 +52,11 @@ public class Bomb extends AbstractCollidable {
 		this.isSuper = isSuper;
 		sprite = new Sprite(TextureAtlas.partybombs, base_x, base_y,
 				SPRITE_WIDTH, SPRITE_HEIGHT);
-		z = (float) (2.0f - y / BombermanOnline.getGameHeight());
+
+		// Used in bomb particle objects, which are used before levels are
+		// initialized
+		if (LevelWrapper.getLevel() != null)
+			z = (float) (2.0f - y / LevelWrapper.getLevel().getHeight());
 		tag(BombermanOnline.tag_playfield);
 
 		if (isSuper)
@@ -92,6 +97,10 @@ public class Bomb extends AbstractCollidable {
 			if (source != null)
 				source.setBombs(source.getBombs() + 1);
 			makeFire();
+			// Dont want the particles on the intro screen to make a horrible
+			// noise
+			if (source != null)
+				SoundPlayer.play("sound11 bomb", 1.2f, 0.5f);
 			destroy();
 		}
 

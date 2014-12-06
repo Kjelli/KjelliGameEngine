@@ -141,11 +141,15 @@ public abstract class InputBox extends AbstractUIObject implements Focusable,
 		Draw.rect(x, y, 4f, width, height, highlighted ? fghighlight
 				: foreground);
 
-		Draw.string(getDrawString(), (x + width / 2 - Sprite.CHAR_WIDTH / 2)
-				- (input.length() < maxLength ? input.length()
-						: input.length() - 1) * Sprite.CHAR_WIDTH / 2, (y
-				+ height / 2 - Sprite.CHAR_HEIGHT / 2) + 1, 2.0f, 1.0f, 1.0f,
-				highlighted ? fghighlight : foreground, true);
+		Draw.string(getDrawString(),
+				(x + width / 2 - Sprite.CHAR_WIDTH / 2)
+						- (input.length() < maxLength ? input.length()
+								* Sprite.CHAR_WIDTH / 2 : (input.length() - 1)
+								* Sprite.CHAR_WIDTH / 2)
+						+ ((hasFocus() || input.length() == maxLength) ? 0
+								: Sprite.CHAR_WIDTH / 2 - 1),
+				(y + height / 2 - Sprite.CHAR_HEIGHT / 2) + 1, 2.0f, 1.0f,
+				1.0f, highlighted ? fghighlight : foreground, true);
 	}
 
 	private String getDrawString() {

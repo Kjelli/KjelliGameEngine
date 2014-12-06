@@ -49,6 +49,20 @@ public class BombermanOnline implements Game {
 	public void loadSounds() {
 		try {
 			SoundPlayer.load("bounce.wav");
+//			SoundPlayer.load("sound1.wav");
+//			SoundPlayer.load("sound2.wav");
+//			SoundPlayer.load("sound3.wav");
+//			SoundPlayer.load("sound4.wav");
+//			SoundPlayer.load("sound5.wav");
+//			SoundPlayer.load("sound6.wav");
+//			SoundPlayer.load("sound7.wav");
+			SoundPlayer.load("sound8.wav");
+			SoundPlayer.load("sound9 lose.wav");
+			SoundPlayer.load("sound10 powerup.wav");
+			SoundPlayer.load("sound11 bomb.wav");
+			SoundPlayer.load("sound11 bomb long.wav");
+			SoundPlayer.load("sound12.wav");
+			SoundPlayer.load("sound13.wav");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -68,6 +82,7 @@ public class BombermanOnline implements Game {
 
 		ticks = 0;
 		World.init((int) getGameWidth(), (int) getGameHeight());
+		Screen.centerOn(null);
 		Screen.zoom(2.0f);
 		Screen.setX(0);
 		Screen.setY(0);
@@ -81,8 +96,8 @@ public class BombermanOnline implements Game {
 				* Screen.getHeight() / 12 + 2 * Sprite.CHAR_HEIGHT, Color.white);
 		World.add(nameLabel);
 
-		nameInput = new InputName(Screen.getWidth() / 2 - 250 / 2,
-				5 * Screen.getHeight() / 12, 250, 20, 32);
+		nameInput = new InputName(Screen.getWidth() / 2 - 10
+				* Sprite.CHAR_WIDTH / 2, 5 * Screen.getHeight() / 12);
 		World.add(nameInput);
 
 		hostAddressLabel = new TextStatic("HOST ADDRESS", Screen.getWidth() / 2
@@ -90,8 +105,8 @@ public class BombermanOnline implements Game {
 				* Screen.getHeight() / 24 + 2 * Sprite.CHAR_HEIGHT, Color.white);
 		World.add(hostAddressLabel);
 
-		connectInput = new InputConnect(Screen.getWidth() / 2 - 250 / 2,
-				7 * Screen.getHeight() / 24, 250, 20, 32);
+		connectInput = new InputConnect(Screen.getWidth() / 2 - 32
+				* Sprite.CHAR_WIDTH / 2, 7 * Screen.getHeight() / 24);
 		World.add(connectInput);
 
 		connectButton = new ConnectButton(Screen.getWidth() / 2
@@ -110,10 +125,8 @@ public class BombermanOnline implements Game {
 			if (Network.hostServer()) {
 				World.clear();
 
-				LevelWrapper.init("level2");
+				LevelWrapper.load("level2");
 
-				World.add(new TextScrolling("Hosting (" + Network.TCP_PORT
-						+ ")"));
 			}
 		} else {
 			if (Network.connect(hostAddress)) {
@@ -262,5 +275,9 @@ public class BombermanOnline implements Game {
 			return;
 		}
 		initGame(connectInput.getText(), nameInput.getText());
+	}
+	
+	public static void reset(){
+		
 	}
 }

@@ -9,6 +9,9 @@ import no.kjelli.bombline.gameobjects.Block;
 import no.kjelli.bombline.gameobjects.Destructible;
 import no.kjelli.bombline.gameobjects.Floor;
 import no.kjelli.bombline.gameobjects.Player;
+import no.kjelli.bombline.gameobjects.powerups.PowerupBomb;
+import no.kjelli.bombline.gameobjects.powerups.PowerupFire;
+import no.kjelli.bombline.gameobjects.powerups.PowerupSpeed;
 import no.kjelli.bombline.network.Network;
 import no.kjelli.bombline.network.PacketLevelResponse;
 import no.kjelli.generic.gameobjects.GameObject;
@@ -17,7 +20,7 @@ public class LevelImports {
 	private static ArrayList<GameObject> objects;
 	public static final char FLOOR = '.', BLOCK = '#', DESTRUCTIBLE = 'X',
 			PLAYER_ONE = '1', PLAYER_TWO = '2', PLAYER_THREE = '3',
-			PLAYER_FOUR = '4';
+			PLAYER_FOUR = '4', SPEED = 'S', POWER = 'P', BOMB = 'B';
 	private static int width, height, maxPlayers;
 	private static Player player;
 	private static int[] playerSpawnX;
@@ -132,6 +135,18 @@ public class LevelImports {
 			addPlayerSpawn(4, x, y);
 			break;
 		case FLOOR:
+			objects.add(new Floor(x, y));
+			break;
+		case SPEED:
+			objects.add(new PowerupSpeed(x, y));
+			objects.add(new Floor(x, y));
+			break;
+		case POWER:
+			objects.add(new PowerupFire(x, y));
+			objects.add(new Floor(x, y));
+			break;
+		case BOMB:
+			objects.add(new PowerupBomb(x, y));
 			objects.add(new Floor(x, y));
 			break;
 		default:

@@ -16,7 +16,7 @@ public class PowerupSpeed extends AbstractPowerup {
 	}
 
 	@Override
-	public void powerUp(Player player) {
+	public void powerUpEffect(Player player) {
 		player.increaseSpeed();
 		World.add(new GlitterParticle(player.getX(), player.getY(), player
 				.getZ() + 0.1f, player));
