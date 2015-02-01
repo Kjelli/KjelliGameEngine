@@ -255,7 +255,6 @@ public class Draw {
 				y += Screen.getY();
 			}
 			glTranslatef(x - Screen.getX(), y - Screen.getY(), z);
-			glTranslatef(0.f, 0.f, 0.0f);
 			glRotatef(rot, 0, 0, 1);
 
 			glBegin(GL_LINE_LOOP);

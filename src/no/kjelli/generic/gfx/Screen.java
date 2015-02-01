@@ -1,16 +1,20 @@
 package no.kjelli.generic.gfx;
 
-import static org.lwjgl.opengl.GL11.glClearColor;
-import static org.lwjgl.opengl.GL11.glScalef;
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL20.*;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.HashSet;
 
+import no.kjelli.bombline.BombermanOnline;
 import no.kjelli.generic.Physics;
 import no.kjelli.generic.World;
 import no.kjelli.generic.gameobjects.GameObject;
 import no.kjelli.generic.input.Input;
 import no.kjelli.generic.input.InputListener;
-import no.kjelli.generic.main.Launcher;
+import no.kjelli.generic.main.GameWrapper;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
@@ -53,6 +57,7 @@ public class Screen {
 
 	private static int debug_draw_mode = 0;
 
+
 	public static void init(int x, int y, int width, int height) {
 		init(x, y, width, height, Color.black);
 	}
@@ -79,15 +84,14 @@ public class Screen {
 
 			@Override
 			public void keyUp(int eventKey) {
-				// TODO Auto-generated method stub
-
+				if (eventKey == Keyboard.KEY_Q) {
+					Screen.toggleDebugDraw();
+				}
 			}
 
 			@Override
 			public void keyDown(int eventKey) {
-				if (eventKey == Keyboard.KEY_Q) {
-					Screen.toggleDebugDraw();
-				}
+				
 			}
 		});
 	}
@@ -97,11 +101,10 @@ public class Screen {
 	}
 
 	public static void render() {
-		glScalef(1 / scale, 1 / scale, 1.0f);
+		glScalef(1 / scale, 1 / scale, 1f);
 		World.render();
-
 		if (debug_draw_mode > 0) {
-			Draw.string("FPS: " + Launcher.framesPerSecond + "\nObjects: "
+			Draw.string("FPS: " + GameWrapper.framesPerSecond + "\nObjects: "
 					+ World.getObjects().size(), 1, Screen.getHeight()
 					- Sprite.CHAR_HEIGHT - 1, 4.2f, 1, 1, Color.yellow, true);
 		}
@@ -348,5 +351,15 @@ public class Screen {
 
 	public static Focusable getFocusElement() {
 		return focus;
+	}
+	
+	public static void dispose(){
+		//TODO
+	}
+	public static void incrementX(int x) {
+		Screen.setX(Screen.x + x);
+	}
+	public static void incrementY(int y) {
+		Screen.setY(Screen.y + y);
 	}
 }

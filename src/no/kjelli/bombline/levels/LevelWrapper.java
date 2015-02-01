@@ -46,6 +46,7 @@ public class LevelWrapper {
 	private static final ArrayList<Packet> incomingPackets = new ArrayList<Packet>();
 
 	private static boolean receiving = false;
+	private static boolean displayingNames = false;
 
 	private static String lastLoadedLevel;
 	private static TextFloating text;
@@ -118,9 +119,9 @@ public class LevelWrapper {
 		playersJoinedText.destroy();
 	}
 
-	public static void end() {
+	public static void endLevel() {
 		level.end();
-		Input.unregister(inputListener);
+		level = null;
 	}
 
 	public static void addPacket(Packet p) {
@@ -314,6 +315,14 @@ public class LevelWrapper {
 
 	public static Level getLevel() {
 		return level;
+	}
+	
+	public static void toggleNameDisplay() {
+		displayingNames = !displayingNames;
+		getLevel().getPlayer().displayName(displayingNames);
+		for (Player p : getLevel().getPlayersMP()) {
+			p.displayName(displayingNames);
+		}
 	}
 
 }

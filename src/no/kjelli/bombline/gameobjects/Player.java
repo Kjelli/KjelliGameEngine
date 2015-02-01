@@ -49,6 +49,7 @@ public class Player extends AbstractCollidable {
 
 	protected static final Color deadColor = new Color(0.1f, 0.1f, 0.1f);
 	protected static final float DELTA_SPEED = 0.15f;
+	private static final float MAX_SPEED = 20 * DELTA_SPEED;
 	protected int walkingFrame;
 	protected long steps;
 	protected DIRECTION direction = DIRECTION.DOWN;
@@ -112,6 +113,7 @@ public class Player extends AbstractCollidable {
 				stop(collision.getImpactDirection());
 			}
 		}
+
 		if (target instanceof Fire) {
 			if (Network.isHosting()) {
 				loseLife();
@@ -462,7 +464,8 @@ public class Player extends AbstractCollidable {
 	}
 
 	public void increaseSpeed() {
-		speed += DELTA_SPEED;
+		if (speed < MAX_SPEED)
+			speed += DELTA_SPEED;
 	}
 
 	public int getID() {

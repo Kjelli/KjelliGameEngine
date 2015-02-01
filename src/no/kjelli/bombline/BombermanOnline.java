@@ -20,7 +20,7 @@ import no.kjelli.generic.gfx.Screen;
 import no.kjelli.generic.gfx.Sprite;
 import no.kjelli.generic.gfx.texts.TextScrolling;
 import no.kjelli.generic.gfx.texts.TextStatic;
-import no.kjelli.generic.main.Launcher;
+import no.kjelli.generic.main.GameWrapper;
 import no.kjelli.generic.sound.SoundPlayer;
 
 public class BombermanOnline implements Game {
@@ -49,13 +49,13 @@ public class BombermanOnline implements Game {
 	public void loadSounds() {
 		try {
 			SoundPlayer.load("bounce.wav");
-//			SoundPlayer.load("sound1.wav");
-//			SoundPlayer.load("sound2.wav");
-//			SoundPlayer.load("sound3.wav");
-//			SoundPlayer.load("sound4.wav");
-//			SoundPlayer.load("sound5.wav");
-//			SoundPlayer.load("sound6.wav");
-//			SoundPlayer.load("sound7.wav");
+			// SoundPlayer.load("sound1.wav");
+			// SoundPlayer.load("sound2.wav");
+			// SoundPlayer.load("sound3.wav");
+			// SoundPlayer.load("sound4.wav");
+			// SoundPlayer.load("sound5.wav");
+			// SoundPlayer.load("sound6.wav");
+			// SoundPlayer.load("sound7.wav");
 			SoundPlayer.load("sound8.wav");
 			SoundPlayer.load("sound9 lose.wav");
 			SoundPlayer.load("sound10 powerup.wav");
@@ -124,8 +124,7 @@ public class BombermanOnline implements Game {
 		if (hostAddress == null) {
 			if (Network.hostServer()) {
 				World.clear();
-
-				LevelWrapper.load("level2");
+				LevelWrapper.load("default");
 
 			}
 		} else {
@@ -254,7 +253,7 @@ public class BombermanOnline implements Game {
 
 	public static void main(String[] args) {
 		Game game = new BombermanOnline();
-		new Launcher(game, false);
+		new GameWrapper(game, false);
 	}
 
 	public static void connect(boolean host) {
@@ -276,8 +275,11 @@ public class BombermanOnline implements Game {
 		}
 		initGame(connectInput.getText(), nameInput.getText());
 	}
-	
-	public static void reset(){
-		
+
+	public static void reset() {
+		if (LevelWrapper.getLevel() != null)
+			LevelWrapper.endLevel();
+		Network.cleanup();
+		initIntro();
 	}
 }

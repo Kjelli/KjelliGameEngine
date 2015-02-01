@@ -3,9 +3,9 @@ package no.kjelli.bombline.menu;
 import org.newdawn.slick.Color;
 
 import no.kjelli.bombline.BombermanOnline;
-import no.kjelli.generic.input.InputBox;
+import no.kjelli.generic.input.AbstractInputBox;
 
-public class InputName extends InputBox {
+public class InputName extends AbstractInputBox {
 	private static final String[] names = { "Kjell", "Rolf", "Vigdis",
 			"Michelle", "Robert", "Nils", "Høna", "Ingve", "Biffen", "Leif",
 			"Bodil", "Svein", "Jesus", "Pornofrans", "Susan" };

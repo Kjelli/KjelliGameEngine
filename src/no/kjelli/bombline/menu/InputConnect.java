@@ -3,9 +3,9 @@ package no.kjelli.bombline.menu;
 import org.newdawn.slick.Color;
 
 import no.kjelli.bombline.BombermanOnline;
-import no.kjelli.generic.input.InputBox;
+import no.kjelli.generic.input.AbstractInputBox;
 
-public class InputConnect extends InputBox {
+public class InputConnect extends AbstractInputBox {
 
 	public InputConnect(float x, float y) {
 		super(x, y, 32, Color.white, Color.black, Color.gray,

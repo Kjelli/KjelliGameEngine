@@ -8,13 +8,13 @@ import java.awt.Dimension;
 import org.lwjgl.opengl.Display;
 
 import no.kjelli.generic.Game;
-import no.kjelli.generic.main.Launcher;
+import no.kjelli.generic.main.GameWrapper;
 
 @SuppressWarnings("serial")
 public abstract class AppletLauncher extends Applet {
 
 	Canvas display_parent;
-	Launcher launcher;
+	GameWrapper launcher;
 
 	public void init() {
 		setLayout(new BorderLayout());
@@ -59,7 +59,7 @@ public abstract class AppletLauncher extends Applet {
 		launcher.stop();
 	}
 
-	protected abstract Launcher getGameLauncher();
+	protected abstract GameWrapper getGameLauncher();
 
 	public Canvas getDisplay_parent() {
 		return display_parent;

@@ -12,7 +12,7 @@ import no.kjelli.generic.gfx.Draw;
 import no.kjelli.generic.gfx.Screen;
 import no.kjelli.generic.gfx.Sprite;
 import no.kjelli.generic.gfx.texts.TextStatic;
-import no.kjelli.generic.main.Launcher;
+import no.kjelli.generic.main.GameWrapper;
 import no.kjelli.generic.sound.SoundPlayer;
 import no.kjelli.julekalender.luke3.Board.Horsey;
 
@@ -151,6 +151,6 @@ public class JuleKalender implements Game {
 
 	public static void main(String[] args) {
 		Game game = new JuleKalender();
-		new Launcher(game, false);
+		new GameWrapper(game, false);
 	}
 }

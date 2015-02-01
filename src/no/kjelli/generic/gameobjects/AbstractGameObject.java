@@ -1,3 +1,4 @@
+
 package no.kjelli.generic.gameobjects;
 
 import no.kjelli.generic.World;

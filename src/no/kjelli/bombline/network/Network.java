@@ -71,11 +71,13 @@ public class Network {
 		if (server != null) {
 			server.close();
 			server.stop();
+			server = null;
 		}
 
 		if (client != null) {
 			client.close();
 			client.stop();
+			client = null;
 		}
 
 	}

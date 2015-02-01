@@ -51,7 +51,7 @@ public abstract class AbstractCollidable extends AbstractGameObject implements
 
 		while (xStep >= stepSize) {
 			xStep-= stepSize;
-			x+= stepSize;
+			x += stepSize;
 			Physics.getCollisions(this);
 			if (colRight) {
 				x-= stepSize;
