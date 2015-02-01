@@ -8,11 +8,11 @@ public class NameInputBox extends AbstractInputBox {
 	public static final Color foreground = new Color(Color.white),
 			background = new Color(Color.black), bghighlight = new Color(
 					Color.darkGray), fghighlight = new Color(Color.white);
-
 	public static final int MAX_CAP = 9;
 
-	public NameInputBox(float x, float y) {
-		super(x, y, MAX_CAP, foreground, background, bghighlight, fghighlight);
+	public NameInputBox(String defaultname, float x, float y) {
+		super(x, y, MAX_CAP, defaultname, foreground, background, bghighlight, fghighlight);
+
 	}
 
 	@Override
@@ -20,10 +20,6 @@ public class NameInputBox extends AbstractInputBox {
 		setVisible(true);
 	}
 
-	@Override
-	protected String getDefaultText() {
-		return "name";
-	}
 
 	@Override
 	protected void onInputComplete() {

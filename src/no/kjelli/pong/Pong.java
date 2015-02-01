@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.lwjgl.input.Keyboard;
 
+import no.kjelli.generic.Callback;
 import no.kjelli.generic.Game;
 import no.kjelli.generic.World;
 import no.kjelli.generic.gameobjects.GameObject;
@@ -11,7 +12,6 @@ import no.kjelli.generic.gameobjects.Tagger;
 import no.kjelli.generic.gfx.Screen;
 import no.kjelli.generic.main.GameWrapper;
 import no.kjelli.generic.sound.SoundPlayer;
-import no.kjelli.pong.gameobjects.particles.BlockParticle;
 import no.kjelli.pong.config.PlayerConfig;
 import no.kjelli.pong.gameobjects.Ball;
 import no.kjelli.pong.gameobjects.Bat;
@@ -91,12 +91,7 @@ public class Pong implements Game {
 
 		ball = new Ball(Screen.getCenterX() - Ball.WIDTH / 2,
 				Screen.getCenterY() - Ball.HEIGHT / 2);
-//
-//		for (int i = 0; i < 50; i++) {
-//			World.add(new BlockParticle((float) Math.random()
-//					* Screen.getWidth(), (float) Math.random()
-//					* Screen.getHeight(), (float) (Math.random() * 2 * Math.PI)));
-//		}
+
 		World.add(ball);
 	}
 
@@ -125,6 +120,12 @@ public class Pong implements Game {
 		World.update();
 		Screen.update();
 
+	}
+	
+	public static void reset() {
+		bat1.reset();
+		bat2.reset();
+		ball.reset();
 	}
 
 	@Override
@@ -159,9 +160,5 @@ public class Pong implements Game {
 		new GameWrapper(new Pong(), true);
 	}
 
-	public static void reset() {
-		bat1.reset();
-		bat2.reset();
-		ball.reset();
-	}
+	
 }
