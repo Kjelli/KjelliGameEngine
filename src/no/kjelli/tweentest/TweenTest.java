@@ -1,6 +1,7 @@
 package no.kjelli.tweentest;
 
 import java.io.IOException;
+import java.util.Scanner;
 
 import no.kjelli.generic.Game;
 import no.kjelli.generic.World;
@@ -31,7 +32,7 @@ public class TweenTest implements Game {
 	@Override
 	public void init() {
 		loadSounds();
-		initIntro();
+		initGame();
 	}
 
 	@Override
@@ -88,8 +89,8 @@ public class TweenTest implements Game {
 	public void initGame() {
 		World.clear();
 		state = STATE.PLAYING;
-	}
 
+	}
 	@Override
 	public void render() {
 		Screen.render();

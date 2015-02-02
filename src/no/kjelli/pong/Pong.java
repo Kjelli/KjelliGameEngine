@@ -121,7 +121,7 @@ public class Pong implements Game {
 		Screen.update();
 
 	}
-	
+
 	public static void reset() {
 		bat1.reset();
 		bat2.reset();
@@ -160,5 +160,4 @@ public class Pong implements Game {
 		new GameWrapper(new Pong(), true);
 	}
 
-	
 }
