@@ -11,9 +11,9 @@ import java.util.HashSet;
 import no.kjelli.generic.Physics;
 import no.kjelli.generic.World;
 import no.kjelli.generic.gameobjects.GameObject;
+import no.kjelli.generic.gamewrapper.GameWrapper;
 import no.kjelli.generic.input.Input;
 import no.kjelli.generic.input.InputListener;
-import no.kjelli.generic.main.GameWrapper;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;

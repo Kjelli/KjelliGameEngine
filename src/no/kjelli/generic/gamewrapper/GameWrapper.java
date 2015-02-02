@@ -1,19 +1,38 @@
-package no.kjelli.generic.main;
+package no.kjelli.generic.gamewrapper;
 
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL20.*;
-
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-
+import static org.lwjgl.opengl.GL11.GL_ALPHA_TEST;
+import static org.lwjgl.opengl.GL11.GL_BLEND;
+import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
+import static org.lwjgl.opengl.GL11.GL_GREATER;
+import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
+import static org.lwjgl.opengl.GL11.GL_MULT;
+import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.GL_PROJECTION;
+import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_ENV;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_ENV_MODE;
+import static org.lwjgl.opengl.GL11.glAlphaFunc;
+import static org.lwjgl.opengl.GL11.glBlendFunc;
+import static org.lwjgl.opengl.GL11.glClear;
+import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.glFlush;
+import static org.lwjgl.opengl.GL11.glLoadIdentity;
+import static org.lwjgl.opengl.GL11.glMatrixMode;
+import static org.lwjgl.opengl.GL11.glOrtho;
+import static org.lwjgl.opengl.GL11.glTexEnvi;
+import static org.lwjgl.opengl.GL11.glViewport;
 import no.kjelli.generic.Game;
 import no.kjelli.generic.World;
-import no.kjelli.generic.applet.AppletLauncher;
+import no.kjelli.generic.gameobjects.AbstractGameObject;
+import no.kjelli.generic.gameobjects.GameObject;
 import no.kjelli.generic.gfx.Screen;
 import no.kjelli.generic.gfx.textures.TextureAtlas;
 import no.kjelli.generic.input.Input;
 import no.kjelli.generic.sound.SoundPlayer;
+import no.kjelli.generic.tweens.GameObjectAccessor;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
@@ -22,11 +41,15 @@ import org.lwjgl.openal.AL;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 
+import aurelienribon.tweenengine.Tween;
+import aurelienribon.tweenengine.TweenManager;
+
 public class GameWrapper {
 
 	private static final int FRAME_RATE = 60;
 	private static Game game;
 	public static Thread gameThread;
+	public static TweenManager tweenManager;
 
 	String title;
 	int width, height;
@@ -43,28 +66,21 @@ public class GameWrapper {
 		launch();
 	}
 
-	public GameWrapper(Game game,boolean fullscreen,
-			AppletLauncher appletLauncher) {
-		GameWrapper.game = game;
-		this.fullscreen = fullscreen;
-		this.title = game.getTitle();
-		this.width = (int) appletLauncher.getAppletSize().getWidth();
-		this.height = (int) appletLauncher.getAppletSize().getHeight();
-		try {
-			Display.setParent(appletLauncher.getDisplay_parent());
-		} catch (LWJGLException e) {
-			e.printStackTrace();
-		}
-	}
-
 	public void stop() {
 		running = false;
 	}
 
 	public void launch() {
 		running = true;
+		
+		System.out.println(Tween.getRegisteredAccessor(GameObject.class));
+		Tween.registerAccessor(AbstractGameObject.class, new GameObjectAccessor());
+		initTweenEngine();
+		
+		
 		gameThread = new Thread() {
 			public void run() {
+
 				initDisplay(width, height, fullscreen);
 				Display.setTitle(title);
 				initInput();
@@ -195,6 +211,12 @@ public class GameWrapper {
 		Screen.init(0, 0, Display.getWidth(), Display.getHeight());
 		World.init(Display.getWidth(), Display.getHeight());
 		game.init();
+		tweenManager.resume();
+	}
+
+	private void initTweenEngine() {
+		tweenManager = new TweenManager();
+		tweenManager.pause();
 	}
 
 	private void pollInput() {
@@ -212,7 +234,7 @@ public class GameWrapper {
 			pollInput();
 			update();
 			render();
-			calculateFrameRate();
+			tweenManager.update(calculateFrameRate());
 		}
 	}
 
@@ -221,17 +243,19 @@ public class GameWrapper {
 	long frameCounter;
 	public static long framesPerSecond;
 
-	private void calculateFrameRate() {
+	public float calculateFrameRate() {
 		long now = System.nanoTime();
-		double diff = now - lastTime;
+		float diff = (now - lastTime) / 1000000L;
 		lastTime = now;
-		incrementer += diff / 1000000L;
+		incrementer += diff;
 		frameCounter++;
 		if (incrementer > 1000) {
 			incrementer -= 1000;
 			framesPerSecond = frameCounter;
 			frameCounter = 0;
 		}
+		
+		return diff;
 	}
 
 	private void update() {
@@ -258,8 +282,8 @@ public class GameWrapper {
 		TextureAtlas.destroy();
 		Keyboard.destroy();
 		Mouse.destroy();
-		Display.destroy();
 		AL.destroy();
+		Display.destroy();
 	}
 
 	public Game getGame() {

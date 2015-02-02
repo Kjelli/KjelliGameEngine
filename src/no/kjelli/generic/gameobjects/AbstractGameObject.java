@@ -13,6 +13,7 @@ public abstract class AbstractGameObject implements GameObject {
 	protected float z = 0;
 	protected float width;
 	protected float height;
+	protected float rotation;
 
 	protected float xScale = 1.0f;
 	protected float yScale = 1.0f;
@@ -79,6 +80,16 @@ public abstract class AbstractGameObject implements GameObject {
 
 	public void setZ(float z) {
 		this.z = z;
+	}
+	
+	@Override
+	public void setRotation(float deg) {
+		this.rotation = deg;	
+	}
+	
+	@Override
+	public float getRotation() {
+		return rotation;
 	}
 
 	public double getDistance(GameObject other) {
