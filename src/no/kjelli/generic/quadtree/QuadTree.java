@@ -1,4 +1,4 @@
-package no.kjelli.quadtree;
+package no.kjelli.generic.quadtree;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -194,7 +194,7 @@ public class QuadTree<E extends Collidable> {
 			Draw.line(borderLeft + width / 2, borderBottom + height / 2, 5f,
 					object.getX() + object.getWidth() / 2, object.getY()
 							+ object.getHeight() / 2, Color.red, false);
-			Draw.rect(object, 5f);
+			Draw.rect(object, 5f, Color.cyan);
 		}
 		if (nodes[0] != null) {
 			for (int i = 0; i < nodes.length; i++) {

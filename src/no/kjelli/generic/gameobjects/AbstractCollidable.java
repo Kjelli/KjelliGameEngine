@@ -5,7 +5,7 @@ import no.kjelli.generic.Physics;
 
 public abstract class AbstractCollidable extends AbstractGameObject implements
 		Collidable {
-	private static final float stepSize = 0.01f;
+	private static final float stepSize = 1f;
 	@Deprecated
 	public AbstractCollidable(float x, float y, float width, float height) {
 		super(x, y, width, height);
