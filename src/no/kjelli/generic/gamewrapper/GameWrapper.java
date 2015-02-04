@@ -1,4 +1,4 @@
-package no.kjelli.generic.main;
+package no.kjelli.generic.gamewrapper;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;
@@ -11,7 +11,7 @@ import no.kjelli.generic.Game;
 import no.kjelli.generic.World;
 import no.kjelli.generic.applet.AppletLauncher;
 import no.kjelli.generic.gfx.Screen;
-import no.kjelli.generic.gfx.textures.TextureAtlas;
+import no.kjelli.generic.gfx.textures.SpriteSheet;
 import no.kjelli.generic.input.Input;
 import no.kjelli.generic.sound.SoundPlayer;
 
@@ -255,7 +255,7 @@ public class GameWrapper {
 	private void cleanUp() {
 		game.destroy();
 		Screen.dispose();
-		TextureAtlas.destroy();
+		SpriteSheet.destroy();
 		Keyboard.destroy();
 		Mouse.destroy();
 		Display.destroy();

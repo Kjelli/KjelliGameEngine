@@ -25,7 +25,7 @@ public class Bat extends AbstractCollidable {
 	public static final float SPEED_MAX = 5.0f;
 
 	public static final int STUN_TIMER_MAX = 60;
-	public static final int BULLETS_MAX = 100;
+	public static final int BULLETS_MAX = 1;
 	public static final float ACCELERATION = 0.9f;
 	public static final float SHRINK_HEIGHT = Pong.block_size / 4;
 

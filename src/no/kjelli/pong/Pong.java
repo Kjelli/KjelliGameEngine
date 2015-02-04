@@ -9,13 +9,18 @@ import no.kjelli.generic.Game;
 import no.kjelli.generic.World;
 import no.kjelli.generic.gameobjects.GameObject;
 import no.kjelli.generic.gameobjects.Tagger;
+import no.kjelli.generic.gamewrapper.GameWrapper;
 import no.kjelli.generic.gfx.Screen;
-import no.kjelli.generic.main.GameWrapper;
+import no.kjelli.generic.gfx.textures.SpriteSheet;
+import no.kjelli.generic.input.Input;
+import no.kjelli.generic.input.InputListener;
 import no.kjelli.generic.sound.SoundPlayer;
 import no.kjelli.pong.config.PlayerConfig;
 import no.kjelli.pong.gameobjects.Ball;
 import no.kjelli.pong.gameobjects.Bat;
 import no.kjelli.pong.menu.ControlInput;
+import no.kjelli.pong.menu.Logo;
+import no.kjelli.pong.menu.StartButton;
 
 public class Pong implements Game {
 
@@ -23,6 +28,8 @@ public class Pong implements Game {
 	public static int block_size = 32;
 	public static long ticks = 0;
 	PlayerConfig[] config = new PlayerConfig[2];
+
+	public static SpriteSheet objects;
 
 	public static Bat bat1, bat2;
 	public static Ball ball;
@@ -36,8 +43,13 @@ public class Pong implements Game {
 
 	@Override
 	public void init() {
+		loadSpritesheet();
 		loadSounds();
 		initIntro();
+	}
+
+	private void loadSpritesheet() {
+		objects = new SpriteSheet("res\\pong.png");
 	}
 
 	@Override
@@ -56,9 +68,17 @@ public class Pong implements Game {
 		World.clear();
 		state = STATE.INTRO;
 
-		config[0] = new PlayerConfig("devguy", Keyboard.KEY_W, Keyboard.KEY_S,
+		World.add(new Logo(Screen.getCenterX() - Logo.WIDTH / 2, Screen
+				.getHeight() * 3/4 - Logo.HEIGHT / 2));
+
+		World.add(new StartButton(Screen.getCenterX() - StartButton.WIDTH / 2,
+				Screen.getHeight() / 4 - StartButton.HEIGHT / 2, this));
+	}
+
+	public void initControllerInput() {
+		config[0] = new PlayerConfig("leftie", Keyboard.KEY_W, Keyboard.KEY_S,
 				Keyboard.KEY_SPACE, 0);
-		config[1] = new PlayerConfig("Newguy", Keyboard.KEY_UP,
+		config[1] = new PlayerConfig("rightie", Keyboard.KEY_UP,
 				Keyboard.KEY_DOWN, Keyboard.KEY_LEFT, 1);
 		fetchControlInput(config[0], new Callback() {
 			@Override
@@ -93,6 +113,21 @@ public class Pong implements Game {
 				Screen.getCenterY() - Ball.HEIGHT / 2);
 
 		World.add(ball);
+
+		Input.register(new InputListener() {
+
+			@Override
+			public void keyDown(int eventKey) {
+				if (eventKey == Keyboard.KEY_ESCAPE) {
+					initIntro();
+					Input.unregister(this);
+				}
+			}
+
+			@Override
+			public void keyUp(int eventKey) {
+			}
+		});
 	}
 
 	@Override
@@ -121,7 +156,7 @@ public class Pong implements Game {
 		Screen.update();
 
 	}
-	
+
 	public static void reset() {
 		bat1.reset();
 		bat2.reset();
@@ -143,12 +178,12 @@ public class Pong implements Game {
 
 	@Override
 	public double getWidth() {
-		return 800;
+		return 640;
 	}
 
 	@Override
 	public double getHeight() {
-		return 600;
+		return 480;
 	}
 
 	@Override
@@ -157,8 +192,7 @@ public class Pong implements Game {
 	}
 
 	public static void main(String[] args) {
-		new GameWrapper(new Pong(), true);
+		new GameWrapper(new Pong(), false);
 	}
 
-	
 }

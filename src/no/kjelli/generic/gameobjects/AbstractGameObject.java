@@ -16,6 +16,7 @@ public abstract class AbstractGameObject implements GameObject {
 
 	protected float xScale = 1.0f;
 	protected float yScale = 1.0f;
+	protected float rotation = 0f;
 
 	protected Sprite sprite;
 

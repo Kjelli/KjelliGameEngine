@@ -4,24 +4,22 @@ import java.util.HashSet;
 
 import org.newdawn.slick.opengl.Texture;
 
-public class TextureAtlas {
+public class SpriteSheet {
 
-	public static final HashSet<TextureAtlas> list = new HashSet<>();
-	public static TextureAtlas objects = new TextureAtlas("res\\objects.png");
-	public static TextureAtlas partybombs = new TextureAtlas("res\\partybomb.png");
-	public static TextureAtlas font = new TextureAtlas("res\\fontsmall.png");
+	public static final HashSet<SpriteSheet> list = new HashSet<>();
+	public static SpriteSheet font = new SpriteSheet("res\\fontsmall.png");
 
 	Texture atlasTexture;
 	int sourceWidth, sourceHeight;
 
-	private TextureAtlas(Texture texture) {
+	private SpriteSheet(Texture texture) {
 		this.atlasTexture = texture;
 		sourceWidth = texture.getImageWidth();
 		sourceHeight = texture.getImageHeight();
 		list.add(this);
 	}
 
-	public TextureAtlas(String location) {
+	public SpriteSheet(String location) {
 		this(Textures.load(location));
 	}
 
@@ -38,7 +36,7 @@ public class TextureAtlas {
 	}
 
 	public static void destroy() {
-		for (TextureAtlas ta : list) {
+		for (SpriteSheet ta : list) {
 			ta.atlasTexture.release();
 		}
 	}

@@ -8,7 +8,7 @@ import java.awt.Dimension;
 import org.lwjgl.opengl.Display;
 
 import no.kjelli.generic.Game;
-import no.kjelli.generic.main.GameWrapper;
+import no.kjelli.generic.gamewrapper.GameWrapper;
 
 @SuppressWarnings("serial")
 public abstract class AppletLauncher extends Applet {

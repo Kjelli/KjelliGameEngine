@@ -1,7 +1,7 @@
 package no.kjelli.generic.gfx;
 
 import static org.lwjgl.opengl.GL15.glDeleteBuffers;
-import no.kjelli.generic.gfx.textures.TextureAtlas;
+import no.kjelli.generic.gfx.textures.SpriteSheet;
 import no.kjelli.generic.gfx.textures.TextureRegion;
 
 import org.newdawn.slick.Color;
@@ -22,7 +22,7 @@ public class Sprite {
 			int x = (i % SPRITE_WIDTH) * CHAR_WIDTH;
 			int y = (SPRITE_HEIGHT - 1) * CHAR_HEIGHT - (i / SPRITE_WIDTH)
 					* CHAR_HEIGHT;
-			temp[i] = new Sprite(TextureAtlas.font, x, y, CHAR_WIDTH,
+			temp[i] = new Sprite(SpriteSheet.font, x, y, CHAR_WIDTH,
 					CHAR_HEIGHT);
 		}
 		return temp;
@@ -32,13 +32,13 @@ public class Sprite {
 	public static final int CHAR_WIDTH = 8, CHAR_HEIGHT = 8, SPRITE_WIDTH = 32,
 			SPRITE_HEIGHT = 2;
 
-	TextureAtlas textureAtlas;
+	SpriteSheet textureAtlas;
 	TextureRegion textureRegion;
 	VertexBufferObject vbo;
 	Color color;
 	float width, height;
 
-	public Sprite(TextureAtlas textureAtlas, int texture_x, int texture_y,
+	public Sprite(SpriteSheet textureAtlas, int texture_x, int texture_y,
 			int texture_width, int texture_height) {
 		this.textureAtlas = textureAtlas;
 		this.textureRegion = textureAtlas.getTextureRegion(texture_x,
