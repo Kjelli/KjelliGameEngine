@@ -48,7 +48,7 @@ public class Bullet extends AbstractCollidable {
 			Ball ball = (Ball) (collision.getTarget());
 			World.add(new BallParticle(ball));
 			SoundPlayer.play("speedup");
-			ball.speedUp();
+			ball.charge(parent);
 			destroy();
 		}
 	}

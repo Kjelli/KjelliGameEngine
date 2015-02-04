@@ -1,6 +1,5 @@
 package no.kjelli.generic.gamewrapper;
 
-<<<<<<< HEAD:src/no/kjelli/generic/gamewrapper/GameWrapper.java
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;
 
@@ -8,7 +7,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
-=======
 import static org.lwjgl.opengl.GL11.GL_ALPHA_TEST;
 import static org.lwjgl.opengl.GL11.GL_BLEND;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
@@ -33,7 +31,6 @@ import static org.lwjgl.opengl.GL11.glMatrixMode;
 import static org.lwjgl.opengl.GL11.glOrtho;
 import static org.lwjgl.opengl.GL11.glTexEnvi;
 import static org.lwjgl.opengl.GL11.glViewport;
->>>>>>> origin/Misc:src/no/kjelli/generic/gamewrapper/GameWrapper.java
 import no.kjelli.generic.Game;
 import no.kjelli.generic.World;
 import no.kjelli.generic.gameobjects.AbstractGameObject;
@@ -83,7 +80,6 @@ public class GameWrapper {
 	public void launch() {
 		running = true;
 		
-		System.out.println(Tween.getRegisteredAccessor(GameObject.class));
 		Tween.registerAccessor(AbstractGameObject.class, new GameObjectAccessor());
 		initTweenEngine();
 		

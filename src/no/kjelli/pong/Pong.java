@@ -2,30 +2,34 @@ package no.kjelli.pong;
 
 import java.io.IOException;
 
-import org.lwjgl.input.Keyboard;
-
 import no.kjelli.generic.Callback;
 import no.kjelli.generic.Game;
 import no.kjelli.generic.World;
 import no.kjelli.generic.gameobjects.GameObject;
 import no.kjelli.generic.gameobjects.Tagger;
 import no.kjelli.generic.gamewrapper.GameWrapper;
+import no.kjelli.generic.gfx.Draw;
 import no.kjelli.generic.gfx.Screen;
-<<<<<<< HEAD
+import no.kjelli.generic.gfx.Sprite;
 import no.kjelli.generic.gfx.textures.SpriteSheet;
 import no.kjelli.generic.input.Input;
 import no.kjelli.generic.input.InputListener;
-=======
->>>>>>> origin/Misc
 import no.kjelli.generic.sound.SoundPlayer;
 import no.kjelli.pong.config.PlayerConfig;
 import no.kjelli.pong.gameobjects.Ball;
 import no.kjelli.pong.gameobjects.Bat;
+import no.kjelli.pong.gameobjects.Wall;
 import no.kjelli.pong.menu.ControlInput;
 import no.kjelli.pong.menu.Logo;
 import no.kjelli.pong.menu.StartButton;
 
+import org.lwjgl.input.Keyboard;
+
 public class Pong implements Game {
+
+	public static final float MARGIN = Sprite.CHAR_HEIGHT * 7;
+	public static final float LOWER_LIMIT = MARGIN;
+	public static final float UPPER_LIMIT = 480 - MARGIN;
 
 	public static int tag_playfield = Tagger.uniqueTag();
 	public static int block_size = 32;
@@ -33,7 +37,6 @@ public class Pong implements Game {
 	PlayerConfig[] config = new PlayerConfig[2];
 
 	public static SpriteSheet objects;
-
 	public static Bat bat1, bat2;
 	public static Ball ball;
 
@@ -79,8 +82,9 @@ public class Pong implements Game {
 	}
 
 	public void initControllerInput() {
+		World.clear();
 		config[0] = new PlayerConfig("leftie", Keyboard.KEY_W, Keyboard.KEY_S,
-				Keyboard.KEY_SPACE, 0);
+				Keyboard.KEY_D, 0);
 		config[1] = new PlayerConfig("rightie", Keyboard.KEY_UP,
 				Keyboard.KEY_DOWN, Keyboard.KEY_LEFT, 1);
 		fetchControlInput(config[0], new Callback() {
@@ -115,6 +119,10 @@ public class Pong implements Game {
 		ball = new Ball(Screen.getCenterX() - Ball.WIDTH / 2,
 				Screen.getCenterY() - Ball.HEIGHT / 2);
 
+		World.add(new Wall(0,0, Screen.getWidth(), LOWER_LIMIT));
+		World.add(new Wall(0,UPPER_LIMIT, Screen.getWidth(), Screen.getHeight()- UPPER_LIMIT));
+	
+		
 		World.add(ball);
 
 		Input.register(new InputListener() {

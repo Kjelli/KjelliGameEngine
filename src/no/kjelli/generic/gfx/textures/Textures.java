@@ -15,7 +15,7 @@ public class Textures {
 
 		try {
 			texture = TextureLoader.getTexture(format,
-					ResourceLoader.getResourceAsStream(filename), GL_NEAREST);
+					ResourceLoader.getResourceAsStream(filename), GL_NEAREST); //GL_LINEAR
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -32,7 +32,7 @@ public class TweenTest implements Game {
 	@Override
 	public void init() {
 		loadSounds();
-		initGame();
+		initIntro();
 	}
 
 	@Override

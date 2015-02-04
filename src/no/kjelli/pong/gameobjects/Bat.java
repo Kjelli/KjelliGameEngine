@@ -83,15 +83,14 @@ public class Bat extends AbstractCollidable {
 
 	@Override
 	public void onCollision(Collision collision) {
-		if (collision.getTarget() instanceof Ball) {
+		if (collision.getTarget() instanceof Ball
+				|| collision.getTarget() instanceof Wall) {
 			stop(collision.getImpactDirection());
 		}
 	}
 
 	@Override
 	public void update() {
-		if(Keyboard.isKeyDown(Keyboard.KEY_SPACE))
-			shoot();
 		if (stun_timer > 0) {
 			stun_timer--;
 			return;
@@ -101,12 +100,13 @@ public class Bat extends AbstractCollidable {
 
 	private void movementLogic() {
 		if (up) {
-			if (y + height <= Screen.getHeight())
+			if (y + height <= Pong.UPPER_LIMIT)
 				accelerateUp();
-			else
+			else {
 				velocity_y = 0;
+			}
 		} else if (down) {
-			if (y > 0)
+			if (y > Pong.LOWER_LIMIT)
 				accelerateDown();
 			else
 				velocity_y = 0;
@@ -168,19 +168,19 @@ public class Bat extends AbstractCollidable {
 		if (config.playerNo == 0) {
 			baseX = 20;
 			for (int score = 0; score < config.score; score++) {
-				Draw.fillRect(baseX + (Ball.WIDTH + 1) * score, baseY - 40,
+				Draw.fillRect(baseX + (Ball.WIDTH + 1) * score, baseY - 30,
 						Ball.WIDTH, Ball.HEIGHT);
 			}
 		} else {
 			baseX = Screen.getWidth() - 120;
 			for (int score = 0; score < config.score; score++) {
 				Draw.fillRect(Screen.getWidth() - 2 * Ball.WIDTH
-						- (Ball.WIDTH + 1) * score, baseY - 40, Ball.WIDTH,
+						- (Ball.WIDTH + 1) * score, baseY - 30, Ball.WIDTH,
 						Ball.HEIGHT);
 			}
 		}
 
-		Draw.string(config.name, baseX, baseY, color);
+		Draw.string(config.name, baseX, baseY, 4f, color);
 	}
 
 	public Color getColor() {
@@ -205,7 +205,7 @@ public class Bat extends AbstractCollidable {
 
 	private void shrink() {
 		height -= SHRINK_HEIGHT;
-		y += SHRINK_HEIGHT /2;
+		y += SHRINK_HEIGHT / 2;
 	}
 
 	public void increaseBullets() {
@@ -217,6 +217,7 @@ public class Bat extends AbstractCollidable {
 		String text = config.name + " scored!";
 		TextScrolling tf = new TextScrolling(text, TextScrolling.VERTICAL,
 				-1.0f, color);
+		Wall.color(color);
 		World.add(tf);
 	}
 
