@@ -2,7 +2,12 @@ package no.kjelli.pong;
 
 import java.io.IOException;
 
+<<<<<<< HEAD
 import no.kjelli.generic.Callback;
+=======
+import org.lwjgl.input.Keyboard;
+
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 import no.kjelli.generic.Game;
 import no.kjelli.generic.World;
 import no.kjelli.generic.gameobjects.GameObject;
@@ -14,6 +19,7 @@ import no.kjelli.generic.gfx.textures.SpriteSheet;
 import no.kjelli.generic.input.Input;
 import no.kjelli.generic.input.InputListener;
 import no.kjelli.generic.sound.SoundPlayer;
+import no.kjelli.pong.gameobjects.particles.BlockParticle;
 import no.kjelli.pong.config.PlayerConfig;
 import no.kjelli.pong.gameobjects.Ball;
 import no.kjelli.pong.gameobjects.Bat;
@@ -298,11 +304,20 @@ public class Pong implements Game {
 
 		ball = new Ball(Screen.getCenterX() - Ball.WIDTH / 2,
 				Screen.getCenterY() - Ball.HEIGHT / 2);
+<<<<<<< HEAD
 
 		World.add(new Wall(0, 0, Screen.getWidth(), LOWER_LIMIT));
 		World.add(new Wall(0, UPPER_LIMIT, Screen.getWidth(), Screen
 				.getHeight() - UPPER_LIMIT));
 
+=======
+//
+//		for (int i = 0; i < 50; i++) {
+//			World.add(new BlockParticle((float) Math.random()
+//					* Screen.getWidth(), (float) Math.random()
+//					* Screen.getHeight(), (float) (Math.random() * 2 * Math.PI)));
+//		}
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 		World.add(ball);
 
 		Input.register(new InputListener() {
@@ -364,6 +379,7 @@ public class Pong implements Game {
 		Screen.update();
 
 	}
+<<<<<<< HEAD
 
 	/**
 	 * The amount of LED-logos flying around in the background in the menu
@@ -407,6 +423,8 @@ public class Pong implements Game {
 		bat2.reset();
 		ball.reset();
 	}
+=======
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 
 	/**
 	 * When the game is closed, each object is destroyed in their own manner to
@@ -439,4 +457,12 @@ public class Pong implements Game {
 		new GameWrapper(new Pong(), false);
 	}
 
+<<<<<<< HEAD
+=======
+	public static void reset() {
+		bat1.reset();
+		bat2.reset();
+		ball.reset();
+	}
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 }

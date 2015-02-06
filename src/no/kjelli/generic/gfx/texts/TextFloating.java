@@ -1,5 +1,7 @@
 package no.kjelli.generic.gfx.texts;
 
+import no.kjelli.bombline.BombermanOnline;
+
 import org.newdawn.slick.Color;
 
 public class TextFloating extends TextStatic {
@@ -17,7 +19,8 @@ public class TextFloating extends TextStatic {
 
 	@Override
 	public void update() {
-		setY(base_y + (float) Math.sin(0 / (20 * Math.PI)) * 4);
+		setY(base_y + (float) Math.sin(BombermanOnline.ticks / (20 * Math.PI))
+				* 4);
 		super.update();
 	}
 

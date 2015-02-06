@@ -6,6 +6,7 @@ import static org.lwjgl.opengl.GL11.glScalef;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 
+import no.kjelli.bombline.BombermanOnline;
 import no.kjelli.generic.Physics;
 import no.kjelli.generic.World;
 import no.kjelli.generic.gameobjects.GameObject;

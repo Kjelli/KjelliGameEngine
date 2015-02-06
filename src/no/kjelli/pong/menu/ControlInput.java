@@ -1,9 +1,9 @@
 package no.kjelli.pong.menu;
 
-import no.kjelli.generic.Callback;
 import no.kjelli.generic.World;
 import no.kjelli.generic.gfx.Sprite;
 import no.kjelli.generic.gfx.texts.TextStatic;
+import no.kjelli.pong.Callback;
 import no.kjelli.pong.config.PlayerConfig;
 
 import org.newdawn.slick.Color;
@@ -22,8 +22,7 @@ public class ControlInput {
 		this.pc = pc;
 		this.cb = callback;
 		namelabel = new TextStatic(nameStr, x - nameStr.length() * Sprite.CHAR_WIDTH / 2, y + 90, Color.white);
-		System.out.println(pc.name);
-		name = new NameInputBox(pc.name, x - NameInputBox.MAX_CAP * Sprite.CHAR_WIDTH
+		name = new NameInputBox(x - NameInputBox.MAX_CAP * Sprite.CHAR_WIDTH
 				/ 2, y + 75);
 
 		label = new TextStatic(pStr +" "+ (pc.playerNo+1), x - pStr.length() * Sprite.CHAR_WIDTH / 2,

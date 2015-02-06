@@ -23,11 +23,11 @@ public abstract class AbstractInputBox extends AbstractUIObject implements Focus
 	private boolean symbolsAllowed = true, numbersAllowed = true,
 			alphanumericAllowed = true, spaceAllowed = true;
 
-	public AbstractInputBox(float x, float y, int maxLength, String defaultText, Color foreground,
+	public AbstractInputBox(float x, float y, int maxLength, Color foreground,
 			Color background, Color bghighlight, Color fghighlight) {
 		super(x, y, 4f, Sprite.CHAR_WIDTH * maxLength + 2,
 				Sprite.CHAR_HEIGHT + 2);
-		this.defaultText = defaultText;
+		this.defaultText = getDefaultText();
 		this.input = defaultText;
 		this.foreground = foreground;
 		this.background = background;
@@ -125,6 +125,7 @@ public abstract class AbstractInputBox extends AbstractUIObject implements Focus
 		}
 	}
 
+	protected abstract String getDefaultText();
 
 	protected abstract void onInputComplete();
 
@@ -189,10 +190,6 @@ public abstract class AbstractInputBox extends AbstractUIObject implements Focus
 
 	public void setNumbersAllowed(boolean numbersAllowed) {
 		this.numbersAllowed = numbersAllowed;
-	}
-
-	public String getDefaultText(){
-		return defaultText;
 	}
 
 	public boolean isAlphanumericAllowed() {
