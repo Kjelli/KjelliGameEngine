@@ -11,13 +11,13 @@ public class Draw {
 
 	public static final Color DEFAULT_COLOR = new Color(1f, 1f, 1f, 1f);
 
-	public static void fillRect(float x, float y, float width, float height) {
-		fillRect(x, y, 0, width, height, 0, DEFAULT_COLOR, false);
+	public static void fillRect(float x, float y,float z, float width, float height) {
+		fillRect(x, y, z, width, height, 0, DEFAULT_COLOR, false);
 	}
 
-	public static void fillRect(float x, float y, float width, float height,
+	public static void fillRect(float x, float y, float z, float width, float height,
 			float rot) {
-		fillRect(x, y, 0, width, height, 0, DEFAULT_COLOR, false);
+		fillRect(x, y, z, width, height, rot, DEFAULT_COLOR, false);
 	}
 
 	public static void fillRect(float x, float y, float width, float height,
@@ -28,6 +28,11 @@ public class Draw {
 	public static void fillRect(float x, float y, float width, float height,
 			float rot, Color color, boolean followScreen) {
 		fillRect(x, y, 0, width, height, rot, color, followScreen);
+	}
+
+	public static void fillRect(float x, float y, float z, float width,
+			float height, Color color) {
+		fillRect(x, y, z, width, height, 0, color, false);
 	}
 
 	public static void fillRect(float x, float y, float z, float width,
@@ -46,9 +51,10 @@ public class Draw {
 				y += Screen.getY();
 			}
 
-			glTranslatef(x - Screen.getX(), y - Screen.getY(), z);
-			glTranslatef(0.5f, 0.5f, 0.0f);
-			glRotatef(rot, 0, 0, 0);
+			glTranslatef(x - Screen.getX() + width / 2, y - Screen.getY()
+					+ height / 2, z);
+			glRotatef(rot, 0, 0, 1);
+			glTranslatef(-width / 2, -height / 2, 0);
 
 			glBegin(GL_QUADS);
 			{
@@ -109,18 +115,28 @@ public class Draw {
 
 	public static void sprite(Sprite sprite, float x, float y, float z,
 			float rot, float xScale, float yScale, boolean followScreen) {
+		sprite(sprite, x, y, z, 0.0f, 1.0f, 1.0f, false, false, false);
+	}
+
+	public static void sprite(Sprite sprite, float x, float y, float z,
+			float rot, float xScale, float yScale, boolean xFlip,
+			boolean yFlip, boolean followScreen) {
 		glPushMatrix();
+
 		{
 			if (followScreen) {
 				x += Screen.getX();
 				y += Screen.getY();
 			}
 
-			glTranslatef(x - Screen.getX() + sprite.getWidth() / 2,
-					y - Screen.getY() + sprite.getHeight() / 2, z);
-			glRotatef(rot, 0, 0, 1.0f);
-			glTranslatef(-sprite.getWidth() / 2, -sprite.getHeight() / 2, 0);
-			glScalef(xScale, yScale, 1.0f);
+			glTranslatef(x - Screen.getX() + sprite.getWidth()*xScale / 2,
+					y - Screen.getY() + sprite.getHeight()*xScale / 2, z);
+			glRotatef(rot, 0, 0, 1);
+			glTranslatef(-sprite.getWidth()*xScale / 2, -sprite.getHeight()*xScale / 2, 0);
+			glScalef(xScale * (xFlip ? -1 : 1), yScale * (yFlip ? -1 : 1), 1.0f);
+			
+			if (xFlip)
+				glTranslatef(-sprite.getWidth() - 1, 0.0f, 0.0f);
 
 			Color color = sprite.getColor();
 
@@ -188,27 +204,35 @@ public class Draw {
 	}
 
 	public static void rect(GameObject object) {
-		rect(object.getX(), object.getY(), 0.0f, object.getWidth() - 1,
-				object.getHeight() - 1, Draw.DEFAULT_COLOR, false);
+		rect(object.getX(), object.getY(), object.getZ(), object.getWidth(),
+				object.getHeight(), object.getRotation(), Draw.DEFAULT_COLOR,
+				false);
 	}
 
 	public static void rect(GameObject object, float z) {
-		rect(object.getX(), object.getY(), z, object.getWidth() - 1,
-				object.getHeight() - 1, 0.0f, Draw.DEFAULT_COLOR, false);
+		rect(object.getX(), object.getY(), z, object.getWidth(),
+				object.getHeight(), object.getRotation(), Draw.DEFAULT_COLOR,
+				false);
+	}
+	
+	public static void rect(GameObject object, float z, Color color) {
+		rect(object.getX(), object.getY(), z, object.getWidth(),
+				object.getHeight(), object.getRotation(), color,
+				false);
 	}
 
 	public static void rect(GameObject object, Color color) {
-		rect(object.getX(), object.getY(), 0, object.getWidth() - 1,
-				object.getHeight() - 1, 0.0f, color, false);
+		rect(object.getX(), object.getY(), object.getZ(), object.getWidth(),
+				object.getHeight(), object.getRotation(), color, false);
 	}
 
-	public static void rect(float x, float y, float width, float height) {
-		rect(x, y, 0, width, height, 0, Draw.DEFAULT_COLOR, false);
+	public static void rect(float x, float y, float z, float width, float height) {
+		rect(x, y, z, width, height, 0, Draw.DEFAULT_COLOR, false);
 	}
 
-	public static void rect(float x, float y, float width, float height,
-			float rot) {
-		rect(x, y, 0, width, height, rot, Draw.DEFAULT_COLOR, false);
+	public static void rect(float x, float y, float z, float width,
+			float height, float rot) {
+		rect(x, y, z, width, height, rot, Draw.DEFAULT_COLOR, false);
 	}
 
 	public static void rect(float x, float y, float width, float height,
@@ -216,9 +240,23 @@ public class Draw {
 		rect(x, y, 0, width, height, 0, color, false);
 	}
 
-	public static void rect(float x, float y, float width, float height,
-			float rot, Color color, boolean followScreen) {
-		rect(x, y, 0, width, height, 0, color, false);
+	public static void rect(float x, float y, float width, float height) {
+		rect(x, y, 0, width, height, 0, DEFAULT_COLOR, false);
+	}
+
+	public static void rect(float x, float y, float z, float width,
+			float height, float rot, Color color) {
+		rect(x, y, z, width, height, 0, color, false);
+	}
+
+	public static void rect(float x, float y, float z, float width,
+			float height, Color color) {
+		rect(x, y, z, width, height, 0, color, false);
+	}
+
+	public static void rect(GameObject object, float xOffset, float yOffset) {
+		rect(object.getX() + xOffset, object.getY() + yOffset, object.getZ(),
+				object.getWidth(), object.getHeight(), object.getRotation());
 	}
 
 	public static void rect(float x, float y, float z, float width,
@@ -231,9 +269,9 @@ public class Draw {
 				x += Screen.getX();
 				y += Screen.getY();
 			}
-			glTranslatef(x - Screen.getX(), y - Screen.getY(), z);
-			glTranslatef(0.5f, 0.5f, 0.0f);
-			glRotatef(rot, 0, 0, 0);
+			glTranslatef(x - Screen.getX() + width/2, y - Screen.getY() + height/2, z);
+			glRotatef(rot, 0, 0, 1);
+			glTranslatef(-width/2,-height/2, 0);
 
 			glBegin(GL_LINE_LOOP);
 			{
@@ -251,11 +289,6 @@ public class Draw {
 		glPopMatrix();
 	}
 
-	public static void rect(GameObject object, float xOffset, float yOffset) {
-		rect(object.getX() + xOffset, object.getY() + yOffset,
-				object.getWidth(), object.getHeight());
-	}
-
 	public static void string(String drawString, float xOffset, float yOffset) {
 		string(drawString, xOffset, yOffset, 0, 1, 1, DEFAULT_COLOR, false);
 	}
@@ -269,6 +302,11 @@ public class Draw {
 	public static void string(String string, float xOffset, float yOffset,
 			Color color) {
 		string(string, xOffset, yOffset, 0, 1, 1, color, false);
+	}
+	
+	public static void string(String string, float xOffset, float yOffset,
+			float z, Color color) {
+		string(string, xOffset, yOffset, z, 1, 1, color, false);
 	}
 
 	public static void string(String string, float xOffset, float yOffset,

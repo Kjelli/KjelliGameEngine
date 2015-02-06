@@ -5,8 +5,16 @@ import no.kjelli.generic.Physics;
 
 public abstract class AbstractCollidable extends AbstractGameObject implements
 		Collidable {
+	private static final float stepSize = 1f;
+
+	@Deprecated
 	public AbstractCollidable(float x, float y, float width, float height) {
 		super(x, y, width, height);
+	}
+
+	public AbstractCollidable(float x, float y, float z, float width,
+			float height) {
+		super(x, y, z, width, height);
 	}
 
 	private float xStep;
@@ -19,7 +27,7 @@ public abstract class AbstractCollidable extends AbstractGameObject implements
 
 	protected void stop(int impactDirection) {
 		colLeft = ((impactDirection & Collision.LEFT) > 0 || (colLeft));
-		colAbove = ((impactDirection & Collision.ABOVE) > 0 || (colAbove));
+		colAbove = ((impactDirection & Collision.UP) > 0 || (colAbove));
 		colRight = ((impactDirection & Collision.RIGHT) > 0 || (colRight));
 		colBelow = ((impactDirection & Collision.BELOW) > 0 || (colBelow));
 
@@ -42,61 +50,62 @@ public abstract class AbstractCollidable extends AbstractGameObject implements
 	private void xStep(double velocity_x) {
 		xStep += velocity_x;
 
-		while (xStep >= 1) {
-			xStep--;
-			x++;
+		while (xStep >= stepSize) {
+			xStep -= stepSize;
+			x += stepSize;
 			Physics.getCollisions(this);
+			microStep(xStep, 0);
 			if (colRight) {
-				x--;
+				x -= stepSize;
 				xStep = 0;
 				return;
 			}
-			microStep();
 
 		}
-		while (xStep <= -1) {
-			xStep++;
-			x--;
+		while (xStep <= -stepSize) {
+			xStep += stepSize;
+			x -= stepSize;
 			Physics.getCollisions(this);
+			microStep(xStep, 0);
 			if (colLeft) {
-				x++;
+				x += stepSize;
 				xStep = 0;
 				return;
 
 			}
-			microStep();
 		}
 	}
 
-	// To be overridden
-	protected void microStep() {
-	};
+	protected void microStep(float xStep, float yStep) {
+		// To be optionally overwritten
+		
+	}
 
 	public void yStep(double velocity_y) {
 		yStep += velocity_y;
 
-		while (yStep >= 1) {
-			yStep--;
-			y++;
+		while (yStep >= stepSize) {
+			yStep -= stepSize;
+			y += stepSize;
 			Physics.getCollisions(this);
+			microStep(0, yStep);
 			if (colAbove) {
-				y--;
+				y -= stepSize;
 				yStep = 0;
 				return;
 
 			}
-			microStep();
 		}
-		while (yStep <= -1) {
-			yStep++;
-			y--;
+		while (yStep <= -stepSize) {
+			yStep += stepSize;
+			y -= stepSize;
 			Physics.getCollisions(this);
+			microStep(0, yStep);
 			if (colBelow) {
-				y++;
+				y += stepSize;
 				yStep = 0;
 				return;
 			}
-			microStep();
 		}
 	}
 

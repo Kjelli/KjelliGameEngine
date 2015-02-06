@@ -1,7 +1,11 @@
 package no.kjelli.generic;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 
+import no.kjelli.generic.gameobjects.Collidable;
 import no.kjelli.generic.gameobjects.GameObject;
 import no.kjelli.generic.gfx.Drawable;
 
@@ -12,6 +16,7 @@ public class World {
 
 	private static int width;
 	private static int height;
+	private static int paused;
 
 	private static ArrayList<GameObject> removeQueue = new ArrayList<>();
 	private static ArrayList<GameObject> addQueue = new ArrayList<>();
@@ -27,7 +32,6 @@ public class World {
 		return objects;
 	}
 
-
 	public static void add(GameObject object) {
 		addQueue.add(object);
 	}
@@ -41,8 +45,12 @@ public class World {
 	}
 
 	public static void clear() {
+		paused = 0;
 		addQueue.clear();
 		removeQueue.addAll(objects);
+		for (GameObject object : objects) {
+			object.destroy();
+		}
 	}
 
 	public static void render() {
@@ -59,35 +67,39 @@ public class World {
 	}
 
 	public static void update() {
-
 		for (GameObject oldObject : removeQueue) {
 			objects.remove(oldObject);
 		}
+		removeQueue.clear();
 		for (GameObject newObject : addQueue) {
 			objects.add(newObject);
+			if (newObject.hasTag(paused))
+				newObject.pause(true);
 			newObject.onCreate();
 		}
-
 		addQueue.clear();
-		removeQueue.clear();
 
 		Physics.quadtree.clear();
-		Physics.addObjects(objects);
+		for (GameObject gameObject : objects) {
+			if (gameObject instanceof Collidable)
+				Physics.quadtree.insert((Collidable) gameObject);
+		}
 		for (GameObject gameObject : objects) {
 			if (!gameObject.isPaused())
 				gameObject.update();
 		}
 	}
 
-	public static HashSet<GameObject> retrieveCollidables(
-			HashSet<GameObject> returnObjects, Rectangle bounds) {
+	public static HashSet<Collidable> retrieveCollidables(
+			HashSet<Collidable> returnObjects, Rectangle bounds) {
 		return Physics.quadtree.retrieve(returnObjects, bounds);
 	}
 
 	// Bad fix for retrieving game objects from the rectangle
-	public static void retrieveAll(HashSet<GameObject> returnObjects,
+	public static void retrieveAll(LinkedHashSet<GameObject> returnObjects,
 			Rectangle bounds) {
-		for (GameObject obj : objects) {
+		for (int i = objects.size() - 1; i >= 0; i--) {
+			GameObject obj = objects.get(i);
 			if (obj.intersects(bounds))
 				returnObjects.add(obj);
 		}
@@ -114,15 +126,18 @@ public class World {
 	}
 
 	public static void pause(int tag, boolean pause) {
+		if ((pause && (paused & tag) == 0) || (!pause && (paused & tag) >= 0)) {
+			paused ^= tag;
+		}
 		for (GameObject o : objects)
 			if (o.hasTag(tag))
 				o.pause(pause);
 	}
 
-	public static void hide(int tag, boolean visible) {
+	public static void hide(int tag, boolean hidden) {
 		for (GameObject o : objects)
 			if (o.hasTag(tag))
-				o.setVisible(!visible);
+				o.setVisible(!hidden);
 	}
 
 }

@@ -5,23 +5,23 @@ import java.util.HashSet;
 
 import no.kjelli.generic.gameobjects.Collidable;
 import no.kjelli.generic.gameobjects.GameObject;
-import no.kjelli.quadtree.QuadTree;
+import no.kjelli.generic.quadtree.QuadTree;
 
 public class Physics {
 
-	public static QuadTree<GameObject> quadtree;
+	public static QuadTree<Collidable> quadtree;
 
 	public static void init() {
-		quadtree = new QuadTree<GameObject>(0, 0, World.getWidth(), 0,
+		quadtree = new QuadTree<Collidable>(0, 0, World.getWidth(), 0,
 				World.getHeight());
 	}
 
-	public static void addObjects(ArrayList<GameObject> others) {
+	public static void addObjects(ArrayList<Collidable> others) {
 		quadtree.insert(others);
 	}
 
 	public static void getCollisions(Collidable object) {
-		HashSet<GameObject> others = new HashSet<>();
+		HashSet<Collidable> others = new HashSet<>();
 		quadtree.retrieve(others, object);
 		for (GameObject other : others) {
 			if (!(other instanceof Collidable))

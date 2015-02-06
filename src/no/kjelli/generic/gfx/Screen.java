@@ -1,27 +1,30 @@
 package no.kjelli.generic.gfx;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.glClearColor;
+import static org.lwjgl.opengl.GL11.glScalef;
 
 import java.util.HashSet;
-
-import javax.swing.plaf.basic.BasicInternalFrameTitlePane.MoveAction;
+import java.util.LinkedHashSet;
 
 import no.kjelli.generic.Physics;
 import no.kjelli.generic.World;
-import no.kjelli.generic.gameobjects.Clickable;
 import no.kjelli.generic.gameobjects.GameObject;
-import no.kjelli.generic.main.Launcher;
-import no.kjelli.mathmania.MathMania;
+import no.kjelli.generic.gamewrapper.GameWrapper;
+import no.kjelli.generic.input.Input;
+import no.kjelli.generic.input.InputListener;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Cursor;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.Rectangle;
 import org.newdawn.slick.Color;
 
 public class Screen {
+	private static final int DEBUG_DRAW_MODES = 3; // off, objects, objects +
+													// quad
 
 	public static final int MOUSE_LEFT = 0, MOUSE_RIGHT = 1;
 
@@ -40,13 +43,17 @@ public class Screen {
 	private static float velocity_x, velocity_y;
 	private static GameObject centerTarget;
 
+	private static Focusable focus = null;
+
 	public static float scale = 1.0f;
 
 	private static Cursor blankCursor;
 	private static HashSet<Clickable> mouseOverEventObjects;
 	private static HashSet<Clickable> mouseOverEventObjectsRemoveQueue;
+	private static float damping;
 
-	private static boolean debug_draw = false;
+	private static int debug_draw_mode = 0;
+
 
 	public static void init(int x, int y, int width, int height) {
 		init(x, y, width, height, Color.black);
@@ -70,6 +77,20 @@ public class Screen {
 		} catch (LWJGLException e) {
 			e.printStackTrace();
 		}
+		Input.register(new InputListener() {
+
+			@Override
+			public void keyUp(int eventKey) {
+				if (eventKey == Keyboard.KEY_Q) {
+					Screen.toggleDebugDraw();
+				}
+			}
+
+			@Override
+			public void keyDown(int eventKey) {
+				
+			}
+		});
 	}
 
 	public static void zoom(float scale) {
@@ -77,19 +98,19 @@ public class Screen {
 	}
 
 	public static void render() {
-		glScalef(1 / scale, 1 / scale, 1.0f);
+		glScalef(1 / scale, 1 / scale, 1f);
 		World.render();
-		if (debug_draw) {
-			Draw.rect(x, y, 4.0f, getWidth() - 1, getHeight() - 1);
-			Physics.quadtree.render();
-			Draw.string("FPS: " + Launcher.framesPerSecond + "\nObjects: "
+		if (debug_draw_mode > 0) {
+			Draw.string("FPS: " + GameWrapper.framesPerSecond + "\nObjects: "
 					+ World.getObjects().size(), 1, Screen.getHeight()
 					- Sprite.CHAR_HEIGHT - 1, 4.2f, 1, 1, Color.yellow, true);
 		}
+		if (debug_draw_mode > 1)
+			Physics.quadtree.render();
 	}
 
 	public static void toggleDebugDraw() {
-		debug_draw = !debug_draw;
+		debug_draw_mode = (debug_draw_mode + 1) % DEBUG_DRAW_MODES;
 	}
 
 	public static void update() {
@@ -117,31 +138,48 @@ public class Screen {
 	}
 
 	private static void followCenterTarget() {
-		velocity_x = (centerTarget.getCenterX() - getCenterX()) / 10;
-		velocity_y = (centerTarget.getCenterY() - getCenterY()) / 10;
+		velocity_x = (centerTarget.getCenterX() - getCenterX()) / damping;
+		velocity_y = (centerTarget.getCenterY() - getCenterY()) / damping;
 		setX((getX() + velocity_x));
 		setY((getY() + velocity_y));
 	}
 
+	static boolean foundFocusable = false, clicked = false;
+
 	private static void checkWorldMouseEvents() {
-		HashSet<GameObject> returnObjects = new HashSet<>();
-		World.retrieveAll(returnObjects,
-				new Rectangle(Mouse.getX(), Mouse.getY(), 1, 1));
+		LinkedHashSet<GameObject> returnObjects = new LinkedHashSet<>();
+		World.retrieveAll(returnObjects, new Rectangle(getMouseX(),
+				getMouseY(), 1, 1));
+		foundFocusable = false;
+		clicked = false;
 		for (GameObject obj : returnObjects) {
 			if (obj instanceof Clickable) {
 				Clickable src = (Clickable) obj;
 				doMouseEvents(src);
+				break;
 			}
+		}
+		if (Mouse.getEventButtonState()) {
+			clicked = true;
+		}
+		if (clicked && !foundFocusable) {
+			setFocusOn(null);
 		}
 	}
 
 	private static void doMouseEvents(Clickable src) {
 		if (Mouse.getEventButton() != -1) {
 			int button = Mouse.getEventButton();
-			if (Mouse.getEventButtonState())
+			if (Mouse.getEventButtonState()) {
 				src.onMousePressed(button);
-			else
+				if (src instanceof Focusable) {
+					setFocusOn(((Focusable) src), true);
+					foundFocusable = true;
+				}
+			} else {
 				src.onMouseReleased(button);
+				foundFocusable = true;
+			}
 			return;
 		}
 
@@ -153,7 +191,12 @@ public class Screen {
 	}
 
 	public static void centerOn(GameObject object) {
+		centerOn(object, 10);
+	}
+
+	public static void centerOn(GameObject object, int damping) {
 		centerTarget = object;
+		Screen.damping = damping;
 	}
 
 	public static boolean contains(GameObject object) {
@@ -253,11 +296,21 @@ public class Screen {
 
 	public static void releaseMouseOverObjects() {
 		for (Clickable c : mouseOverEventObjects) {
-			if (!(c.contains(Mouse.getX(), Mouse.getY()))) {
+			if (!(c.contains(getMouseX(), getMouseY()))) {
 				mouseOverEventObjectsRemoveQueue.add(c);
 				c.onExit();
 			}
 		}
+	}
+
+	private static int getMouseX() {
+		return (int) (Mouse.getX() * ((float) Screen.getWidth() / Display
+				.getWidth()));
+	}
+
+	private static int getMouseY() {
+		return (int) (Mouse.getY() * ((float) Screen.getHeight() / Display
+				.getHeight()));
 	}
 
 	public static float getCenterX() {
@@ -266,5 +319,45 @@ public class Screen {
 
 	public static float getCenterY() {
 		return getY() + getHeight() / 2;
+	}
+
+	public static void setFocusOn(Focusable focusable) {
+		setFocusOn(focusable, true);
+	}
+
+	public static void setFocusOn(Focusable focusable, boolean focus) {
+		if (Screen.focus == focusable)
+			return;
+		if (Screen.focus != null) {
+			Screen.focus.setFocus(false);
+			Screen.focus.onLostFocus();
+			if (focusable == null) {
+				Screen.focus = null;
+				return;
+			}
+		} else {
+			if (focusable == null)
+				return;
+		}
+		if (focus) {
+			Screen.focus = focusable;
+			Screen.focus.setFocus(true);
+			Screen.focus.onFocus();
+		} else
+			Screen.focus = null;
+	}
+
+	public static Focusable getFocusElement() {
+		return focus;
+	}
+	
+	public static void dispose(){
+		//TODO
+	}
+	public static void incrementX(int x) {
+		Screen.setX(Screen.x + x);
+	}
+	public static void incrementY(int y) {
+		Screen.setY(Screen.y + y);
 	}
 }
