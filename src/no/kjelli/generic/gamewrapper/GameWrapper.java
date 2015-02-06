@@ -284,6 +284,7 @@ public class GameWrapper {
 
 	private void cleanUp() {
 		game.destroy();
+		World.destroy();
 		Screen.dispose();
 		SpriteSheet.destroy();
 		Keyboard.destroy();

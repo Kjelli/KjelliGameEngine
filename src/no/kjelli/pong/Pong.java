@@ -95,7 +95,7 @@ public class Pong implements Game {
 	/** Initializes and loads elements of the game and starting the intro */
 	@Override
 	public void init() {
-		loadSpritesheet();
+		loadSpriteSheets();
 		loadSounds();
 		initIntro();
 	}
@@ -104,7 +104,7 @@ public class Pong implements Game {
 	 * Loads textures and initializing them as spritesheets. The gameobjects use
 	 * these spritesheets for their graphics.
 	 */
-	private void loadSpritesheet() {
+	public void loadSpriteSheets() {
 		objects = new SpriteSheet("res\\pong.png");
 		objects_hires = new SpriteSheet("res\\ponghires.png",
 				SpriteSheet.LINEAR);
@@ -113,7 +113,6 @@ public class Pong implements Game {
 	/**
 	 * Loads sound effects which are used throughout the game.
 	 */
-	@Override
 	public void loadSounds() {
 		try {
 			SoundPlayer.load("bounce.wav");

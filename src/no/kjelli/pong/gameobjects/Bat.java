@@ -11,6 +11,7 @@ import no.kjelli.generic.input.Input;
 import no.kjelli.generic.input.InputListener;
 import no.kjelli.generic.settings.Settings;
 import no.kjelli.generic.sound.SoundPlayer;
+import no.kjelli.pong.Pong;
 import no.kjelli.pong.config.PlayerConfig;
 import no.kjelli.pong.gameobjects.ai.AI;
 import no.kjelli.pong.gameobjects.particles.BatParticle;
@@ -96,7 +97,7 @@ public class Bat extends AbstractCollidable {
 	}
 
 	public void shoot() {
-		if (stun_timer == 0 && bullets > 0) {
+		if (stun_timer == 0 && bullets > 0 && Pong.ball.pauseTimer <= 40) {
 			if (!Settings.get("sound_mute", false))
 				SoundPlayer.play("laser1", 1.0f, 0.5f);
 			World.add(new Bullet(this));

@@ -19,7 +19,7 @@ public class Textures {
 		try {
 			texture = TextureLoader.getTexture(format,
 					ResourceLoader.getResourceAsStream(filename), quality); //GL_LINEAR | GL_NEAREST
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return texture;

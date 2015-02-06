@@ -23,6 +23,8 @@ public class SpriteSheet {
 	}
 
 	private SpriteSheet(Texture texture) {
+		if(texture == null)
+			return;
 		this.texture = texture;
 
 		sourceWidth = texture.getImageWidth();
