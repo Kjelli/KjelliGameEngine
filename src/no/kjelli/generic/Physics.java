@@ -5,7 +5,7 @@ import java.util.HashSet;
 
 import no.kjelli.generic.gameobjects.Collidable;
 import no.kjelli.generic.gameobjects.GameObject;
-import no.kjelli.quadtree.QuadTree;
+import no.kjelli.generic.quadtree.QuadTree;
 
 public class Physics {
 

@@ -4,6 +4,8 @@ import static org.lwjgl.opengl.GL15.*;
 
 import java.nio.FloatBuffer;
 
+import no.kjelli.generic.gfx.textures.TextureRegion;
+
 import org.lwjgl.BufferUtils;
 
 public class VertexBufferObject {
@@ -91,6 +93,10 @@ public class VertexBufferObject {
 	public static VertexBufferObject create(int texture_width,
 			int texture_height, float u, float u2, float v, float v2) {
 		return rectangle(texture_width, texture_height, u, u2, v, v2);
+	}
+	
+	public void setTextureCoords(TextureRegion region){
+		setTextureCoords(region.getU(), region.getU2(), region.getV(), region.getV2());
 	}
 
 	public void setTextureCoords(float u, float u2, float v, float v2) {

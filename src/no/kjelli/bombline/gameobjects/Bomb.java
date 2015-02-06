@@ -1,9 +1,6 @@
 package no.kjelli.bombline.gameobjects;
 
-import org.newdawn.slick.Color;
-
 import no.kjelli.bombline.BombermanOnline;
-import no.kjelli.bombline.gameobjects.Fire;
 import no.kjelli.bombline.levels.LevelWrapper;
 import no.kjelli.generic.Collision;
 import no.kjelli.generic.Physics;
@@ -11,8 +8,8 @@ import no.kjelli.generic.World;
 import no.kjelli.generic.gameobjects.AbstractCollidable;
 import no.kjelli.generic.gfx.Draw;
 import no.kjelli.generic.gfx.Sprite;
-import no.kjelli.generic.gfx.textures.TextureAtlas;
-import no.kjelli.generic.sound.SoundPlayer;
+
+import org.newdawn.slick.Color;
 
 public class Bomb extends AbstractCollidable {
 
@@ -50,13 +47,11 @@ public class Bomb extends AbstractCollidable {
 		this.power = power;
 		this.ticking = ticking;
 		this.isSuper = isSuper;
-		sprite = new Sprite(TextureAtlas.partybombs, base_x, base_y,
+		sprite = new Sprite(BombermanOnline.partybombs, base_x, base_y,
 				SPRITE_WIDTH, SPRITE_HEIGHT);
-
-		// Used in bomb particle objects, which are used before levels are
-		// initialized
-		if (LevelWrapper.getLevel() != null)
-			z = (float) (2.0f - y / LevelWrapper.getLevel().getHeight());
+		if (LevelWrapper.getLevel() != null) {
+			z = 2.0f - y / LevelWrapper.getLevel().getHeight();
+		}
 		tag(BombermanOnline.tag_playfield);
 
 		if (isSuper)
@@ -97,10 +92,6 @@ public class Bomb extends AbstractCollidable {
 			if (source != null)
 				source.setBombs(source.getBombs() + 1);
 			makeFire();
-			// Dont want the particles on the intro screen to make a horrible
-			// noise
-			if (source != null)
-				SoundPlayer.play("sound11 bomb", 1.2f, 0.5f);
 			destroy();
 		}
 

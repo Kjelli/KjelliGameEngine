@@ -24,9 +24,6 @@ import no.kjelli.generic.gfx.Draw;
 import no.kjelli.generic.gfx.Screen;
 import no.kjelli.generic.gfx.Sprite;
 import no.kjelli.generic.gfx.texts.TextStatic;
-import no.kjelli.generic.gfx.textures.TextureAtlas;
-import no.kjelli.generic.sound.SoundPlayer;
-import no.kjelli.mathmania.gameobjects.particles.GlitterParticle;
 
 import org.newdawn.slick.Color;
 
@@ -34,9 +31,7 @@ public class Player extends AbstractCollidable {
 	public static final int base_x = 0, base_y = 64;
 	public static final int SPRITE_WIDTH = 16, SPRITE_HEIGHT = 16;
 	public static final int SPRITE_OFFSET = 16;
-	public static final int HITBOX_WIDTH = 8, HITBOX_HEIGHT = 8;
-	public static final int DRAW_X_OFFSET = (HITBOX_WIDTH - SPRITE_WIDTH) / 2,
-			DRAW_Y_OFFSET = 0;
+	public static final int DRAW_X_OFFSET = -2, DRAW_Y_OFFSET = 0;
 	protected static final int FRAME_DURATION = 8;
 	protected static final int FRAME_COUNT = 3;
 
@@ -44,7 +39,7 @@ public class Player extends AbstractCollidable {
 	protected static final int INVINCIBILLITY_TIMER_MAX = 100;
 	protected static final int BOMB_COOLDOWN_MAX = 20;
 	protected static final int BOMB_CAPACITY_INITIAL = 1;
-	protected static final int LIVES_INITIAL = 1;
+	protected static final int LIVES_INITIAL = 3;
 	protected static final int SPEED_INITIAL = 1;
 
 	protected static final Color deadColor = new Color(0.1f, 0.1f, 0.1f);
@@ -73,22 +68,16 @@ public class Player extends AbstractCollidable {
 	protected boolean superBomb = false;
 
 	protected TextStatic playerName;
-	private Color nameColor;
 
 	public Player(int x_index, int y_index) {
 		super(x_index * BombermanOnline.block_size - DRAW_X_OFFSET, y_index
-				* BombermanOnline.block_size - DRAW_Y_OFFSET, 2.0f,
-				HITBOX_WIDTH, HITBOX_HEIGHT);
-		sprite = new Sprite(TextureAtlas.partybombs, base_x, base_y,
+				* BombermanOnline.block_size - DRAW_Y_OFFSET, 2.0f, 12, 12);
+		sprite = new Sprite(BombermanOnline.partybombs, base_x, base_y,
 				SPRITE_WIDTH, SPRITE_HEIGHT);
-		sprite.setColor(new Color(Color.green));
 
 		// Initial call to animationLogic to make the player face downwards
 		animationLogic();
 
-		nameColor = new Color((float) Math.random() * 0.5f + 0.5f,
-				(float) Math.random() * 0.5f + 0.5f,
-				(float) Math.random() * 0.5f + 0.5f);
 		sprite.setColor(new Color(Color.white));
 		bombOverlaps = new ArrayList<Bomb>();
 		tag(BombermanOnline.tag_playfield);
@@ -126,11 +115,8 @@ public class Player extends AbstractCollidable {
 
 		if (lives > 0) {
 			invincibillity_timer = INVINCIBILLITY_TIMER_MAX;
-			bomb_cooldown = BOMB_COOLDOWN_MAX;
 		} else {
 			if (!dead) {
-				SoundPlayer.play("sound9 lose", 1.0f, 0.5f);
-				sprite.setColor(deadColor);
 				fadeout_timer = FADEOUT_TIMER_MAX;
 				dead = true;
 			}
@@ -140,6 +126,10 @@ public class Player extends AbstractCollidable {
 			Network.getServer().sendToAllExceptTCP(Network.getClient().getID(),
 					new PacketPlayerLoseLife(getID()));
 		}
+	}
+
+	public int getID() {
+		return Network.getClient().getID();
 	}
 
 	@Override
@@ -176,21 +166,13 @@ public class Player extends AbstractCollidable {
 		bombOverlapCheck();
 		if (isKeyDown(KEY_SPACE) && getBombs() > 0) {
 			if (bombOverlaps.isEmpty()) {
-				placeBomb();
+				World.add(new Bomb(getXIndex(), getYIndex(), this, power,
+						superBomb));
+				setBombs(getBombs() - 1);
+				if (Network.isOnline())
+					sendBombInfo();
 			}
 		}
-	}
-
-	public void overlapsBomb(Bomb bomb) {
-		bombOverlaps.add(bomb);
-	}
-
-	private void placeBomb() {
-		SoundPlayer.play("bounce", 1.0f, 0.5f);
-		World.add(new Bomb(getXIndex(), getYIndex(), this, power, superBomb));
-		setBombs(getBombs() - 1);
-		if (Network.isOnline())
-			sendBombInfo();
 	}
 
 	private void bombOverlapCheck() {
@@ -423,7 +405,14 @@ public class Player extends AbstractCollidable {
 		// debugDraw();
 	}
 
-	@SuppressWarnings("unused")
+	public int getXIndex() {
+		return (int) ((x + width / 2) / BombermanOnline.block_size);
+	}
+
+	public int getYIndex() {
+		return (int) ((y + height / 2) / BombermanOnline.block_size);
+	}
+
 	private void debugDraw() {
 		Draw.string("x: " + x, 0, Screen.getHeight() - 2 * Sprite.CHAR_HEIGHT,
 				1.0f, 1.0f, 1.0f, x >= 0 ? Color.green : Color.red, true);
@@ -437,44 +426,8 @@ public class Player extends AbstractCollidable {
 				velocity_y >= 0 ? Color.green : Color.red, true);
 	}
 
-	public void debug_highlight() {
-		for (int count = 0; count < 20; count++) {
-			World.add(new GlitterParticle(x, y, 4.0f, this));
-		}
-	}
-
-	public void displayName(boolean display) {
-		playerName.setVisible(display);
-	}
-
-	private void visualizePlayerName() {
-		if (playerName != null) {
-			playerName.setText(name);
-			playerName.setX(x + width / 2 - name.length() * Sprite.CHAR_WIDTH
-					/ 2);
-			playerName.setY(y + 2 * Sprite.CHAR_HEIGHT);
-		} else {
-			playerName = new TextStatic(getName(), getX() + getWidth() / 2
-					- name.length() * Sprite.CHAR_WIDTH / 2, getY() + 2
-					* Sprite.CHAR_HEIGHT, nameColor, false);
-			World.add(playerName);
-		}
-	}
-
-	public void increaseSpeed() {
-		speed += DELTA_SPEED;
-	}
-
-	public int getID() {
-		return Network.getClient().getID();
-	}
-
-	public int getXIndex() {
-		return (int) ((x + width / 2) / BombermanOnline.block_size);
-	}
-
-	public int getYIndex() {
-		return (int) ((y + height / 2) / BombermanOnline.block_size);
+	public void overlapsBomb(Bomb bomb) {
+		bombOverlaps.add(bomb);
 	}
 
 	public void setPower(int power) {
@@ -515,16 +468,34 @@ public class Player extends AbstractCollidable {
 		return speed;
 	}
 
-	public String getName() {
-		return name;
+	public void increaseSpeed() {
+		speed += DELTA_SPEED;
 	}
 
 	public void setName(String name) {
 		this.name = name;
 
-		visualizePlayerName();
+		if (playerName != null) {
+			playerName.setText(name);
+			playerName.setX(x + width / 2 - name.length() * Sprite.CHAR_WIDTH
+					/ 2);
+			playerName.setY(y + 2 * Sprite.CHAR_HEIGHT);
+		} else {
+			playerName = new TextStatic(getName(), getX() + getWidth() / 2
+					- name.length() * Sprite.CHAR_WIDTH / 2, getY() + 2
+					* Sprite.CHAR_HEIGHT, Color.white, false);
+			World.add(playerName);
+		}
 	}
 
+	public String getName() {
+		return name;
+	}
+
+	public void displayName(boolean display) {
+		playerName.setVisible(display);
+	}
+	
 	@Override
 	public void destroy() {
 		playerName.destroy();

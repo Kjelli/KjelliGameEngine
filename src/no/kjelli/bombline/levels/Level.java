@@ -19,15 +19,9 @@ public class Level {
 	private int[] playerSpawnY;
 	private char[][] map;
 
+	public Level() {
 
-	public Level(int width, int height, ArrayList<GameObject> objects, Player player,
-			int maxPlayers, int[] playerSpawnX, int[] playerSpawnY, char[][] map) {
-		this.player = player;
-		this.objects = objects;
-		this.maxPlayers = maxPlayers;
-		this.playerSpawnX = playerSpawnX;
-		this.playerSpawnY = playerSpawnY;
-		this.map = map;
+		//TODO place these after loading level
 		setWidth((int) (width * BombermanOnline.block_size));
 		setHeight((int) (height * BombermanOnline.block_size));
 	}

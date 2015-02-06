@@ -1,10 +1,17 @@
 package no.kjelli.bombline.levels;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 
 import no.kjelli.bombline.BombermanOnline;
+import no.kjelli.bombline.BombermanOnline.STATE;
+import no.kjelli.bombline.gameobjects.Block;
 import no.kjelli.bombline.gameobjects.Bomb;
+import no.kjelli.bombline.gameobjects.Destructible;
+import no.kjelli.bombline.gameobjects.Floor;
 import no.kjelli.bombline.gameobjects.Player;
 import no.kjelli.bombline.gameobjects.PlayerMP;
 import no.kjelli.bombline.gameobjects.powerups.Powerup;
@@ -26,14 +33,17 @@ import no.kjelli.bombline.network.PacketPowerupGain;
 import no.kjelli.bombline.network.PacketPowerupSpawn;
 import no.kjelli.generic.World;
 import no.kjelli.generic.gameobjects.Collidable;
+import no.kjelli.generic.gameobjects.GameObject;
 import no.kjelli.generic.gfx.Screen;
 import no.kjelli.generic.gfx.Sprite;
 import no.kjelli.generic.gfx.texts.TextFading;
 import no.kjelli.generic.gfx.texts.TextFloating;
+import no.kjelli.generic.gfx.texts.TextScrolling;
 import no.kjelli.generic.gfx.texts.TextStatic;
 import no.kjelli.generic.input.Input;
 import no.kjelli.generic.input.InputListener;
 
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.Rectangle;
 import org.newdawn.slick.Color;
 
@@ -43,42 +53,74 @@ public class LevelWrapper {
 	private static final String CLIENT_MESSAGE = "Waiting for host...";
 
 	private static Level level;
-	private static final ArrayList<Packet> incomingPackets = new ArrayList<Packet>();
+	private static ArrayList<Packet> incomingPackets = new ArrayList<Packet>();
 
+	private static boolean playing = false;
 	private static boolean receiving = false;
 
 	private static String lastLoadedLevel;
 	private static TextFloating text;
 	private static TextStatic playersJoinedText;
-	private static final InputListener inputListener = new LevelInputListener();
+	private static InputListener inputListener = new InputListener() {
 
-	public static void load() {
-		load(lastLoadedLevel);
+		@Override
+		public void keyUp(int eventKey) {
+			if (eventKey == Keyboard.KEY_F2) {
+				playing = false;
+				LevelWrapper.end();
+				BombermanOnline.initIntro();
+			} else if (eventKey == Keyboard.KEY_SPACE && !playing) {
+				if (Network.isHosting()) {
+					BombermanOnline.state = STATE.PLAYING;
+					playing = true;
+					LevelWrapper.start();
+					Network.getServer()
+							.sendToAllExceptTCP(Network.getClient().getID(),
+									new PacketLevelStart());
+				}
+			}
+			if (eventKey == Keyboard.KEY_V) {
+				getLevel().getPlayer().displayName(false);
+				for (Player p : getLevel().getPlayersMP()) {
+					p.displayName(false);
+				}
+			}
+
+		}
+
+		@Override
+		public void keyDown(int eventKey) {
+			if (eventKey == Keyboard.KEY_V) {
+				getLevel().getPlayer().displayName(true);
+				for (Player p : getLevel().getPlayersMP()) {
+					p.displayName(true);
+				}
+			}
+
+		}
+	};
+
+	public static void init() {
+		init(lastLoadedLevel);
 	}
 
-	public static void load(String filename) {
-		if (level != null)
-			level.end();
-		level = LevelImports.loadFromFile(filename);
+	public static void init(String filename) {
+		LevelImports.loadFromFile(filename);
 		lastLoadedLevel = filename;
 		prepareLevel();
 	}
 
 	private static void prepareLevel() {
-
 		World.pause(BombermanOnline.tag_playfield, true);
-		World.init((int) level.getWidth(), (int) level.getHeight());
+		World.init((int) getLevel().getWidth(), (int) getLevel().getHeight());
+		getLevel().addObjectsToWorld();
 
-		level.addObjectsToWorld();
+		// TODO validate/improve this zooming method
+		Screen.zoom((float) Screen.getWidth() / (getLevel().getWidth()));
+		Screen.setX((getLevel().getWidth()) / 2 - Screen.getWidth() / 2);
+		Screen.setY((getLevel().getHeight()) / 1.75f - Screen.getHeight() / 2);
 
-		screenSettings();
-		textSettings();
 		Input.register(inputListener);
-
-		level.getPlayer().setName(BombermanOnline.name);
-	}
-
-	private static void textSettings() {
 		text = new TextFloating(Network.isHosting() ? HOST_MESSAGE
 				: CLIENT_MESSAGE,
 				Screen.getWidth()
@@ -94,24 +136,16 @@ public class LevelWrapper {
 				- 3 * Sprite.CHAR_HEIGHT, Color.white, true);
 
 		World.add(playersJoinedText);
-	}
 
-	private static void screenSettings() {
-		if (level.getWidth() > Screen.getWidth()
-				|| level.getHeight() > Screen.getHeight()) {
-			Screen.centerOn(level.getPlayer(), 1);
-		} else {
-			Screen.setX((level.getWidth()) / 2 - Screen.getWidth() / 2);
-			Screen.setY((level.getHeight()) / 1.75f - Screen.getHeight() / 2);
-		}
+		getLevel().getPlayer().setName(BombermanOnline.name);
 	}
 
 	public static void start() {
 		World.hide(BombermanOnline.tag_playfield, false);
 		World.pause(BombermanOnline.tag_playfield, false);
 
-		level.getPlayer().displayName(false);
-		for (Player p : level.getPlayersMP()) {
+		getLevel().getPlayer().displayName(false);
+		for (Player p : getLevel().getPlayersMP()) {
 			p.displayName(false);
 		}
 		text.destroy();
@@ -119,7 +153,7 @@ public class LevelWrapper {
 	}
 
 	public static void end() {
-		level.end();
+		getLevel().end();
 		Input.unregister(inputListener);
 	}
 
@@ -144,8 +178,8 @@ public class LevelWrapper {
 			} else if (packet instanceof PacketPlayerUpdate) {
 				updatePlayerMP((PacketPlayerUpdate) packet);
 			} else if (packet instanceof PacketPlayerUpdateRequest) {
-				if (level != null && level.getPlayer() != null) {
-					level.getPlayer().sendInfo();
+				if (getLevel().getPlayer() != null) {
+					getLevel().getPlayer().sendInfo();
 				} else {
 					incomingPackets.add(incomingPackets.remove(0));
 					return;
@@ -175,7 +209,7 @@ public class LevelWrapper {
 
 	private static void addPlayer(PacketPlayerCredentials ppc) {
 		// Player already exists in our game, no need to add
-		if (level.getPlayerMP(ppc.id) != null)
+		if (getLevel().getPlayerMP(ppc.id) != null)
 			return;
 		addPlayerMP(ppc);
 		Network.getClient().sendTCP(new PacketPlayerUpdateRequest(ppc.id));
@@ -186,7 +220,7 @@ public class LevelWrapper {
 		if (ppc.firstPacket) {
 			Network.getClient().sendTCP(
 					new PacketPlayerCredentials(Network.getClient().getID(),
-							level.getPlayer().getName(), false));
+							getLevel().getPlayer().getName(), false));
 		}
 	}
 
@@ -196,15 +230,15 @@ public class LevelWrapper {
 
 	private static String getPlayersConnectedString() {
 		return HOST_PLAYERS_MESSAGE
-				+ String.format("%d/%d", (level.getPlayersMP().size() + 1),
-						level.getMaxPlayers());
+				+ String.format("%d/%d", (getLevel().getPlayersMP().size() + 1),
+						getLevel().getMaxPlayers());
 	}
 
 	private static void loseLife(PacketPlayerLoseLife packet) {
 		if (packet.id == Network.getClient().getID()) {
-			level.getPlayer().loseLife();
+			getLevel().getPlayer().loseLife();
 		} else {
-			level.getPlayerMP(packet.id).loseLife();
+			getLevel().getPlayerMP(packet.id).loseLife();
 		}
 	}
 
@@ -229,10 +263,16 @@ public class LevelWrapper {
 		}
 
 		if (packet.id == Network.getClient().getID()) {
-			powerup.collect(level.getPlayer());
+			powerup.powerUp(getLevel().getPlayer());
+			// TODO Highlighting player when aquiring a powerup. Change to sfx
+			// or more appealing gfx
 
+			powerup.destroy();
 		} else {
-			powerup.collect(level.getPlayerMP(packet.id));
+			powerup.powerUp(getLevel().getPlayerMP(packet.id));
+			// TODO Highlighting player when aquiring a powerup. Change to sfx
+			// or more appealing gfx
+			powerup.destroy();
 		}
 	}
 
@@ -252,28 +292,25 @@ public class LevelWrapper {
 	}
 
 	private static void receiveLevel(PacketLevelResponse packet) {
-		if (level != null)
-			level.end();
-
-		level = LevelImports.loadFromMap(packet);
+		LevelImports.loadFromMap(packet);
 		setReceiving(false);
 		prepareLevel();
 	}
 
 	private static void sendLevel(PacketLevelRequest packet) {
 		Network.getClient().sendTCP(
-				new PacketLevelResponse(packet.receiverID, level.getMap(),
-						level.getMaxPlayers()));
+				new PacketLevelResponse(packet.receiverID, getLevel().getMap(),
+						getLevel().getMaxPlayers()));
 	}
 
 	private static void placeBomb(PacketPlayerPlaceBomb packet) {
-		Player source = level.getPlayerMP(packet.id);
+		Player source = getLevel().getPlayerMP(packet.id);
 		World.add(new Bomb(packet.x, packet.y, source, source.getPower(),
 				source.hasSuperBomb()));
 	}
 
 	private static void updatePlayerMP(PacketPlayerUpdate ppu) {
-		PlayerMP player = level.getPlayerMP(ppu.id);
+		PlayerMP player = getLevel().getPlayerMP(ppu.id);
 		player.updateMP(ppu.x, ppu.y, ppu.directionID, ppu.animationID);
 	}
 
@@ -286,12 +323,12 @@ public class LevelWrapper {
 
 		PlayerMP newPlayer = new PlayerMP(ppa.id, ppa.name);
 		System.out.println(ppa.name + " was added");
-		level.newPlayer(newPlayer);
+		getLevel().newPlayer(newPlayer);
 		World.add(newPlayer);
 	}
 
 	public static void removePlayer(PacketPlayerRemove packet) {
-		PlayerMP oldPlayer = level.getPlayerMP(packet.id);
+		PlayerMP oldPlayer = getLevel().getPlayerMP(packet.id);
 
 		World.add(new TextFading(oldPlayer.getName() + " left!", Screen
 				.getCenterX()
@@ -300,7 +337,7 @@ public class LevelWrapper {
 				- Sprite.CHAR_HEIGHT / 2, Color.red, 100));
 		updatePlayersConnected();
 
-		level.removePlayer(oldPlayer);
+		getLevel().removePlayer(oldPlayer);
 		oldPlayer.destroy();
 	}
 
@@ -314,6 +351,10 @@ public class LevelWrapper {
 
 	public static Level getLevel() {
 		return level;
+	}
+
+	public static void setLevel(Level level) {
+		LevelWrapper.level = level;
 	}
 
 }

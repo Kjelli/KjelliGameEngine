@@ -10,8 +10,7 @@ public class PlayerMP extends Player {
 	int id;
 
 	public PlayerMP(int id, String name) {
-		super(LevelWrapper.getLevel().getPlayerSpawnX(id), LevelWrapper
-				.getLevel().getPlayerSpawnY(id));
+		super(LevelWrapper.getLevel().getPlayerSpawnX(id), LevelWrapper.getLevel().getPlayerSpawnY(id));
 		this.invincibillity_timer = INVINCIBILLITY_TIMER_MAX;
 		this.id = id;
 		System.out.println("Setting name to " + name);

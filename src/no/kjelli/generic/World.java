@@ -3,6 +3,7 @@ package no.kjelli.generic;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 
 import no.kjelli.generic.gameobjects.Collidable;
 import no.kjelli.generic.gameobjects.GameObject;
@@ -27,16 +28,8 @@ public class World {
 		Physics.init();
 	}
 
-	public static ArrayList<GameObject> getObjects() {
-		return objects;
-	}
-
 	public static void add(GameObject object) {
 		addQueue.add(object);
-	}
-
-	public static int size() {
-		return objects.size();
 	}
 
 	public static void remove(GameObject object) {
@@ -94,33 +87,20 @@ public class World {
 		return Physics.quadtree.retrieve(returnObjects, bounds);
 	}
 
-	// Bad fix for retrieving game objects from the rectangle
-	public static void retrieveAll(HashSet<GameObject> returnObjects,
+	// TODO Bad fix for retrieving game objects from the rectangle
+	public static void retrieveAll(LinkedHashSet<GameObject> returnObjects,
 			Rectangle bounds) {
-		for (GameObject obj : objects) {
+		for (int i = objects.size() - 1; i >= 0; i--) {
+			GameObject obj = objects.get(i);
 			if (obj.intersects(bounds))
 				returnObjects.add(obj);
 		}
 	}
 
-	public static void setWidth(int width) {
-		if (width <= 0)
-			throw new IllegalArgumentException("Width cannot be <= 0!");
-		World.width = width;
-	}
-
-	public static void setHeight(int height) {
-		if (height <= 0)
-			throw new IllegalArgumentException("Height cannot be <= 0!");
-		World.height = height;
-	}
-
-	public static int getWidth() {
-		return width;
-	}
-
-	public static int getHeight() {
-		return height;
+	public static void hide(int tag, boolean hidden) {
+		for (GameObject o : objects)
+			if (o.hasTag(tag))
+				o.setVisible(!hidden);
 	}
 
 	public static void pause(int tag, boolean pause) {
@@ -132,10 +112,38 @@ public class World {
 				o.pause(pause);
 	}
 
-	public static void hide(int tag, boolean hidden) {
-		for (GameObject o : objects)
-			if (o.hasTag(tag))
-				o.setVisible(!hidden);
+	public static ArrayList<GameObject> getObjects() {
+		return objects;
+	}
+
+	public static int size() {
+		return objects.size();
+	}
+
+	public static int getWidth() {
+		return width;
+	}
+
+	public static void setWidth(int width) {
+		if (width <= 0)
+			throw new IllegalArgumentException("Width cannot be <= 0!");
+		World.width = width;
+	}
+
+	public static int getHeight() {
+		return height;
+	}
+
+	public static void setHeight(int height) {
+		if (height <= 0)
+			throw new IllegalArgumentException("Height cannot be <= 0!");
+		World.height = height;
+	}
+	
+	public static void destroy(){
+		for(GameObject go : objects){
+			go.destroy();
+		}
 	}
 
 }

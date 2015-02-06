@@ -4,8 +4,6 @@ public interface Game {
 
 	public void init();
 
-	public void loadSounds();
-
 	public void render();
 
 	public void update();
@@ -16,7 +14,6 @@ public interface Game {
 	
 	public double getHeight();
 
-	public boolean isCloseRequested();
 
 	public String getTitle();
 

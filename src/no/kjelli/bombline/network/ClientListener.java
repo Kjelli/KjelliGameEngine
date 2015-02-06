@@ -7,7 +7,6 @@ import no.kjelli.generic.gfx.texts.TextScrolling;
 
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
-import com.esotericsoftware.kryonet.FrameworkMessage;
 import com.esotericsoftware.kryonet.Listener;
 
 public class ClientListener extends Listener {
@@ -42,8 +41,6 @@ public class ClientListener extends Listener {
 					// TODO spectate? Gameroom? Longterm projects
 					World.add(new TextScrolling("Game already started!"));
 				}
-			} else if (object instanceof FrameworkMessage.KeepAlive) {
-				// DO nothing, keepalive
 			} else {
 				LevelWrapper.addPacket((Packet) object);
 			}

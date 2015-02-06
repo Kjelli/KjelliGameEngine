@@ -20,13 +20,15 @@ import no.kjelli.generic.gfx.Screen;
 import no.kjelli.generic.gfx.Sprite;
 import no.kjelli.generic.gfx.texts.TextScrolling;
 import no.kjelli.generic.gfx.texts.TextStatic;
-import no.kjelli.generic.main.Launcher;
+import no.kjelli.generic.gfx.textures.SpriteSheet;
+import no.kjelli.generic.gamewrapper.GameWrapper;
 import no.kjelli.generic.sound.SoundPlayer;
 
 public class BombermanOnline implements Game {
 
 	public static int tag_playfield = Tagger.uniqueTag();
 	public static int block_size = 16;
+	public static SpriteSheet partybombs;
 
 	public static String name;
 
@@ -40,29 +42,19 @@ public class BombermanOnline implements Game {
 
 	@Override
 	public void init() {
+		loadSpritesheet();
 		loadSounds();
 		Network.settings();
 		initIntro();
 	}
+	
+	public void loadSpritesheet(){
+		partybombs = new SpriteSheet("res\\partybomb.png");
+	}
 
-	@Override
 	public void loadSounds() {
 		try {
 			SoundPlayer.load("bounce.wav");
-//			SoundPlayer.load("sound1.wav");
-//			SoundPlayer.load("sound2.wav");
-//			SoundPlayer.load("sound3.wav");
-//			SoundPlayer.load("sound4.wav");
-//			SoundPlayer.load("sound5.wav");
-//			SoundPlayer.load("sound6.wav");
-//			SoundPlayer.load("sound7.wav");
-			SoundPlayer.load("sound8.wav");
-			SoundPlayer.load("sound9 lose.wav");
-			SoundPlayer.load("sound10 powerup.wav");
-			SoundPlayer.load("sound11 bomb.wav");
-			SoundPlayer.load("sound11 bomb long.wav");
-			SoundPlayer.load("sound12.wav");
-			SoundPlayer.load("sound13.wav");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -82,7 +74,6 @@ public class BombermanOnline implements Game {
 
 		ticks = 0;
 		World.init((int) getGameWidth(), (int) getGameHeight());
-		Screen.centerOn(null);
 		Screen.zoom(2.0f);
 		Screen.setX(0);
 		Screen.setY(0);
@@ -96,8 +87,8 @@ public class BombermanOnline implements Game {
 				* Screen.getHeight() / 12 + 2 * Sprite.CHAR_HEIGHT, Color.white);
 		World.add(nameLabel);
 
-		nameInput = new InputName(Screen.getWidth() / 2 - 10
-				* Sprite.CHAR_WIDTH / 2, 5 * Screen.getHeight() / 12);
+		nameInput = new InputName(Screen.getWidth() / 2 - 250 / 2,
+				5 * Screen.getHeight() / 12, 250, 20, 32);
 		World.add(nameInput);
 
 		hostAddressLabel = new TextStatic("HOST ADDRESS", Screen.getWidth() / 2
@@ -105,8 +96,8 @@ public class BombermanOnline implements Game {
 				* Screen.getHeight() / 24 + 2 * Sprite.CHAR_HEIGHT, Color.white);
 		World.add(hostAddressLabel);
 
-		connectInput = new InputConnect(Screen.getWidth() / 2 - 32
-				* Sprite.CHAR_WIDTH / 2, 7 * Screen.getHeight() / 24);
+		connectInput = new InputConnect(Screen.getWidth() / 2 - 250 / 2,
+				7 * Screen.getHeight() / 24, 250, 20, 32);
 		World.add(connectInput);
 
 		connectButton = new ConnectButton(Screen.getWidth() / 2
@@ -125,8 +116,10 @@ public class BombermanOnline implements Game {
 			if (Network.hostServer()) {
 				World.clear();
 
-				LevelWrapper.load("level2");
+				LevelWrapper.init("default");
 
+				World.add(new TextScrolling("Hosting (" + Network.TCP_PORT
+						+ ")"));
 			}
 		} else {
 			if (Network.connect(hostAddress)) {
@@ -253,8 +246,7 @@ public class BombermanOnline implements Game {
 	}
 
 	public static void main(String[] args) {
-		Game game = new BombermanOnline();
-		new Launcher(game, false);
+		new GameWrapper(new BombermanOnline(), false);
 	}
 
 	public static void connect(boolean host) {
@@ -275,9 +267,5 @@ public class BombermanOnline implements Game {
 			return;
 		}
 		initGame(connectInput.getText(), nameInput.getText());
-	}
-	
-	public static void reset(){
-		
 	}
 }
