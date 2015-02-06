@@ -1,12 +1,10 @@
 package no.kjelli.generic.gfx;
 
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL20.*;
+import static org.lwjgl.opengl.GL11.glClearColor;
+import static org.lwjgl.opengl.GL11.glScalef;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 
 import no.kjelli.generic.Physics;
 import no.kjelli.generic.World;
@@ -149,7 +147,7 @@ public class Screen {
 	static boolean foundFocusable = false, clicked = false;
 
 	private static void checkWorldMouseEvents() {
-		HashSet<GameObject> returnObjects = new HashSet<>();
+		LinkedHashSet<GameObject> returnObjects = new LinkedHashSet<>();
 		World.retrieveAll(returnObjects, new Rectangle(getMouseX(),
 				getMouseY(), 1, 1));
 		foundFocusable = false;
@@ -158,6 +156,7 @@ public class Screen {
 			if (obj instanceof Clickable) {
 				Clickable src = (Clickable) obj;
 				doMouseEvents(src);
+				break;
 			}
 		}
 		if (Mouse.getEventButtonState()) {

@@ -21,8 +21,6 @@ public class TweenTest implements Game {
 	public static int block_size = 32;
 	public static long ticks = 0;
 
-	private static boolean isCloseRequested = false;
-
 	public static STATE state;
 
 	public static enum STATE {
@@ -55,19 +53,19 @@ public class TweenTest implements Game {
 				Screen.getCenterY());
 		World.add(to);
 		Timeline.createParallel()
-				.push(Tween.to(to, GameObjectAccessor.SIZE_WH, 1500).target(
+				.push(Tween.to(to, GameObjectAccessor.SCALE_WH, 1500).target(
 						Screen.getWidth(), Screen.getHeight()))
 				.push(Tween.to(to, GameObjectAccessor.POSITION_XY, 1500)
 						.target(0, 0))
 				.push(Timeline
 						.createSequence()
-						.push(Tween.to(to, GameObjectAccessor.SIZE_W, 1500)
+						.push(Tween.to(to, GameObjectAccessor.SCALE_W, 1500)
 								.target(Screen.getCenterX()).delay(1500))
-						.push(Tween.to(to, GameObjectAccessor.SIZE_W, 1500)
+						.push(Tween.to(to, GameObjectAccessor.SCALE_W, 1500)
 								.target(Screen.getWidth()))
-						.push(Tween.to(to, GameObjectAccessor.SIZE_H, 500)
+						.push(Tween.to(to, GameObjectAccessor.SCALE_H, 500)
 								.target(50))
-						.push(Tween.to(to, GameObjectAccessor.SIZE_W, 500)
+						.push(Tween.to(to, GameObjectAccessor.SCALE_W, 500)
 								.target(200))
 						.push(Tween.to(to, GameObjectAccessor.POSITION_XY, 500)
 								.target(Screen.getCenterX() - 100,
@@ -91,6 +89,7 @@ public class TweenTest implements Game {
 		state = STATE.PLAYING;
 
 	}
+
 	@Override
 	public void render() {
 		Screen.render();
@@ -124,11 +123,6 @@ public class TweenTest implements Game {
 			go.destroy();
 		}
 
-	}
-
-	@Override
-	public boolean isCloseRequested() {
-		return isCloseRequested;
 	}
 
 	@Override

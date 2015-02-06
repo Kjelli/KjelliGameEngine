@@ -35,8 +35,10 @@ public interface GameObject extends Drawable {
 	public float getCenterY();
 
 	public double getVelocityX();
+	public void setVelocityX(double vel_x);
 
 	public double getVelocityY();
+	public void setVelocityY(double vel_y);
 
 	public boolean isVisible();
 
@@ -70,4 +72,7 @@ public interface GameObject extends Drawable {
 
 	public boolean isPaused();
 
+	public void setXScale(float xScale);
+
+	public void setYScale(float yScale);
 }

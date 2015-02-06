@@ -5,31 +5,31 @@ import no.kjelli.generic.World;
 import no.kjelli.generic.gameobjects.AbstractCollidable;
 import no.kjelli.generic.gfx.Draw;
 import no.kjelli.generic.gfx.Screen;
-import no.kjelli.generic.gfx.Sprite;
+import no.kjelli.generic.settings.Settings;
 import no.kjelli.generic.sound.SoundPlayer;
 import no.kjelli.pong.Pong;
+import no.kjelli.pong.gameobjects.particles.BallHitParticle;
 import no.kjelli.pong.gameobjects.particles.BallParticle;
 import no.kjelli.pong.gameobjects.particles.BallParticleReverse;
 
 import org.newdawn.slick.Color;
 
 public class Ball extends AbstractCollidable {
-	public static final float WIDTH = Pong.block_size / 2;
-	public static final float HEIGHT = Pong.block_size / 2;
-	public static final float MAXBOUNCEANGLE = (float) (5 * Math.PI / 12);
-	public static final float SPEEDINIT = 5.0f;
+	public static final float WIDTH = 16;
+	public static final float HEIGHT = 16;
+	public static final float MAXBOUNCEANGLE = (float) (3 * Math.PI / 12);
+	public static final float SPEEDINIT = 3.0f;
 	public static final float BASE_BORDER = 3f;
 	public static float border = BASE_BORDER;
-	private static float UPPER_LIMIT = Screen.getHeight() - Sprite.CHAR_HEIGHT
-			* 3;
 
 	public float speed = SPEEDINIT;
 	public Color color = new Color(Color.white);
+	public Color whiteColor = new Color(Color.white);
 	public boolean wasHit = false;
 	public float angle;
-	private long pauseTimer = -1;
+	public long pauseTimer = -1;
 
-	private Bat batCharger;
+	public Bat batCharger;
 
 	public Ball(float x, float y) {
 		super(x, y, 1.0f, WIDTH, HEIGHT);
@@ -53,7 +53,8 @@ public class Ball extends AbstractCollidable {
 			Bat bat = (Bat) collision.getTarget();
 			stop(collision.getImpactDirection());
 			wasHit = true;
-			SoundPlayer.play("bounce");
+			if (!Settings.get("sound_mute", false))
+				SoundPlayer.play("bounce");
 			calculateAngle(bat);
 			speedUp();
 
@@ -62,9 +63,11 @@ public class Ball extends AbstractCollidable {
 				bat.stun();
 				batCharger = null;
 			}
-			World.add(new BallParticle(this));
+			World.add(new BallHitParticle(this));
 
 		} else if (collision.getTarget() instanceof Wall) {
+			if (!Settings.get("sound_mute", false))
+				SoundPlayer.play("bounce");
 			stop(collision.getImpactDirection());
 			collidingWall();
 			speedUp();
@@ -77,7 +80,8 @@ public class Ball extends AbstractCollidable {
 
 	private void calculateAngle(Bat target) {
 		float relativeIntersectY = (this.getCenterY() - target.getCenterY());
-		float normalizedRelativeIntersectionY = (relativeIntersectY / (Bat.HEIGHT / 2));
+		float normalizedRelativeIntersectionY = (relativeIntersectY / (target
+				.getHeight() / 2));
 		float bounceAngle = normalizedRelativeIntersectionY * MAXBOUNCEANGLE;
 		if (x < target.getX())
 			angle = (float) (Math.PI - bounceAngle % (2 * Math.PI));
@@ -114,12 +118,24 @@ public class Ball extends AbstractCollidable {
 	}
 
 	@Override
+	protected void microStep(float x, float y) {
+		if (speed > 6) {
+			World.add(new BallParticle(this, this.x + x, this.y + y));
+		}
+	}
+
+	@Override
 	public void draw() {
+		if (pauseTimer > 0) {
+			whiteColor.a = color.a = (float) (BallParticleReverse.TIME_TO_LIVE_MAX - pauseTimer)
+					/ BallParticleReverse.TIME_TO_LIVE_MAX;
+		}
 		Draw.fillRect(x, y, 2f, width, height, color);
 		Draw.fillRect(x + border, y + border, 3f, width - 2 * border, height
-				- 2 * border, Color.white);
-		if(batCharger !=null){
-			Draw.rect(x - 2, y - 2, width + 4, height + 4, batCharger.getColor());
+				- 2 * border, whiteColor);
+		if (batCharger != null) {
+			Draw.rect(x - 2, y - 2, width + 4, height + 4,
+					batCharger.getColor());
 		}
 	}
 
@@ -128,10 +144,12 @@ public class Ball extends AbstractCollidable {
 	}
 
 	public void reset() {
+		color = new Color(255, 255, 255, 0);
 		pauseTimer = BallParticleReverse.TIME_TO_LIVE_MAX;
 		speed = SPEEDINIT;
-		color = new Color(Color.white);
 		wasHit = false;
+		charge(null);
+
 		setX(Screen.getCenterX() - Ball.WIDTH / 2);
 		setY(Screen.getCenterY() - Ball.HEIGHT / 2);
 		randomizeAngle();
@@ -140,5 +158,9 @@ public class Ball extends AbstractCollidable {
 
 	public void charge(Bat parent) {
 		batCharger = parent;
+	}
+
+	public boolean isStarting() {
+		return pauseTimer > 0;
 	}
 }

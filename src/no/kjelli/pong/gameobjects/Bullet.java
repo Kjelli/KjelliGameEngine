@@ -5,8 +5,10 @@ import no.kjelli.generic.World;
 import no.kjelli.generic.gameobjects.AbstractCollidable;
 import no.kjelli.generic.gfx.Draw;
 import no.kjelli.generic.gfx.Screen;
+import no.kjelli.generic.settings.Settings;
 import no.kjelli.generic.sound.SoundPlayer;
-import no.kjelli.pong.gameobjects.particles.BallParticle;
+import no.kjelli.pong.Pong;
+import no.kjelli.pong.gameobjects.particles.BallHitParticle;
 
 import org.newdawn.slick.Color;
 
@@ -39,15 +41,17 @@ public class Bullet extends AbstractCollidable {
 			return;
 		if (collision.getTarget() instanceof Bat) {
 			Bat target = ((Bat) collision.getTarget());
-			SoundPlayer.play("hit1");
 			if (target != parent) {
+				if (!Settings.get("sound_mute", false))
+					SoundPlayer.play("hit1");
 				target.stun();
 				destroy();
 			}
 		} else if (collision.getTarget() instanceof Ball) {
 			Ball ball = (Ball) (collision.getTarget());
-			World.add(new BallParticle(ball));
-			SoundPlayer.play("speedup");
+			World.add(new BallHitParticle(ball));
+			if (!Settings.get("sound_mute", false))
+				SoundPlayer.play("speedup");
 			ball.charge(parent);
 			destroy();
 		}
@@ -55,6 +59,8 @@ public class Bullet extends AbstractCollidable {
 
 	@Override
 	public void update() {
+		if (Pong.ball.pauseTimer > 40)
+			destroy();
 		if (x > Screen.getWidth() || x + width < 0)
 			destroy();
 		move();

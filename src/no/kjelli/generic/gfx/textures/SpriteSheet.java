@@ -3,14 +3,24 @@ package no.kjelli.generic.gfx.textures;
 import java.util.HashSet;
 
 import org.newdawn.slick.opengl.Texture;
+import static org.lwjgl.opengl.GL11.*;
 
 public class SpriteSheet {
 
 	public static final HashSet<SpriteSheet> list = new HashSet<>();
 	public static SpriteSheet font = new SpriteSheet("res\\fontsmall.png");
+	public static final int NEAREST = GL_NEAREST, LINEAR = GL_LINEAR;
 
 	Texture texture;
 	int sourceWidth, sourceHeight;
+
+	public SpriteSheet(String location) {
+		this(Textures.load(location));
+	}
+
+	public SpriteSheet(String location, int quality) {
+		this(Textures.load(location, quality));
+	}
 
 	private SpriteSheet(Texture texture) {
 		this.texture = texture;
@@ -18,10 +28,6 @@ public class SpriteSheet {
 		sourceWidth = texture.getImageWidth();
 		sourceHeight = texture.getImageHeight();
 		list.add(this);
-	}
-
-	public SpriteSheet(String location) {
-		this(Textures.load(location));
 	}
 
 	public TextureRegion getTextureRegion(int x, int y, int width, int height) {

@@ -3,6 +3,7 @@ package no.kjelli.generic;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 
 import no.kjelli.generic.gameobjects.Collidable;
 import no.kjelli.generic.gameobjects.GameObject;
@@ -95,9 +96,10 @@ public class World {
 	}
 
 	// Bad fix for retrieving game objects from the rectangle
-	public static void retrieveAll(HashSet<GameObject> returnObjects,
+	public static void retrieveAll(LinkedHashSet<GameObject> returnObjects,
 			Rectangle bounds) {
-		for (GameObject obj : objects) {
+		for (int i = objects.size() - 1; i >= 0; i--) {
+			GameObject obj = objects.get(i);
 			if (obj.intersects(bounds))
 				returnObjects.add(obj);
 		}

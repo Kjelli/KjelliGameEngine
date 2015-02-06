@@ -9,9 +9,9 @@ public class GameObjectAccessor implements TweenAccessor<GameObject> {
 	public static final int POSITION_Y = 2;
 	public static final int POSITION_XY = 3;
 
-	public static final int SIZE_W = 4;
-	public static final int SIZE_H = 5;
-	public static final int SIZE_WH = 6;
+	public static final int SCALE_W = 4;
+	public static final int SCALE_H = 5;
+	public static final int SCALE_WH = 6;
 
 	public static final int ROTATION = 7;
 
@@ -33,15 +33,15 @@ public class GameObjectAccessor implements TweenAccessor<GameObject> {
 		 * 
 		 */
 
-		case SIZE_W:
-			returnValues[0] = go.getWidth();
+		case SCALE_W:
+			returnValues[0] = go.getXScale();
 			return 1;
-		case SIZE_H:
-			returnValues[0] = go.getHeight();
+		case SCALE_H:
+			returnValues[0] = go.getYScale();
 			return 1;
-		case SIZE_WH:
-			returnValues[0] = go.getWidth();
-			returnValues[1] = go.getHeight();
+		case SCALE_WH:
+			returnValues[0] = go.getXScale();
+			returnValues[1] = go.getYScale();
 			return 2;
 
 			/*
@@ -77,15 +77,15 @@ public class GameObjectAccessor implements TweenAccessor<GameObject> {
 		 * 
 		 */
 
-		case SIZE_W:
-			go.setWidth(newValues[0]);
+		case SCALE_W:
+			go.setXScale(newValues[0]);
 			break;
-		case SIZE_H:
-			go.setHeight(newValues[0]);
+		case SCALE_H:
+			go.setYScale(newValues[0]);
 			break;
-		case SIZE_WH:
-			go.setWidth(newValues[0]);
-			go.setHeight(newValues[1]);
+		case SCALE_WH:
+			go.setXScale(newValues[0]);
+			go.setYScale(newValues[1]);
 			break;
 
 		/*

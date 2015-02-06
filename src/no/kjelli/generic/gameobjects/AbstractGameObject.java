@@ -1,4 +1,3 @@
-
 package no.kjelli.generic.gameobjects;
 
 import no.kjelli.generic.World;
@@ -81,12 +80,12 @@ public abstract class AbstractGameObject implements GameObject {
 	public void setZ(float z) {
 		this.z = z;
 	}
-	
+
 	@Override
 	public void setRotation(float deg) {
-		this.rotation = deg;	
+		this.rotation = deg;
 	}
-	
+
 	@Override
 	public float getRotation() {
 		return rotation;
@@ -106,7 +105,7 @@ public abstract class AbstractGameObject implements GameObject {
 	}
 
 	public float getWidth() {
-		return width * xScale;
+		return width;
 	}
 
 	public void setWidth(float width) {
@@ -114,7 +113,7 @@ public abstract class AbstractGameObject implements GameObject {
 	}
 
 	public float getHeight() {
-		return height * xScale;
+		return height;
 	}
 
 	public void setHeight(float height) {
@@ -132,9 +131,17 @@ public abstract class AbstractGameObject implements GameObject {
 	public double getVelocityX() {
 		return velocity_x;
 	}
+	
+	public void setVelocityX(double vel_x) {
+		this.velocity_x = vel_x;
+	}
 
 	public double getVelocityY() {
 		return velocity_y;
+	}
+	
+	public void setVelocityY(double vel_y) {
+		this.velocity_y = vel_y;
 	}
 
 	private boolean valueInRange(float value, float min, float max) {
@@ -216,8 +223,12 @@ public abstract class AbstractGameObject implements GameObject {
 		return yScale;
 	}
 
-	public int compareTo(AbstractGameObject that) {
-		return 1;
+	public void setXScale(float xScale) {
+		this.xScale = xScale;
+	}
+
+	public void setYScale(float yScale) {
+		this.yScale = yScale;
 	}
 
 	@Override

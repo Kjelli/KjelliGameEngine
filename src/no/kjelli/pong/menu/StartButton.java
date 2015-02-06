@@ -19,7 +19,7 @@ public class StartButton extends AbstractButton {
 
 	@Override
 	protected void released(int mouseButton) {
-		game.initControllerInput();
+		game.initGameModeChoice();
 		destroy();
 	}
 

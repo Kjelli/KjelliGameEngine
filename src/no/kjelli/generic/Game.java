@@ -16,7 +16,6 @@ public interface Game {
 	
 	public double getHeight();
 
-	public boolean isCloseRequested();
 
 	public String getTitle();
 

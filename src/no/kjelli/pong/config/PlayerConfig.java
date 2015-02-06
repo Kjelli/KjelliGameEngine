@@ -4,7 +4,6 @@ package no.kjelli.pong.config;
 public class PlayerConfig {
 	public String name;
 	public int upKey, downKey, powKey;
-	public int score = 0;
 	public int playerNo;
 
 	public PlayerConfig() {

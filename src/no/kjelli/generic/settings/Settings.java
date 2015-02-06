@@ -12,6 +12,11 @@ public class Settings {
 		settings.put(name, val);
 	}
 
+	public static boolean get(String name, boolean defaultValue) {
+		return settings.containsKey(name) ? (boolean) settings.get(name)
+				: defaultValue;
+	}
+
 	public static int get(String name, int defaultValue) {
 		return settings.containsKey(name) ? (int) settings.get(name)
 				: defaultValue;

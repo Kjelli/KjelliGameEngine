@@ -11,13 +11,13 @@ public class Draw {
 
 	public static final Color DEFAULT_COLOR = new Color(1f, 1f, 1f, 1f);
 
-	public static void fillRect(float x, float y, float width, float height) {
-		fillRect(x, y, 0, width, height, 0, DEFAULT_COLOR, false);
+	public static void fillRect(float x, float y,float z, float width, float height) {
+		fillRect(x, y, z, width, height, 0, DEFAULT_COLOR, false);
 	}
 
-	public static void fillRect(float x, float y, float width, float height,
+	public static void fillRect(float x, float y, float z, float width, float height,
 			float rot) {
-		fillRect(x, y, 0, width, height, rot, DEFAULT_COLOR, false);
+		fillRect(x, y, z, width, height, rot, DEFAULT_COLOR, false);
 	}
 
 	public static void fillRect(float x, float y, float width, float height,
@@ -134,7 +134,6 @@ public class Draw {
 			glRotatef(rot, 0, 0, 1);
 			glTranslatef(-sprite.getWidth()*xScale / 2, -sprite.getHeight()*xScale / 2, 0);
 			glScalef(xScale * (xFlip ? -1 : 1), yScale * (yFlip ? -1 : 1), 1.0f);
-			
 			
 			if (xFlip)
 				glTranslatef(-sprite.getWidth() - 1, 0.0f, 0.0f);

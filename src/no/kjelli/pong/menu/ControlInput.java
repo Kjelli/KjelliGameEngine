@@ -9,8 +9,8 @@ import no.kjelli.pong.config.PlayerConfig;
 import org.newdawn.slick.Color;
 
 public class ControlInput {
-	private String nameStr = "Name", upStr = "UP", downStr = "DOWN", powStr = "POWER",
-			pStr = "Player ";
+	private String nameStr = "Name", upStr = "OPP", downStr = "NED", powStr = "SKYT",
+			pStr = "Spiller ";
 	public TextStatic namelabel, label;
 	public ControlInputButton up, down, pow;
 	public NameInputBox name;

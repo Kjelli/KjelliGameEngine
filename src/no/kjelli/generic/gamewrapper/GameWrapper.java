@@ -234,7 +234,7 @@ public class GameWrapper {
 			if (Display.wasResized()) {
 				glViewport(0, 0, Display.getWidth(), Display.getHeight());
 			}
-			if (Display.isCloseRequested() || game.isCloseRequested()) {
+			if (Display.isCloseRequested()) {
 				running = false;
 			}
 			pollInput();

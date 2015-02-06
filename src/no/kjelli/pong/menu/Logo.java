@@ -14,8 +14,8 @@ import no.kjelli.pong.Pong;
 public class Logo extends AbstractGameObject {
 	private static final float xScale = 2.0f, yScale = 2.0f;
 
-	public static final float SPRITE_WIDTH = 200;
-	public static final float SPRITE_HEIGHT = 100;
+	public static final float SPRITE_WIDTH = 199;
+	public static final float SPRITE_HEIGHT = 99;
 	public static final float WIDTH = SPRITE_WIDTH * xScale;
 	public static final float HEIGHT = SPRITE_HEIGHT * yScale;
 	private final Color color = new Color(Color.blue);
@@ -29,8 +29,8 @@ public class Logo extends AbstractGameObject {
 	@Override
 	public void onCreate() {
 		setVisible(true);
-		setRotation(-15);
-		Tween.to(this, GameObjectAccessor.ROTATION, 1000).target(15)
+		setRotation(-5);
+		Tween.to(this, GameObjectAccessor.ROTATION, 1000).target(5)
 				.repeatYoyo(-1, 100).start(GameWrapper.tweenManager);
 	}
 
