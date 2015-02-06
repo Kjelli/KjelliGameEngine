@@ -26,7 +26,7 @@ public class Level {
 		setHeight((int) (height * BombermanOnline.block_size));
 	}
 
-	private void addObjectsToWorld() {
+	void addObjectsToWorld() {
 		for (GameObject b : objects)
 			World.add(b);
 	}

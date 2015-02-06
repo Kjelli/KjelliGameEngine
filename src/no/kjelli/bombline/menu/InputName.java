@@ -3,9 +3,9 @@ package no.kjelli.bombline.menu;
 import org.newdawn.slick.Color;
 
 import no.kjelli.bombline.BombermanOnline;
-import no.kjelli.generic.input.InputBox;
+import no.kjelli.generic.input.AbstractInputBox;
 
-public class InputName extends InputBox {
+public class InputName extends AbstractInputBox {
 
 	public InputName(float x, float y, float width, float height, int maxLength) {
 		super(x, y, maxLength, "Kjell", Color.white, Color.black, Color.gray,

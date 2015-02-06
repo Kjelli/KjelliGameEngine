@@ -23,12 +23,7 @@ import no.kjelli.generic.gameobjects.Collidable;
 import no.kjelli.generic.gfx.Draw;
 import no.kjelli.generic.gfx.Screen;
 import no.kjelli.generic.gfx.Sprite;
-import no.kjelli.generic.gfx.texts.TextFading;
-import no.kjelli.generic.gfx.texts.TextScrolling;
 import no.kjelli.generic.gfx.texts.TextStatic;
-import no.kjelli.generic.gfx.textures.TextureAtlas;
-import no.kjelli.generic.input.InputListener;
-import no.kjelli.mathmania.gameobjects.particles.GlitterParticle;
 
 import org.newdawn.slick.Color;
 
@@ -77,7 +72,7 @@ public class Player extends AbstractCollidable {
 	public Player(int x_index, int y_index) {
 		super(x_index * BombermanOnline.block_size - DRAW_X_OFFSET, y_index
 				* BombermanOnline.block_size - DRAW_Y_OFFSET, 2.0f, 12, 12);
-		sprite = new Sprite(TextureAtlas.partybombs, base_x, base_y,
+		sprite = new Sprite(BombermanOnline.partybombs, base_x, base_y,
 				SPRITE_WIDTH, SPRITE_HEIGHT);
 
 		// Initial call to animationLogic to make the player face downwards
@@ -277,7 +272,7 @@ public class Player extends AbstractCollidable {
 		horizontalAcceleration();
 		verticalAcceleration();
 		if (velocity_x != 0 || velocity_y != 0) {
-			z = 2.0f - y / LevelWrapper.getHeight();
+			z = 2.0f - y / LevelWrapper.getLevel().getHeight();
 			move();
 			playerName.setX(x + width / 2 - name.length() * Sprite.CHAR_WIDTH
 					/ 2);
@@ -467,12 +462,6 @@ public class Player extends AbstractCollidable {
 
 	public void setBombCapacity(int bombcapacity) {
 		this.bombcapacity = bombcapacity;
-	}
-
-	public void debug_highlight() {
-		for (int count = 0; count < 20; count++) {
-			World.add(new GlitterParticle(x, y, 4.0f, this));
-		}
 	}
 
 	public float getSpeed() {

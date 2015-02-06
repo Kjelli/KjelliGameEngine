@@ -4,14 +4,12 @@ import no.kjelli.bombline.BombermanOnline;
 import no.kjelli.bombline.gameobjects.powerups.PowerupBomb;
 import no.kjelli.bombline.gameobjects.powerups.PowerupFire;
 import no.kjelli.bombline.gameobjects.powerups.PowerupSpeed;
-import no.kjelli.bombline.levels.LevelWrapper;
 import no.kjelli.bombline.network.Network;
 import no.kjelli.generic.Collision;
 import no.kjelli.generic.World;
 import no.kjelli.generic.gameobjects.AbstractCollidable;
 import no.kjelli.generic.gfx.Draw;
 import no.kjelli.generic.gfx.Sprite;
-import no.kjelli.generic.gfx.textures.TextureAtlas;
 
 public class Destructible extends AbstractCollidable {
 	public static final int base_x = 144, base_y = 0;
@@ -31,7 +29,7 @@ public class Destructible extends AbstractCollidable {
 				* BombermanOnline.block_size, 16, 16);
 		this.x_index = x_index;
 		this.y_index = y_index;
-		sprite = new Sprite(TextureAtlas.partybombs, base_x, base_y,
+		sprite = new Sprite(BombermanOnline.partybombs, base_x, base_y,
 				SPRITE_WIDTH, SPRITE_HEIGHT);
 		z = 0.0f;
 		tag(BombermanOnline.tag_playfield);
@@ -67,7 +65,6 @@ public class Destructible extends AbstractCollidable {
 		if (!destroying) {
 			destroying = true;
 			Floor floor = new Floor(x_index, y_index, true);
-			LevelWrapper.addGameObject(floor);
 			World.add(floor);
 			sprite.setTextureCoords(blow_x, blow_y, SPRITE_WIDTH, SPRITE_HEIGHT);
 			if (Network.isHosting())

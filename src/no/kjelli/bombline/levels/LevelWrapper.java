@@ -80,8 +80,8 @@ public class LevelWrapper {
 				}
 			}
 			if (eventKey == Keyboard.KEY_V) {
-				getPlayer().displayName(false);
-				for (Player p : getPlayersMP()) {
+				getLevel().getPlayer().displayName(false);
+				for (Player p : getLevel().getPlayersMP()) {
 					p.displayName(false);
 				}
 			}
@@ -91,8 +91,8 @@ public class LevelWrapper {
 		@Override
 		public void keyDown(int eventKey) {
 			if (eventKey == Keyboard.KEY_V) {
-				getPlayer().displayName(true);
-				for (Player p : getPlayersMP()) {
+				getLevel().getPlayer().displayName(true);
+				for (Player p : getLevel().getPlayersMP()) {
 					p.displayName(true);
 				}
 			}
@@ -111,15 +111,14 @@ public class LevelWrapper {
 	}
 
 	private static void prepareLevel() {
-
 		World.pause(BombermanOnline.tag_playfield, true);
-		World.init((int) level.getWidth(), (int) level.getHeight());
-		level.addObjectsToWorld();
+		World.init((int) getLevel().getWidth(), (int) getLevel().getHeight());
+		getLevel().addObjectsToWorld();
 
 		// TODO validate/improve this zooming method
-		Screen.zoom((float) Screen.getWidth() / (level.getWidth()));
-		Screen.setX((level.getWidth()) / 2 - Screen.getWidth() / 2);
-		Screen.setY((level.getHeight()) / 1.75f - Screen.getHeight() / 2);
+		Screen.zoom((float) Screen.getWidth() / (getLevel().getWidth()));
+		Screen.setX((getLevel().getWidth()) / 2 - Screen.getWidth() / 2);
+		Screen.setY((getLevel().getHeight()) / 1.75f - Screen.getHeight() / 2);
 
 		Input.register(inputListener);
 		text = new TextFloating(Network.isHosting() ? HOST_MESSAGE
@@ -138,15 +137,15 @@ public class LevelWrapper {
 
 		World.add(playersJoinedText);
 
-		level.getPlayer().setName(BombermanOnline.name);
+		getLevel().getPlayer().setName(BombermanOnline.name);
 	}
 
 	public static void start() {
 		World.hide(BombermanOnline.tag_playfield, false);
 		World.pause(BombermanOnline.tag_playfield, false);
 
-		level.getPlayer().displayName(false);
-		for (Player p : level.getPlayersMP()) {
+		getLevel().getPlayer().displayName(false);
+		for (Player p : getLevel().getPlayersMP()) {
 			p.displayName(false);
 		}
 		text.destroy();
@@ -154,7 +153,7 @@ public class LevelWrapper {
 	}
 
 	public static void end() {
-		level.end();
+		getLevel().end();
 		Input.unregister(inputListener);
 	}
 
@@ -179,8 +178,8 @@ public class LevelWrapper {
 			} else if (packet instanceof PacketPlayerUpdate) {
 				updatePlayerMP((PacketPlayerUpdate) packet);
 			} else if (packet instanceof PacketPlayerUpdateRequest) {
-				if (level.getPlayer() != null) {
-					level.getPlayer().sendInfo();
+				if (getLevel().getPlayer() != null) {
+					getLevel().getPlayer().sendInfo();
 				} else {
 					incomingPackets.add(incomingPackets.remove(0));
 					return;
@@ -210,7 +209,7 @@ public class LevelWrapper {
 
 	private static void addPlayer(PacketPlayerCredentials ppc) {
 		// Player already exists in our game, no need to add
-		if (level.getPlayerMP(ppc.id) != null)
+		if (getLevel().getPlayerMP(ppc.id) != null)
 			return;
 		addPlayerMP(ppc);
 		Network.getClient().sendTCP(new PacketPlayerUpdateRequest(ppc.id));
@@ -221,7 +220,7 @@ public class LevelWrapper {
 		if (ppc.firstPacket) {
 			Network.getClient().sendTCP(
 					new PacketPlayerCredentials(Network.getClient().getID(),
-							level.getPlayer().getName(), false));
+							getLevel().getPlayer().getName(), false));
 		}
 	}
 
@@ -231,15 +230,15 @@ public class LevelWrapper {
 
 	private static String getPlayersConnectedString() {
 		return HOST_PLAYERS_MESSAGE
-				+ String.format("%d/%d", (level.getPlayersMP().size() + 1),
-						level.getMaxPlayers());
+				+ String.format("%d/%d", (getLevel().getPlayersMP().size() + 1),
+						getLevel().getMaxPlayers());
 	}
 
 	private static void loseLife(PacketPlayerLoseLife packet) {
 		if (packet.id == Network.getClient().getID()) {
-			level.getPlayer().loseLife();
+			getLevel().getPlayer().loseLife();
 		} else {
-			level.getPlayerMP(packet.id).loseLife();
+			getLevel().getPlayerMP(packet.id).loseLife();
 		}
 	}
 
@@ -264,17 +263,15 @@ public class LevelWrapper {
 		}
 
 		if (packet.id == Network.getClient().getID()) {
-			powerup.powerUp(level.getPlayer());
+			powerup.powerUp(getLevel().getPlayer());
 			// TODO Highlighting player when aquiring a powerup. Change to sfx
 			// or more appealing gfx
-			level.getPlayer().debug_highlight();
 
 			powerup.destroy();
 		} else {
-			powerup.powerUp(level.getPlayerMP(packet.id));
+			powerup.powerUp(getLevel().getPlayerMP(packet.id));
 			// TODO Highlighting player when aquiring a powerup. Change to sfx
 			// or more appealing gfx
-			level.getPlayerMP(packet.id).debug_highlight();
 			powerup.destroy();
 		}
 	}
@@ -302,18 +299,18 @@ public class LevelWrapper {
 
 	private static void sendLevel(PacketLevelRequest packet) {
 		Network.getClient().sendTCP(
-				new PacketLevelResponse(packet.receiverID, level.getMap(),
-						level.getMaxPlayers()));
+				new PacketLevelResponse(packet.receiverID, getLevel().getMap(),
+						getLevel().getMaxPlayers()));
 	}
 
 	private static void placeBomb(PacketPlayerPlaceBomb packet) {
-		Player source = level.getPlayerMP(packet.id);
+		Player source = getLevel().getPlayerMP(packet.id);
 		World.add(new Bomb(packet.x, packet.y, source, source.getPower(),
 				source.hasSuperBomb()));
 	}
 
 	private static void updatePlayerMP(PacketPlayerUpdate ppu) {
-		PlayerMP player = level.getPlayerMP(ppu.id);
+		PlayerMP player = getLevel().getPlayerMP(ppu.id);
 		player.updateMP(ppu.x, ppu.y, ppu.directionID, ppu.animationID);
 	}
 
@@ -326,12 +323,12 @@ public class LevelWrapper {
 
 		PlayerMP newPlayer = new PlayerMP(ppa.id, ppa.name);
 		System.out.println(ppa.name + " was added");
-		level.newPlayer(newPlayer);
+		getLevel().newPlayer(newPlayer);
 		World.add(newPlayer);
 	}
 
 	public static void removePlayer(PacketPlayerRemove packet) {
-		PlayerMP oldPlayer = level.getPlayerMP(packet.id);
+		PlayerMP oldPlayer = getLevel().getPlayerMP(packet.id);
 
 		World.add(new TextFading(oldPlayer.getName() + " left!", Screen
 				.getCenterX()
@@ -340,7 +337,7 @@ public class LevelWrapper {
 				- Sprite.CHAR_HEIGHT / 2, Color.red, 100));
 		updatePlayersConnected();
 
-		level.removePlayer(oldPlayer);
+		getLevel().removePlayer(oldPlayer);
 		oldPlayer.destroy();
 	}
 
@@ -350,6 +347,14 @@ public class LevelWrapper {
 
 	public static void setReceiving(boolean receiving) {
 		LevelWrapper.receiving = receiving;
+	}
+
+	public static Level getLevel() {
+		return level;
+	}
+
+	public static void setLevel(Level level) {
+		LevelWrapper.level = level;
 	}
 
 }

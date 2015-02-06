@@ -20,13 +20,15 @@ import no.kjelli.generic.gfx.Screen;
 import no.kjelli.generic.gfx.Sprite;
 import no.kjelli.generic.gfx.texts.TextScrolling;
 import no.kjelli.generic.gfx.texts.TextStatic;
-import no.kjelli.generic.main.Launcher;
+import no.kjelli.generic.gfx.textures.SpriteSheet;
+import no.kjelli.generic.gamewrapper.GameWrapper;
 import no.kjelli.generic.sound.SoundPlayer;
 
 public class BombermanOnline implements Game {
 
 	public static int tag_playfield = Tagger.uniqueTag();
 	public static int block_size = 16;
+	public static SpriteSheet partybombs;
 
 	public static String name;
 
@@ -40,12 +42,16 @@ public class BombermanOnline implements Game {
 
 	@Override
 	public void init() {
+		loadSpritesheet();
 		loadSounds();
 		Network.settings();
 		initIntro();
 	}
+	
+	public void loadSpritesheet(){
+		partybombs = new SpriteSheet("res\\partybomb.png");
+	}
 
-	@Override
 	public void loadSounds() {
 		try {
 			SoundPlayer.load("bounce.wav");
@@ -110,7 +116,7 @@ public class BombermanOnline implements Game {
 			if (Network.hostServer()) {
 				World.clear();
 
-				LevelWrapper.init("level");
+				LevelWrapper.init("default");
 
 				World.add(new TextScrolling("Hosting (" + Network.TCP_PORT
 						+ ")"));
@@ -240,8 +246,7 @@ public class BombermanOnline implements Game {
 	}
 
 	public static void main(String[] args) {
-		Game game = new BombermanOnline();
-		new Launcher(game, false);
+		new GameWrapper(new BombermanOnline(), false);
 	}
 
 	public static void connect(boolean host) {

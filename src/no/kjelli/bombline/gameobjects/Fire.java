@@ -8,7 +8,6 @@ import no.kjelli.generic.World;
 import no.kjelli.generic.gameobjects.AbstractCollidable;
 import no.kjelli.generic.gfx.Draw;
 import no.kjelli.generic.gfx.Sprite;
-import no.kjelli.generic.gfx.textures.TextureAtlas;
 
 public class Fire extends AbstractCollidable {
 
@@ -100,7 +99,7 @@ public class Fire extends AbstractCollidable {
 				break;
 			}
 		}
-		sprite = new Sprite(TextureAtlas.partybombs, base_x
+		sprite = new Sprite(BombermanOnline.partybombs, base_x
 				+ fire_fragment.getX() * SPRITE_WIDTH, base_y
 				+ fire_fragment.getY() * SPRITE_HEIGHT, SPRITE_WIDTH,
 				SPRITE_HEIGHT);

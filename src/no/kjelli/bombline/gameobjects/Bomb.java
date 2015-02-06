@@ -1,9 +1,6 @@
 package no.kjelli.bombline.gameobjects;
 
-import org.newdawn.slick.Color;
-
 import no.kjelli.bombline.BombermanOnline;
-import no.kjelli.bombline.gameobjects.Fire;
 import no.kjelli.bombline.levels.LevelWrapper;
 import no.kjelli.generic.Collision;
 import no.kjelli.generic.Physics;
@@ -11,7 +8,8 @@ import no.kjelli.generic.World;
 import no.kjelli.generic.gameobjects.AbstractCollidable;
 import no.kjelli.generic.gfx.Draw;
 import no.kjelli.generic.gfx.Sprite;
-import no.kjelli.generic.gfx.textures.TextureAtlas;
+
+import org.newdawn.slick.Color;
 
 public class Bomb extends AbstractCollidable {
 
@@ -49,9 +47,11 @@ public class Bomb extends AbstractCollidable {
 		this.power = power;
 		this.ticking = ticking;
 		this.isSuper = isSuper;
-		sprite = new Sprite(TextureAtlas.partybombs, base_x, base_y,
+		sprite = new Sprite(BombermanOnline.partybombs, base_x, base_y,
 				SPRITE_WIDTH, SPRITE_HEIGHT);
-		z = 2.0f - y / LevelWrapper.getHeight();
+		if (LevelWrapper.getLevel() != null) {
+			z = 2.0f - y / LevelWrapper.getLevel().getHeight();
+		}
 		tag(BombermanOnline.tag_playfield);
 
 		if (isSuper)

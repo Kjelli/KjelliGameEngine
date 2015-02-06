@@ -1,11 +1,11 @@
 package no.kjelli.bombline.menu;
 
+import no.kjelli.bombline.BombermanOnline;
+import no.kjelli.generic.input.AbstractInputBox;
+
 import org.newdawn.slick.Color;
 
-import no.kjelli.bombline.BombermanOnline;
-import no.kjelli.generic.input.InputBox;
-
-public class InputConnect extends InputBox {
+public class InputConnect extends AbstractInputBox {
 
 	public InputConnect(float x, float y, float width, float height,
 			int maxLength) {

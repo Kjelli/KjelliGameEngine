@@ -11,11 +11,10 @@ import no.kjelli.generic.gameobjects.AbstractCollidable;
 import no.kjelli.generic.gameobjects.Collidable;
 import no.kjelli.generic.gfx.Draw;
 import no.kjelli.generic.gfx.Sprite;
-import no.kjelli.generic.gfx.textures.TextureAtlas;
 
 public abstract class AbstractPowerup extends AbstractCollidable implements
 		Powerup {
-	private static Sprite background = new Sprite(TextureAtlas.partybombs,
+	private static Sprite background = new Sprite(BombermanOnline.partybombs,
 			BACKGROUND_BASE_X, BACKGROUND_BASE_Y, SPRITE_WIDTH, SPRITE_HEIGHT);
 	public static final int blow_x = 224, blow_y = 48;
 	private static final int BLOW_TIMER_MAX = 4;
