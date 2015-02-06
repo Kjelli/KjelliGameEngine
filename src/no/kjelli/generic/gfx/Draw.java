@@ -269,7 +269,12 @@ public class Draw {
 				x += Screen.getX();
 				y += Screen.getY();
 			}
+<<<<<<< HEAD
 			glTranslatef(x - Screen.getX() + width/2, y - Screen.getY() + height/2, z);
+=======
+			glTranslatef(x - Screen.getX(), y - Screen.getY(), z);
+			glTranslatef(0.f, 0.f, 0.0f);
+>>>>>>> parent of aa02c52... Developed Pong Game at #it-dagene
 			glRotatef(rot, 0, 0, 1);
 			glTranslatef(-width/2,-height/2, 0);
 

@@ -3,7 +3,6 @@ package no.kjelli.generic.input;
 import no.kjelli.generic.gameobjects.AbstractGameObject;
 import no.kjelli.generic.gfx.Clickable;
 import no.kjelli.generic.gfx.Draw;
-import no.kjelli.generic.gfx.Focusable;
 import no.kjelli.generic.gfx.Sprite;
 
 import org.newdawn.slick.Color;
@@ -17,16 +16,10 @@ public abstract class AbstractButton extends AbstractGameObject implements Click
 	private Color click_color;
 
 	private InputListener inputListener;
+
 	public AbstractButton(float x, float y, float width, float height, String text) {
 		super(x, y, 3f, width, height);
 		this.text = text;
-	}
-	public AbstractButton(float x, float y, float width, float height, String text, Color highlight_color, Color idle_color, Color click_color) {
-		super(x, y, 3f, width, height);
-		this.text = text;
-		this.highlight_color = highlight_color;
-		this.idle_color = idle_color;
-		this.click_color = click_color;
 	}
 
 	@Override
@@ -103,10 +96,6 @@ public abstract class AbstractButton extends AbstractGameObject implements Click
 
 	public void setClick_color(Color click_color) {
 		this.click_color = click_color;
-	}
-	
-	public void setText(String text){
-		this.text = text;
 	}
 
 	@Override

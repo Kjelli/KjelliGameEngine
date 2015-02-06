@@ -10,7 +10,7 @@ import no.kjelli.generic.World;
 import no.kjelli.generic.gameobjects.GameObject;
 import no.kjelli.generic.gameobjects.Tagger;
 import no.kjelli.generic.gfx.Screen;
-import no.kjelli.generic.main.GameWrapper;
+import no.kjelli.generic.main.Launcher;
 import no.kjelli.generic.sound.SoundPlayer;
 import no.kjelli.partybombs.gameobjects.Player;
 import no.kjelli.partybombs.levels.Level;
@@ -132,6 +132,6 @@ public class Partybombs implements Game {
 	}
 
 	public static void main(String[] args) {
-		new GameWrapper(new Partybombs(), false);
+		new Launcher(new Partybombs(), false);
 	}
 }

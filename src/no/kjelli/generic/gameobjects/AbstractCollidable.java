@@ -51,8 +51,13 @@ public abstract class AbstractCollidable extends AbstractGameObject implements
 		xStep += velocity_x;
 
 		while (xStep >= stepSize) {
+<<<<<<< HEAD
 			xStep -= stepSize;
 			x += stepSize;
+=======
+			xStep-= stepSize;
+			x+= stepSize;
+>>>>>>> parent of aa02c52... Developed Pong Game at #it-dagene
 			Physics.getCollisions(this);
 			microStep(xStep, 0);
 			if (colRight) {

@@ -153,7 +153,11 @@ public class LevelWrapper {
 	}
 
 	public static void end() {
+<<<<<<< HEAD
 		getLevel().end();
+=======
+		level.end();
+>>>>>>> parent of aa02c52... Developed Pong Game at #it-dagene
 		Input.unregister(inputListener);
 	}
 
@@ -352,9 +356,12 @@ public class LevelWrapper {
 	public static Level getLevel() {
 		return level;
 	}
+<<<<<<< HEAD
 
 	public static void setLevel(Level level) {
 		LevelWrapper.level = level;
 	}
+=======
+>>>>>>> parent of aa02c52... Developed Pong Game at #it-dagene
 
 }

@@ -20,8 +20,12 @@ import no.kjelli.generic.gfx.Screen;
 import no.kjelli.generic.gfx.Sprite;
 import no.kjelli.generic.gfx.texts.TextScrolling;
 import no.kjelli.generic.gfx.texts.TextStatic;
+<<<<<<< HEAD
 import no.kjelli.generic.gfx.textures.SpriteSheet;
 import no.kjelli.generic.gamewrapper.GameWrapper;
+=======
+import no.kjelli.generic.main.Launcher;
+>>>>>>> parent of aa02c52... Developed Pong Game at #it-dagene
 import no.kjelli.generic.sound.SoundPlayer;
 
 public class BombermanOnline implements Game {
@@ -55,6 +59,23 @@ public class BombermanOnline implements Game {
 	public void loadSounds() {
 		try {
 			SoundPlayer.load("bounce.wav");
+<<<<<<< HEAD
+=======
+//			SoundPlayer.load("sound1.wav");
+//			SoundPlayer.load("sound2.wav");
+//			SoundPlayer.load("sound3.wav");
+//			SoundPlayer.load("sound4.wav");
+//			SoundPlayer.load("sound5.wav");
+//			SoundPlayer.load("sound6.wav");
+//			SoundPlayer.load("sound7.wav");
+			SoundPlayer.load("sound8.wav");
+			SoundPlayer.load("sound9 lose.wav");
+			SoundPlayer.load("sound10 powerup.wav");
+			SoundPlayer.load("sound11 bomb.wav");
+			SoundPlayer.load("sound11 bomb long.wav");
+			SoundPlayer.load("sound12.wav");
+			SoundPlayer.load("sound13.wav");
+>>>>>>> parent of aa02c52... Developed Pong Game at #it-dagene
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -115,6 +136,11 @@ public class BombermanOnline implements Game {
 		if (hostAddress == null) {
 			if (Network.hostServer()) {
 				World.clear();
+<<<<<<< HEAD
+=======
+
+				LevelWrapper.load("level2");
+>>>>>>> parent of aa02c52... Developed Pong Game at #it-dagene
 
 				LevelWrapper.init("default");
 
@@ -246,7 +272,12 @@ public class BombermanOnline implements Game {
 	}
 
 	public static void main(String[] args) {
+<<<<<<< HEAD
 		new GameWrapper(new BombermanOnline(), false);
+=======
+		Game game = new BombermanOnline();
+		new Launcher(game, false);
+>>>>>>> parent of aa02c52... Developed Pong Game at #it-dagene
 	}
 
 	public static void connect(boolean host) {
@@ -268,4 +299,11 @@ public class BombermanOnline implements Game {
 		}
 		initGame(connectInput.getText(), nameInput.getText());
 	}
+<<<<<<< HEAD
+=======
+	
+	public static void reset(){
+		
+	}
+>>>>>>> parent of aa02c52... Developed Pong Game at #it-dagene
 }

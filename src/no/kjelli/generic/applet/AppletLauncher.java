@@ -8,13 +8,17 @@ import java.awt.Dimension;
 import org.lwjgl.opengl.Display;
 
 import no.kjelli.generic.Game;
+<<<<<<< HEAD
 import no.kjelli.generic.gamewrapper.GameWrapper;
+=======
+import no.kjelli.generic.main.Launcher;
+>>>>>>> parent of aa02c52... Developed Pong Game at #it-dagene
 
 @SuppressWarnings("serial")
 public abstract class AppletLauncher extends Applet {
 
 	Canvas display_parent;
-	GameWrapper launcher;
+	Launcher launcher;
 
 	public void init() {
 		setLayout(new BorderLayout());
@@ -59,7 +63,7 @@ public abstract class AppletLauncher extends Applet {
 		launcher.stop();
 	}
 
-	protected abstract GameWrapper getGameLauncher();
+	protected abstract Launcher getGameLauncher();
 
 	public Canvas getDisplay_parent() {
 		return display_parent;

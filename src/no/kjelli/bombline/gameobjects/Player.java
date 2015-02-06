@@ -426,8 +426,49 @@ public class Player extends AbstractCollidable {
 				velocity_y >= 0 ? Color.green : Color.red, true);
 	}
 
+<<<<<<< HEAD
 	public void overlapsBomb(Bomb bomb) {
 		bombOverlaps.add(bomb);
+=======
+	public void debug_highlight() {
+		for (int count = 0; count < 20; count++) {
+			World.add(new GlitterParticle(x, y, 4.0f, this));
+		}
+	}
+
+	public void displayName(boolean display) {
+		playerName.setVisible(display);
+	}
+
+	private void visualizePlayerName() {
+		if (playerName != null) {
+			playerName.setText(name);
+			playerName.setX(x + width / 2 - name.length() * Sprite.CHAR_WIDTH
+					/ 2);
+			playerName.setY(y + 2 * Sprite.CHAR_HEIGHT);
+		} else {
+			playerName = new TextStatic(getName(), getX() + getWidth() / 2
+					- name.length() * Sprite.CHAR_WIDTH / 2, getY() + 2
+					* Sprite.CHAR_HEIGHT, nameColor, false);
+			World.add(playerName);
+		}
+	}
+
+	public void increaseSpeed() {
+		speed += DELTA_SPEED;
+	}
+
+	public int getID() {
+		return Network.getClient().getID();
+	}
+
+	public int getXIndex() {
+		return (int) ((x + width / 2) / BombermanOnline.block_size);
+	}
+
+	public int getYIndex() {
+		return (int) ((y + height / 2) / BombermanOnline.block_size);
+>>>>>>> parent of aa02c52... Developed Pong Game at #it-dagene
 	}
 
 	public void setPower(int power) {

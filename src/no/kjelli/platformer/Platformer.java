@@ -9,7 +9,7 @@ import no.kjelli.generic.World;
 import no.kjelli.generic.gameobjects.GameObject;
 import no.kjelli.generic.gameobjects.Tagger;
 import no.kjelli.generic.gfx.Screen;
-import no.kjelli.generic.main.GameWrapper;
+import no.kjelli.generic.main.Launcher;
 import no.kjelli.generic.sound.SoundPlayer;
 import no.kjelli.platformer.gameobjects.MovingOnewayPlatform;
 import no.kjelli.platformer.gameobjects.OnewayPlatform;
@@ -130,6 +130,6 @@ public class Platformer implements Game {
 	}
 
 	public static void main(String[] args) {
-		new GameWrapper(new Platformer(), false);
+		new Launcher(new Platformer(), false);
 	}
 }
