@@ -1,29 +1,24 @@
-package no.kjelli.julekalender.luke3;
+package no.kjelli.julekalender.luke10;
 
 import java.io.IOException;
 
-import org.newdawn.slick.Color;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 
 import no.kjelli.generic.Game;
 import no.kjelli.generic.World;
 import no.kjelli.generic.gameobjects.GameObject;
 import no.kjelli.generic.gameobjects.Tagger;
-import no.kjelli.generic.gfx.Draw;
 import no.kjelli.generic.gfx.Screen;
-import no.kjelli.generic.gfx.Sprite;
-import no.kjelli.generic.gfx.texts.TextStatic;
-<<<<<<< HEAD
-import no.kjelli.generic.main.Launcher;
-=======
+import no.kjelli.generic.input.Input;
+import no.kjelli.generic.input.InputListener;
 import no.kjelli.generic.main.GameWrapper;
->>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 import no.kjelli.generic.sound.SoundPlayer;
-import no.kjelli.julekalender.luke3.Board.Horsey;
 
 public class JuleKalender implements Game {
 
 	public static int tag_playfield = Tagger.uniqueTag();
-	public static int block_size = 32;
+	public static int block_size = 1;
 
 	public static enum STATE {
 		INTRO, MENU, LOADING, PLAYING
@@ -37,7 +32,6 @@ public class JuleKalender implements Game {
 	public void init() {
 		loadSounds();
 		initIntro();
-		Board.init(10,10);
 	}
 
 	@Override
@@ -63,9 +57,42 @@ public class JuleKalender implements Game {
 		}
 	}
 
+	static boolean left, right, up, down;
+	static int speed = 8;
+
 	public static void initIntro() {
 		state = STATE.INTRO;
 		World.clear();
+		Board.init();
+		Screen.setX(-(float) getGameWidth() / 2);
+		Screen.setY(-(float) getGameHeight() / 2);
+
+		Input.register(new InputListener() {
+
+			@Override
+			public void keyUp(int eventKey) {
+				if (eventKey == Keyboard.KEY_DOWN)
+					down = false;
+				if (eventKey == Keyboard.KEY_UP)
+					up = false;
+				if (eventKey == Keyboard.KEY_LEFT)
+					left = false;
+				if (eventKey == Keyboard.KEY_RIGHT)
+					right = false;
+			}
+
+			@Override
+			public void keyDown(int eventKey) {
+				if (eventKey == Keyboard.KEY_DOWN)
+					down = true;
+				if (eventKey == Keyboard.KEY_UP)
+					up = true;
+				if (eventKey == Keyboard.KEY_LEFT)
+					left = true;
+				if (eventKey == Keyboard.KEY_RIGHT)
+					right = true;
+			}
+		});
 	}
 
 	public static void initGame() {
@@ -75,30 +102,34 @@ public class JuleKalender implements Game {
 
 	@Override
 	public void render() {
-		Board.render();
 		Screen.render();
+		Board.render();
 	}
-
-	static final int traversalCount = 200;
-	static int traversed = 0;
 
 	@Override
 	public void update() {
 		ticks++;
 		switch (state) {
 		case INTRO:
-			if (traversed < traversalCount && ticks % 10 == 0) {
-				SoundPlayer.play("bounce");
-				Horsey.traverse(1);
-				traversed++;
-			} else if (traversed == traversalCount) {
-				traversed++;
-				SoundPlayer.play("sound12");
-				String drawString = "Blacks: " + Board.getNumberOfBlackCells();
-				World.add(new TextStatic(drawString, Screen.getCenterX()
-						- drawString.length() * Sprite.CHAR_WIDTH / 2, Screen
-						.getCenterY() / 4, Color.blue));
+			if (left)
+				Screen.incrementX(-speed);
+			if (right)
+				Screen.incrementX(speed);
+			if (down)
+				Screen.incrementY(-speed);
+			if (up)
+				Screen.incrementY(speed);
+			boolean click = false;
+			Mouse.poll();
+			while (Mouse.next()) {
+				if (Mouse.getEventButton() == 0 && Mouse.getEventButtonState()) {
+					int x = (int) (Mouse.getX()-getGameWidth()/2);
+					int y = (int) (Mouse.getY()-getGameHeight()/2);
+					System.out.println(x);
+					Board.centerOn(x, y);
+				}
 			}
+
 			break;
 		case LOADING:
 			break;
@@ -119,6 +150,7 @@ public class JuleKalender implements Game {
 		for (GameObject go : World.getObjects()) {
 			go.destroy();
 		}
+		Board.dispose();
 
 	}
 
@@ -131,11 +163,11 @@ public class JuleKalender implements Game {
 	}
 
 	public static double getGameWidth() {
-		return 640;
+		return 1024;
 	}
 
 	public static double getGameHeight() {
-		return 480;
+		return 768;
 	}
 
 	@Override
@@ -155,10 +187,6 @@ public class JuleKalender implements Game {
 
 	public static void main(String[] args) {
 		Game game = new JuleKalender();
-<<<<<<< HEAD
-		new Launcher(game, false);
-=======
 		new GameWrapper(game, false);
->>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 	}
 }

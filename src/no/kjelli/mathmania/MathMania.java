@@ -9,7 +9,11 @@ import no.kjelli.generic.World;
 import no.kjelli.generic.gameobjects.GameObject;
 import no.kjelli.generic.gameobjects.Tagger;
 import no.kjelli.generic.gfx.Screen;
+<<<<<<< HEAD
 import no.kjelli.generic.main.Launcher;
+=======
+import no.kjelli.generic.main.GameWrapper;
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 import no.kjelli.generic.sound.SoundPlayer;
 import no.kjelli.mathmania.gameobjects.Combo;
 import no.kjelli.mathmania.gameobjects.Input;
@@ -171,7 +175,11 @@ public class MathMania implements Game {
 	}
 
 	public static void main(String[] args) {
+<<<<<<< HEAD
 		new Launcher(new MathMania(), true);
+=======
+		new GameWrapper(new MathMania(), true);
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 	}
 
 	@Override

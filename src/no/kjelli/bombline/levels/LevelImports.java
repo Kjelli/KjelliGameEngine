@@ -9,6 +9,12 @@ import no.kjelli.bombline.gameobjects.Block;
 import no.kjelli.bombline.gameobjects.Destructible;
 import no.kjelli.bombline.gameobjects.Floor;
 import no.kjelli.bombline.gameobjects.Player;
+<<<<<<< HEAD
+=======
+import no.kjelli.bombline.gameobjects.powerups.PowerupBomb;
+import no.kjelli.bombline.gameobjects.powerups.PowerupFire;
+import no.kjelli.bombline.gameobjects.powerups.PowerupSpeed;
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 import no.kjelli.bombline.network.Network;
 import no.kjelli.bombline.network.PacketLevelResponse;
 import no.kjelli.generic.gameobjects.GameObject;
@@ -17,14 +23,22 @@ public class LevelImports {
 	private static ArrayList<GameObject> objects;
 	public static final char FLOOR = '.', BLOCK = '#', DESTRUCTIBLE = 'X',
 			PLAYER_ONE = '1', PLAYER_TWO = '2', PLAYER_THREE = '3',
+<<<<<<< HEAD
 			PLAYER_FOUR = '4';
+=======
+			PLAYER_FOUR = '4', SPEED = 'S', POWER = 'P', BOMB = 'B';
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 	private static int width, height, maxPlayers;
 	private static Player player;
 	private static int[] playerSpawnX;
 	private static int[] playerSpawnY;
 	private static char[][] map;
 
+<<<<<<< HEAD
 	public static void loadFromFile(String name) {
+=======
+	public static Level loadFromFile(String name) {
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 		BufferedReader br = null;
 		objects = new ArrayList<>();
 		try {
@@ -48,7 +62,11 @@ public class LevelImports {
 						System.err
 								.println("Inconsistent dimensions in lev file!");
 						br.close();
+<<<<<<< HEAD
 						return;
+=======
+						return null;
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 					}
 					char blocktype = ' ';
 					if (block.length() > 1) {
@@ -79,7 +97,11 @@ public class LevelImports {
 				}
 				y++;
 			}
+<<<<<<< HEAD
 			return;
+=======
+			return buildLevel();
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -90,11 +112,22 @@ public class LevelImports {
 				e.printStackTrace();
 			}
 		}
+<<<<<<< HEAD
 
 	}
 
 	public static void loadFromMap(PacketLevelResponse packet) {
 		char[][] map = packet.levelMap;
+=======
+		return null;
+
+	}
+
+	public static Level loadFromMap(PacketLevelResponse packet) {
+		map = packet.levelMap;
+		width = map.length;
+		height = map[0].length;
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 		maxPlayers = packet.maxPlayers;
 		playerSpawnX = new int[maxPlayers];
 		playerSpawnY = new int[maxPlayers];
@@ -105,6 +138,10 @@ public class LevelImports {
 				determineBlock(blocktype, x, y);
 			}
 		}
+<<<<<<< HEAD
+=======
+		return buildLevel();
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 	}
 
 	private static void determineBlock(char blocktype, int x, int y) {
@@ -130,6 +167,21 @@ public class LevelImports {
 		case FLOOR:
 			objects.add(new Floor(x, y));
 			break;
+<<<<<<< HEAD
+=======
+		case SPEED:
+			objects.add(new PowerupSpeed(x, y));
+			objects.add(new Floor(x, y));
+			break;
+		case POWER:
+			objects.add(new PowerupFire(x, y));
+			objects.add(new Floor(x, y));
+			break;
+		case BOMB:
+			objects.add(new PowerupBomb(x, y));
+			objects.add(new Floor(x, y));
+			break;
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 		default:
 			break;
 		}
@@ -148,4 +200,14 @@ public class LevelImports {
 		}
 		objects.add(new Floor(x, y));
 	}
+<<<<<<< HEAD
+=======
+
+	private static Level buildLevel() {
+		Level newLevel = new Level(width, height, objects, player, maxPlayers,
+				playerSpawnX, playerSpawnY, map);
+		return newLevel;
+
+	}
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 }

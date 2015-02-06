@@ -1,29 +1,21 @@
-package no.kjelli.julekalender.luke3;
+package no.kjelli.julekalender.luke20;
 
 import java.io.IOException;
-
-import org.newdawn.slick.Color;
 
 import no.kjelli.generic.Game;
 import no.kjelli.generic.World;
 import no.kjelli.generic.gameobjects.GameObject;
 import no.kjelli.generic.gameobjects.Tagger;
-import no.kjelli.generic.gfx.Draw;
 import no.kjelli.generic.gfx.Screen;
-import no.kjelli.generic.gfx.Sprite;
-import no.kjelli.generic.gfx.texts.TextStatic;
-<<<<<<< HEAD
-import no.kjelli.generic.main.Launcher;
-=======
 import no.kjelli.generic.main.GameWrapper;
->>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 import no.kjelli.generic.sound.SoundPlayer;
-import no.kjelli.julekalender.luke3.Board.Horsey;
 
 public class JuleKalender implements Game {
 
 	public static int tag_playfield = Tagger.uniqueTag();
 	public static int block_size = 32;
+
+	public static ChristmasDinner cd;
 
 	public static enum STATE {
 		INTRO, MENU, LOADING, PLAYING
@@ -37,7 +29,6 @@ public class JuleKalender implements Game {
 	public void init() {
 		loadSounds();
 		initIntro();
-		Board.init(10,10);
 	}
 
 	@Override
@@ -66,6 +57,8 @@ public class JuleKalender implements Game {
 	public static void initIntro() {
 		state = STATE.INTRO;
 		World.clear();
+
+		cd = new ChristmasDinner(1500);
 	}
 
 	public static void initGame() {
@@ -75,29 +68,23 @@ public class JuleKalender implements Game {
 
 	@Override
 	public void render() {
-		Board.render();
 		Screen.render();
+		cd.draw();
 	}
-
-	static final int traversalCount = 200;
-	static int traversed = 0;
 
 	@Override
 	public void update() {
 		ticks++;
 		switch (state) {
 		case INTRO:
-			if (traversed < traversalCount && ticks % 10 == 0) {
-				SoundPlayer.play("bounce");
-				Horsey.traverse(1);
-				traversed++;
-			} else if (traversed == traversalCount) {
-				traversed++;
-				SoundPlayer.play("sound12");
-				String drawString = "Blacks: " + Board.getNumberOfBlackCells();
-				World.add(new TextStatic(drawString, Screen.getCenterX()
-						- drawString.length() * Sprite.CHAR_WIDTH / 2, Screen
-						.getCenterY() / 4, Color.blue));
+			if (!cd.allDrunk) {
+				if (ticks % 1 == 0) {
+					if (ticks % 2 == 0) {
+						cd.bottleHolder.drink();
+					} else {
+						cd.bottleHolder.pass();
+					}
+				}
 			}
 			break;
 		case LOADING:
@@ -131,11 +118,11 @@ public class JuleKalender implements Game {
 	}
 
 	public static double getGameWidth() {
-		return 640;
+		return 1024;
 	}
 
 	public static double getGameHeight() {
-		return 480;
+		return 768;
 	}
 
 	@Override
@@ -155,10 +142,6 @@ public class JuleKalender implements Game {
 
 	public static void main(String[] args) {
 		Game game = new JuleKalender();
-<<<<<<< HEAD
-		new Launcher(game, false);
-=======
 		new GameWrapper(game, false);
->>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 	}
 }

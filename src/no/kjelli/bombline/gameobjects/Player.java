@@ -24,6 +24,12 @@ import no.kjelli.generic.gfx.Draw;
 import no.kjelli.generic.gfx.Screen;
 import no.kjelli.generic.gfx.Sprite;
 import no.kjelli.generic.gfx.texts.TextStatic;
+<<<<<<< HEAD
+=======
+import no.kjelli.generic.gfx.textures.TextureAtlas;
+import no.kjelli.generic.sound.SoundPlayer;
+import no.kjelli.mathmania.gameobjects.particles.GlitterParticle;
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 
 import org.newdawn.slick.Color;
 
@@ -31,7 +37,13 @@ public class Player extends AbstractCollidable {
 	public static final int base_x = 0, base_y = 64;
 	public static final int SPRITE_WIDTH = 16, SPRITE_HEIGHT = 16;
 	public static final int SPRITE_OFFSET = 16;
+<<<<<<< HEAD
 	public static final int DRAW_X_OFFSET = -2, DRAW_Y_OFFSET = 0;
+=======
+	public static final int HITBOX_WIDTH = 8, HITBOX_HEIGHT = 8;
+	public static final int DRAW_X_OFFSET = (HITBOX_WIDTH - SPRITE_WIDTH) / 2,
+			DRAW_Y_OFFSET = 0;
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 	protected static final int FRAME_DURATION = 8;
 	protected static final int FRAME_COUNT = 3;
 
@@ -39,11 +51,19 @@ public class Player extends AbstractCollidable {
 	protected static final int INVINCIBILLITY_TIMER_MAX = 100;
 	protected static final int BOMB_COOLDOWN_MAX = 20;
 	protected static final int BOMB_CAPACITY_INITIAL = 1;
+<<<<<<< HEAD
 	protected static final int LIVES_INITIAL = 3;
+=======
+	protected static final int LIVES_INITIAL = 1;
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 	protected static final int SPEED_INITIAL = 1;
 
 	protected static final Color deadColor = new Color(0.1f, 0.1f, 0.1f);
 	protected static final float DELTA_SPEED = 0.15f;
+<<<<<<< HEAD
+=======
+	private static final float MAX_SPEED = 20 * DELTA_SPEED;
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 	protected int walkingFrame;
 	protected long steps;
 	protected DIRECTION direction = DIRECTION.DOWN;
@@ -68,16 +88,34 @@ public class Player extends AbstractCollidable {
 	protected boolean superBomb = false;
 
 	protected TextStatic playerName;
+<<<<<<< HEAD
 
 	public Player(int x_index, int y_index) {
 		super(x_index * BombermanOnline.block_size - DRAW_X_OFFSET, y_index
 				* BombermanOnline.block_size - DRAW_Y_OFFSET, 2.0f, 12, 12);
 		sprite = new Sprite(BombermanOnline.partybombs, base_x, base_y,
 				SPRITE_WIDTH, SPRITE_HEIGHT);
+=======
+	private Color nameColor;
+
+	public Player(int x_index, int y_index) {
+		super(x_index * BombermanOnline.block_size - DRAW_X_OFFSET, y_index
+				* BombermanOnline.block_size - DRAW_Y_OFFSET, 2.0f,
+				HITBOX_WIDTH, HITBOX_HEIGHT);
+		sprite = new Sprite(TextureAtlas.partybombs, base_x, base_y,
+				SPRITE_WIDTH, SPRITE_HEIGHT);
+		sprite.setColor(new Color(Color.green));
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 
 		// Initial call to animationLogic to make the player face downwards
 		animationLogic();
 
+<<<<<<< HEAD
+=======
+		nameColor = new Color((float) Math.random() * 0.5f + 0.5f,
+				(float) Math.random() * 0.5f + 0.5f,
+				(float) Math.random() * 0.5f + 0.5f);
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 		sprite.setColor(new Color(Color.white));
 		bombOverlaps = new ArrayList<Bomb>();
 		tag(BombermanOnline.tag_playfield);
@@ -101,6 +139,10 @@ public class Player extends AbstractCollidable {
 				stop(collision.getImpactDirection());
 			}
 		}
+<<<<<<< HEAD
+=======
+
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 		if (target instanceof Fire) {
 			if (Network.isHosting()) {
 				loseLife();
@@ -115,8 +157,16 @@ public class Player extends AbstractCollidable {
 
 		if (lives > 0) {
 			invincibillity_timer = INVINCIBILLITY_TIMER_MAX;
+<<<<<<< HEAD
 		} else {
 			if (!dead) {
+=======
+			bomb_cooldown = BOMB_COOLDOWN_MAX;
+		} else {
+			if (!dead) {
+				SoundPlayer.play("sound9 lose", 1.0f, 0.5f);
+				sprite.setColor(deadColor);
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 				fadeout_timer = FADEOUT_TIMER_MAX;
 				dead = true;
 			}
@@ -128,10 +178,13 @@ public class Player extends AbstractCollidable {
 		}
 	}
 
+<<<<<<< HEAD
 	public int getID() {
 		return Network.getClient().getID();
 	}
 
+=======
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 	@Override
 	public void update() {
 		movementLogic();
@@ -166,15 +219,34 @@ public class Player extends AbstractCollidable {
 		bombOverlapCheck();
 		if (isKeyDown(KEY_SPACE) && getBombs() > 0) {
 			if (bombOverlaps.isEmpty()) {
+<<<<<<< HEAD
 				World.add(new Bomb(getXIndex(), getYIndex(), this, power,
 						superBomb));
 				setBombs(getBombs() - 1);
 				if (Network.isOnline())
 					sendBombInfo();
+=======
+				placeBomb();
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 			}
 		}
 	}
 
+<<<<<<< HEAD
+=======
+	public void overlapsBomb(Bomb bomb) {
+		bombOverlaps.add(bomb);
+	}
+
+	private void placeBomb() {
+		SoundPlayer.play("bounce", 1.0f, 0.5f);
+		World.add(new Bomb(getXIndex(), getYIndex(), this, power, superBomb));
+		setBombs(getBombs() - 1);
+		if (Network.isOnline())
+			sendBombInfo();
+	}
+
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 	private void bombOverlapCheck() {
 		Iterator<Bomb> it = bombOverlaps.iterator();
 		while (it.hasNext()) {
@@ -405,6 +477,7 @@ public class Player extends AbstractCollidable {
 		// debugDraw();
 	}
 
+<<<<<<< HEAD
 	public int getXIndex() {
 		return (int) ((x + width / 2) / BombermanOnline.block_size);
 	}
@@ -413,6 +486,9 @@ public class Player extends AbstractCollidable {
 		return (int) ((y + height / 2) / BombermanOnline.block_size);
 	}
 
+=======
+	@SuppressWarnings("unused")
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 	private void debugDraw() {
 		Draw.string("x: " + x, 0, Screen.getHeight() - 2 * Sprite.CHAR_HEIGHT,
 				1.0f, 1.0f, 1.0f, x >= 0 ? Color.green : Color.red, true);
@@ -427,9 +503,12 @@ public class Player extends AbstractCollidable {
 	}
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 	public void overlapsBomb(Bomb bomb) {
 		bombOverlaps.add(bomb);
 =======
+=======
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 	public void debug_highlight() {
 		for (int count = 0; count < 20; count++) {
 			World.add(new GlitterParticle(x, y, 4.0f, this));
@@ -455,7 +534,12 @@ public class Player extends AbstractCollidable {
 	}
 
 	public void increaseSpeed() {
+<<<<<<< HEAD
 		speed += DELTA_SPEED;
+=======
+		if (speed < MAX_SPEED)
+			speed += DELTA_SPEED;
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 	}
 
 	public int getID() {
@@ -468,7 +552,10 @@ public class Player extends AbstractCollidable {
 
 	public int getYIndex() {
 		return (int) ((y + height / 2) / BombermanOnline.block_size);
+<<<<<<< HEAD
 >>>>>>> parent of aa02c52... Developed Pong Game at #it-dagene
+=======
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 	}
 
 	public void setPower(int power) {
@@ -509,13 +596,19 @@ public class Player extends AbstractCollidable {
 		return speed;
 	}
 
+<<<<<<< HEAD
 	public void increaseSpeed() {
 		speed += DELTA_SPEED;
+=======
+	public String getName() {
+		return name;
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 	}
 
 	public void setName(String name) {
 		this.name = name;
 
+<<<<<<< HEAD
 		if (playerName != null) {
 			playerName.setText(name);
 			playerName.setX(x + width / 2 - name.length() * Sprite.CHAR_WIDTH
@@ -537,6 +630,11 @@ public class Player extends AbstractCollidable {
 		playerName.setVisible(display);
 	}
 	
+=======
+		visualizePlayerName();
+	}
+
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 	@Override
 	public void destroy() {
 		playerName.destroy();

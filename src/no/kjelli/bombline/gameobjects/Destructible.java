@@ -4,12 +4,20 @@ import no.kjelli.bombline.BombermanOnline;
 import no.kjelli.bombline.gameobjects.powerups.PowerupBomb;
 import no.kjelli.bombline.gameobjects.powerups.PowerupFire;
 import no.kjelli.bombline.gameobjects.powerups.PowerupSpeed;
+<<<<<<< HEAD
+=======
+import no.kjelli.bombline.levels.LevelWrapper;
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 import no.kjelli.bombline.network.Network;
 import no.kjelli.generic.Collision;
 import no.kjelli.generic.World;
 import no.kjelli.generic.gameobjects.AbstractCollidable;
 import no.kjelli.generic.gfx.Draw;
 import no.kjelli.generic.gfx.Sprite;
+<<<<<<< HEAD
+=======
+import no.kjelli.generic.gfx.textures.TextureAtlas;
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 
 public class Destructible extends AbstractCollidable {
 	public static final int base_x = 144, base_y = 0;
@@ -29,7 +37,11 @@ public class Destructible extends AbstractCollidable {
 				* BombermanOnline.block_size, 16, 16);
 		this.x_index = x_index;
 		this.y_index = y_index;
+<<<<<<< HEAD
 		sprite = new Sprite(BombermanOnline.partybombs, base_x, base_y,
+=======
+		sprite = new Sprite(TextureAtlas.partybombs, base_x, base_y,
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 				SPRITE_WIDTH, SPRITE_HEIGHT);
 		z = 0.0f;
 		tag(BombermanOnline.tag_playfield);
@@ -78,9 +90,15 @@ public class Destructible extends AbstractCollidable {
 
 		if (determinant < 10) {
 			World.add(new PowerupBomb(x_index, y_index));
+<<<<<<< HEAD
 		}else if(determinant < 20){
 			World.add(new PowerupSpeed(x_index, y_index));
 		}else if(determinant < 30){
+=======
+		} else if (determinant < 20) {
+			World.add(new PowerupSpeed(x_index, y_index));
+		} else if (determinant < 30) {
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 			World.add(new PowerupFire(x_index, y_index));
 		}
 

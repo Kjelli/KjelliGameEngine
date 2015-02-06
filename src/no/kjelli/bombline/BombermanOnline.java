@@ -21,18 +21,25 @@ import no.kjelli.generic.gfx.Sprite;
 import no.kjelli.generic.gfx.texts.TextScrolling;
 import no.kjelli.generic.gfx.texts.TextStatic;
 <<<<<<< HEAD
+<<<<<<< HEAD
 import no.kjelli.generic.gfx.textures.SpriteSheet;
 import no.kjelli.generic.gamewrapper.GameWrapper;
 =======
 import no.kjelli.generic.main.Launcher;
 >>>>>>> parent of aa02c52... Developed Pong Game at #it-dagene
+=======
+import no.kjelli.generic.main.GameWrapper;
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 import no.kjelli.generic.sound.SoundPlayer;
 
 public class BombermanOnline implements Game {
 
 	public static int tag_playfield = Tagger.uniqueTag();
 	public static int block_size = 16;
+<<<<<<< HEAD
 	public static SpriteSheet partybombs;
+=======
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 
 	public static String name;
 
@@ -46,11 +53,15 @@ public class BombermanOnline implements Game {
 
 	@Override
 	public void init() {
+<<<<<<< HEAD
 		loadSpritesheet();
+=======
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 		loadSounds();
 		Network.settings();
 		initIntro();
 	}
+<<<<<<< HEAD
 	
 	public void loadSpritesheet(){
 		partybombs = new SpriteSheet("res\\partybomb.png");
@@ -68,6 +79,20 @@ public class BombermanOnline implements Game {
 //			SoundPlayer.load("sound5.wav");
 //			SoundPlayer.load("sound6.wav");
 //			SoundPlayer.load("sound7.wav");
+=======
+
+	@Override
+	public void loadSounds() {
+		try {
+			SoundPlayer.load("bounce.wav");
+			// SoundPlayer.load("sound1.wav");
+			// SoundPlayer.load("sound2.wav");
+			// SoundPlayer.load("sound3.wav");
+			// SoundPlayer.load("sound4.wav");
+			// SoundPlayer.load("sound5.wav");
+			// SoundPlayer.load("sound6.wav");
+			// SoundPlayer.load("sound7.wav");
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 			SoundPlayer.load("sound8.wav");
 			SoundPlayer.load("sound9 lose.wav");
 			SoundPlayer.load("sound10 powerup.wav");
@@ -75,7 +100,10 @@ public class BombermanOnline implements Game {
 			SoundPlayer.load("sound11 bomb long.wav");
 			SoundPlayer.load("sound12.wav");
 			SoundPlayer.load("sound13.wav");
+<<<<<<< HEAD
 >>>>>>> parent of aa02c52... Developed Pong Game at #it-dagene
+=======
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -95,6 +123,10 @@ public class BombermanOnline implements Game {
 
 		ticks = 0;
 		World.init((int) getGameWidth(), (int) getGameHeight());
+<<<<<<< HEAD
+=======
+		Screen.centerOn(null);
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 		Screen.zoom(2.0f);
 		Screen.setX(0);
 		Screen.setY(0);
@@ -108,8 +140,13 @@ public class BombermanOnline implements Game {
 				* Screen.getHeight() / 12 + 2 * Sprite.CHAR_HEIGHT, Color.white);
 		World.add(nameLabel);
 
+<<<<<<< HEAD
 		nameInput = new InputName(Screen.getWidth() / 2 - 250 / 2,
 				5 * Screen.getHeight() / 12, 250, 20, 32);
+=======
+		nameInput = new InputName(Screen.getWidth() / 2 - 10
+				* Sprite.CHAR_WIDTH / 2, 5 * Screen.getHeight() / 12);
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 		World.add(nameInput);
 
 		hostAddressLabel = new TextStatic("HOST ADDRESS", Screen.getWidth() / 2
@@ -117,8 +154,13 @@ public class BombermanOnline implements Game {
 				* Screen.getHeight() / 24 + 2 * Sprite.CHAR_HEIGHT, Color.white);
 		World.add(hostAddressLabel);
 
+<<<<<<< HEAD
 		connectInput = new InputConnect(Screen.getWidth() / 2 - 250 / 2,
 				7 * Screen.getHeight() / 24, 250, 20, 32);
+=======
+		connectInput = new InputConnect(Screen.getWidth() / 2 - 32
+				* Sprite.CHAR_WIDTH / 2, 7 * Screen.getHeight() / 24);
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 		World.add(connectInput);
 
 		connectButton = new ConnectButton(Screen.getWidth() / 2
@@ -137,6 +179,7 @@ public class BombermanOnline implements Game {
 			if (Network.hostServer()) {
 				World.clear();
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 
 				LevelWrapper.load("level2");
@@ -146,6 +189,10 @@ public class BombermanOnline implements Game {
 
 				World.add(new TextScrolling("Hosting (" + Network.TCP_PORT
 						+ ")"));
+=======
+				LevelWrapper.load("default");
+
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 			}
 		} else {
 			if (Network.connect(hostAddress)) {
@@ -273,11 +320,16 @@ public class BombermanOnline implements Game {
 
 	public static void main(String[] args) {
 <<<<<<< HEAD
+<<<<<<< HEAD
 		new GameWrapper(new BombermanOnline(), false);
 =======
 		Game game = new BombermanOnline();
 		new Launcher(game, false);
 >>>>>>> parent of aa02c52... Developed Pong Game at #it-dagene
+=======
+		Game game = new BombermanOnline();
+		new GameWrapper(game, false);
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 	}
 
 	public static void connect(boolean host) {
@@ -300,10 +352,20 @@ public class BombermanOnline implements Game {
 		initGame(connectInput.getText(), nameInput.getText());
 	}
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 	
 	public static void reset(){
 		
 	}
 >>>>>>> parent of aa02c52... Developed Pong Game at #it-dagene
+=======
+
+	public static void reset() {
+		if (LevelWrapper.getLevel() != null)
+			LevelWrapper.endLevel();
+		Network.cleanup();
+		initIntro();
+	}
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 }

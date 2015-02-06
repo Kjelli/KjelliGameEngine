@@ -1,6 +1,13 @@
 package no.kjelli.bombline.gameobjects;
 
+<<<<<<< HEAD
 import no.kjelli.bombline.BombermanOnline;
+=======
+import org.newdawn.slick.Color;
+
+import no.kjelli.bombline.BombermanOnline;
+import no.kjelli.bombline.gameobjects.Fire;
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 import no.kjelli.bombline.levels.LevelWrapper;
 import no.kjelli.generic.Collision;
 import no.kjelli.generic.Physics;
@@ -8,8 +15,13 @@ import no.kjelli.generic.World;
 import no.kjelli.generic.gameobjects.AbstractCollidable;
 import no.kjelli.generic.gfx.Draw;
 import no.kjelli.generic.gfx.Sprite;
+<<<<<<< HEAD
 
 import org.newdawn.slick.Color;
+=======
+import no.kjelli.generic.gfx.textures.TextureAtlas;
+import no.kjelli.generic.sound.SoundPlayer;
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 
 public class Bomb extends AbstractCollidable {
 
@@ -47,11 +59,21 @@ public class Bomb extends AbstractCollidable {
 		this.power = power;
 		this.ticking = ticking;
 		this.isSuper = isSuper;
+<<<<<<< HEAD
 		sprite = new Sprite(BombermanOnline.partybombs, base_x, base_y,
 				SPRITE_WIDTH, SPRITE_HEIGHT);
 		if (LevelWrapper.getLevel() != null) {
 			z = 2.0f - y / LevelWrapper.getLevel().getHeight();
 		}
+=======
+		sprite = new Sprite(TextureAtlas.partybombs, base_x, base_y,
+				SPRITE_WIDTH, SPRITE_HEIGHT);
+
+		// Used in bomb particle objects, which are used before levels are
+		// initialized
+		if (LevelWrapper.getLevel() != null)
+			z = (float) (2.0f - y / LevelWrapper.getLevel().getHeight());
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 		tag(BombermanOnline.tag_playfield);
 
 		if (isSuper)
@@ -92,6 +114,13 @@ public class Bomb extends AbstractCollidable {
 			if (source != null)
 				source.setBombs(source.getBombs() + 1);
 			makeFire();
+<<<<<<< HEAD
+=======
+			// Dont want the particles on the intro screen to make a horrible
+			// noise
+			if (source != null)
+				SoundPlayer.play("sound11 bomb", 1.2f, 0.5f);
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 			destroy();
 		}
 

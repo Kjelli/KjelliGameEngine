@@ -7,6 +7,9 @@ import no.kjelli.generic.Callback;
 =======
 import org.lwjgl.input.Keyboard;
 
+<<<<<<< HEAD
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
+=======
 >>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 import no.kjelli.generic.Game;
 import no.kjelli.generic.World;
@@ -305,18 +308,24 @@ public class Pong implements Game {
 		ball = new Ball(Screen.getCenterX() - Ball.WIDTH / 2,
 				Screen.getCenterY() - Ball.HEIGHT / 2);
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 		World.add(new Wall(0, 0, Screen.getWidth(), LOWER_LIMIT));
 		World.add(new Wall(0, UPPER_LIMIT, Screen.getWidth(), Screen
 				.getHeight() - UPPER_LIMIT));
 
 =======
+=======
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 //
 //		for (int i = 0; i < 50; i++) {
 //			World.add(new BlockParticle((float) Math.random()
 //					* Screen.getWidth(), (float) Math.random()
 //					* Screen.getHeight(), (float) (Math.random() * 2 * Math.PI)));
 //		}
+<<<<<<< HEAD
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
+=======
 >>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 		World.add(ball);
 
@@ -380,6 +389,7 @@ public class Pong implements Game {
 
 	}
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 	/**
 	 * The amount of LED-logos flying around in the background in the menu
@@ -425,6 +435,8 @@ public class Pong implements Game {
 	}
 =======
 >>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
+=======
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 
 	/**
 	 * When the game is closed, each object is destroyed in their own manner to
@@ -458,11 +470,17 @@ public class Pong implements Game {
 	}
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 	public static void reset() {
 		bat1.reset();
 		bat2.reset();
 		ball.reset();
 	}
+<<<<<<< HEAD
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
+=======
 >>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 }

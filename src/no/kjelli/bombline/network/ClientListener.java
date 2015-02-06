@@ -7,6 +7,10 @@ import no.kjelli.generic.gfx.texts.TextScrolling;
 
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
+<<<<<<< HEAD
+=======
+import com.esotericsoftware.kryonet.FrameworkMessage;
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 import com.esotericsoftware.kryonet.Listener;
 
 public class ClientListener extends Listener {
@@ -41,6 +45,11 @@ public class ClientListener extends Listener {
 					// TODO spectate? Gameroom? Longterm projects
 					World.add(new TextScrolling("Game already started!"));
 				}
+<<<<<<< HEAD
+=======
+			} else if (object instanceof FrameworkMessage.KeepAlive) {
+				// DO nothing, keepalive
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 			} else {
 				LevelWrapper.addPacket((Packet) object);
 			}

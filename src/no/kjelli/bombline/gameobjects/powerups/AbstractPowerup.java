@@ -11,15 +11,28 @@ import no.kjelli.generic.gameobjects.AbstractCollidable;
 import no.kjelli.generic.gameobjects.Collidable;
 import no.kjelli.generic.gfx.Draw;
 import no.kjelli.generic.gfx.Sprite;
+<<<<<<< HEAD
 
 public abstract class AbstractPowerup extends AbstractCollidable implements
 		Powerup {
 	private static Sprite background = new Sprite(BombermanOnline.partybombs,
+=======
+import no.kjelli.generic.gfx.textures.TextureAtlas;
+import no.kjelli.generic.sound.SoundPlayer;
+
+public abstract class AbstractPowerup extends AbstractCollidable implements
+		Powerup {
+	private static Sprite background = new Sprite(TextureAtlas.partybombs,
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 			BACKGROUND_BASE_X, BACKGROUND_BASE_Y, SPRITE_WIDTH, SPRITE_HEIGHT);
 	public static final int blow_x = 224, blow_y = 48;
 	private static final int BLOW_TIMER_MAX = 4;
 	private static final int BLOW_COOLDOWN_MAX = 20;
+<<<<<<< HEAD
 	
+=======
+
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 	public int blow_cooldown = BLOW_COOLDOWN_MAX;
 	public int blow_frame = 3;
 	public int blow_timer = BLOW_TIMER_MAX;
@@ -55,6 +68,10 @@ public abstract class AbstractPowerup extends AbstractCollidable implements
 					Network.getServer().sendToAllTCP(
 							new PacketPowerupGain(Network.getClient().getID(),
 									type, x_index, y_index));
+<<<<<<< HEAD
+=======
+					setVisible(false);
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 				}
 			} else {
 				// Clientside view - make powerup disappear and wait for packet.
@@ -63,6 +80,15 @@ public abstract class AbstractPowerup extends AbstractCollidable implements
 		}
 	}
 
+<<<<<<< HEAD
+=======
+	public void collect(Player player) {
+		SoundPlayer.play("sound10 powerup");
+		powerUpEffect(player);
+		destroy();
+	}
+
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 	@Override
 	public void onCreate() {
 		setVisible(true);

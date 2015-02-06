@@ -5,6 +5,11 @@ import no.kjelli.generic.Collision;
 import no.kjelli.generic.gameobjects.AbstractCollidable;
 import no.kjelli.generic.gfx.Draw;
 import no.kjelli.generic.gfx.Sprite;
+<<<<<<< HEAD
+=======
+import no.kjelli.generic.gfx.textures.TextureAtlas;
+import no.kjelli.partybombs.Partybombs;
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 
 public class Block extends AbstractCollidable {
 	public static final int base_x = 160, base_y = 64;
@@ -14,7 +19,11 @@ public class Block extends AbstractCollidable {
 	public Block(int x_index, int y_index) {
 		super(x_index * BombermanOnline.block_size, y_index * BombermanOnline.block_size,
 				16, 16);
+<<<<<<< HEAD
 		sprite = new Sprite(BombermanOnline.partybombs, base_x, base_y,
+=======
+		sprite = new Sprite(TextureAtlas.partybombs, base_x, base_y,
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 				SPRITE_WIDTH, SPRITE_HEIGHT);
 		z = 1.0f;
 		tag(BombermanOnline.tag_playfield);

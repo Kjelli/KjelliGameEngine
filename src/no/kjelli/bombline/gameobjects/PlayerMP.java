@@ -10,7 +10,12 @@ public class PlayerMP extends Player {
 	int id;
 
 	public PlayerMP(int id, String name) {
+<<<<<<< HEAD
 		super(LevelWrapper.getLevel().getPlayerSpawnX(id), LevelWrapper.getLevel().getPlayerSpawnY(id));
+=======
+		super(LevelWrapper.getLevel().getPlayerSpawnX(id), LevelWrapper
+				.getLevel().getPlayerSpawnY(id));
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 		this.invincibillity_timer = INVINCIBILLITY_TIMER_MAX;
 		this.id = id;
 		System.out.println("Setting name to " + name);

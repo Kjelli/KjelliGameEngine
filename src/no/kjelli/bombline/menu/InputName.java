@@ -3,6 +3,7 @@ package no.kjelli.bombline.menu;
 import org.newdawn.slick.Color;
 
 import no.kjelli.bombline.BombermanOnline;
+<<<<<<< HEAD
 import no.kjelli.generic.input.InputBox;
 
 <<<<<<< HEAD
@@ -27,6 +28,20 @@ public class InputName extends InputBox {
 				fghighlight);
 	}
 
+=======
+import no.kjelli.generic.input.AbstractInputBox;
+
+public class InputName extends AbstractInputBox {
+	private static final String[] names = { "Kjell", "Rolf", "Vigdis",
+			"Michelle", "Robert", "Nils", "Høna", "Ingve", "Biffen", "Leif",
+			"Bodil", "Svein", "Jesus", "Pornofrans", "Susan" };
+
+	public InputName(float x, float y) {
+		super(x, y, 10, Color.white, Color.black, Color.gray, Color.white);
+		setSymbolsAllowed(false);
+	}
+
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 	@Override
 	public void onCreate() {
 		setVisible(true);
@@ -36,4 +51,12 @@ public class InputName extends InputBox {
 	protected void onInputComplete() {
 	}
 
+<<<<<<< HEAD
+=======
+	@Override
+	protected String getDefaultText() {
+		return names[(int) (Math.random() * names.length)];
+	}
+
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 }

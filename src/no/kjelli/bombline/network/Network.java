@@ -71,11 +71,19 @@ public class Network {
 		if (server != null) {
 			server.close();
 			server.stop();
+<<<<<<< HEAD
+=======
+			server = null;
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 		}
 
 		if (client != null) {
 			client.close();
 			client.stop();
+<<<<<<< HEAD
+=======
+			client = null;
+>>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 		}
 
 	}
