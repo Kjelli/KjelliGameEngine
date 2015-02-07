@@ -12,12 +12,8 @@ public interface Powerup extends GameObject {
 	public static final int SPRITE_WIDTH = 16, SPRITE_HEIGHT = 16;
 	public static final int DRAW_X_OFFSET = -2, DRAW_Y_OFFSET = -2;
 
-<<<<<<< HEAD
-	void powerUp(Player player);
-=======
 	void collect(Player player);
 	void powerUpEffect(Player player);
->>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 	void blowUp();
 
 	int getType();

@@ -10,19 +10,12 @@ public class BombParticle extends AbstractParticle {
 	Bomb bomb;
 
 	public BombParticle(float x, float y, int power, boolean ticking) {
-<<<<<<< HEAD
 		super(x, y, 4f, Bomb.SPRITE_WIDTH, Bomb.SPRITE_HEIGHT, -1);
-=======
-		super(x, y, Bomb.SPRITE_WIDTH, Bomb.SPRITE_HEIGHT, 1);
->>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 		bomb = new Bomb((int) (x / BombermanOnline.block_size),
 				(int) (y / BombermanOnline.block_size), null, power, false,
 				ticking);
 		World.add(bomb);
-<<<<<<< HEAD
-=======
-		sustain(true);
->>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
+
 		bomb.getSprite().getColor().a = 0;
 		tag(BombermanOnline.tag_playfield);
 	}

@@ -8,10 +8,6 @@ import no.kjelli.generic.World;
 import no.kjelli.generic.gameobjects.AbstractCollidable;
 import no.kjelli.generic.gfx.Draw;
 import no.kjelli.generic.gfx.Sprite;
-<<<<<<< HEAD
-=======
-import no.kjelli.generic.gfx.textures.TextureAtlas;
->>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 
 public class Fire extends AbstractCollidable {
 
@@ -103,11 +99,7 @@ public class Fire extends AbstractCollidable {
 				break;
 			}
 		}
-<<<<<<< HEAD
 		sprite = new Sprite(BombermanOnline.partybombs, base_x
-=======
-		sprite = new Sprite(TextureAtlas.partybombs, base_x
->>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 				+ fire_fragment.getX() * SPRITE_WIDTH, base_y
 				+ fire_fragment.getY() * SPRITE_HEIGHT, SPRITE_WIDTH,
 				SPRITE_HEIGHT);

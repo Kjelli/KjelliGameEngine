@@ -6,17 +6,12 @@ import static org.lwjgl.opengl.GL11.glScalef;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 
-import no.kjelli.bombline.BombermanOnline;
 import no.kjelli.generic.Physics;
 import no.kjelli.generic.World;
 import no.kjelli.generic.gameobjects.GameObject;
 import no.kjelli.generic.gamewrapper.GameWrapper;
 import no.kjelli.generic.input.Input;
 import no.kjelli.generic.input.InputListener;
-<<<<<<< HEAD
-=======
-import no.kjelli.generic.main.Launcher;
->>>>>>> parent of aa02c52... Developed Pong Game at #it-dagene
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
@@ -107,7 +102,7 @@ public class Screen {
 		World.render();
 
 		if (debug_draw_mode > 0) {
-			Draw.string("FPS: " + Launcher.framesPerSecond + "\nObjects: "
+			Draw.string("FPS: " + GameWrapper.framesPerSecond + "\nObjects: "
 					+ World.getObjects().size(), 1, Screen.getHeight()
 					- Sprite.CHAR_HEIGHT - 1, 4.2f, 1, 1, Color.yellow, true);
 		}
@@ -355,5 +350,10 @@ public class Screen {
 
 	public static Focusable getFocusElement() {
 		return focus;
+	}
+
+	public static void dispose() {
+		// TODO Auto-generated method stub
+		
 	}
 }

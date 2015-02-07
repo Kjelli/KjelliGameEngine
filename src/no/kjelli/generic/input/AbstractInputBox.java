@@ -10,7 +10,7 @@ import static org.lwjgl.input.Keyboard.*;
 import org.lwjgl.input.Keyboard;
 import org.newdawn.slick.Color;
 
-public abstract class InputBox extends AbstractUIObject implements Focusable,
+public abstract class AbstractInputBox extends AbstractUIObject implements Focusable,
 		Clickable {
 	private String input;
 	private int maxLength = 8;
@@ -23,11 +23,7 @@ public abstract class InputBox extends AbstractUIObject implements Focusable,
 	private boolean symbolsAllowed = true, numbersAllowed = true,
 			alphanumericAllowed = true, spaceAllowed = true;
 
-<<<<<<< HEAD:src/no/kjelli/generic/input/InputBox.java
-	public InputBox(float x, float y, int maxLength, Color foreground,
-=======
 	public AbstractInputBox(float x, float y, int maxLength, Color foreground,
->>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong:src/no/kjelli/generic/input/AbstractInputBox.java
 			Color background, Color bghighlight, Color fghighlight) {
 		super(x, y, 4f, Sprite.CHAR_WIDTH * maxLength + 2,
 				Sprite.CHAR_HEIGHT + 2);

@@ -1,18 +1,10 @@
 package no.kjelli.bombline.gameobjects;
 
 import no.kjelli.bombline.BombermanOnline;
-<<<<<<< HEAD
 import no.kjelli.generic.gameobjects.AbstractGameObject;
 import no.kjelli.generic.gfx.Draw;
 import no.kjelli.generic.gfx.Sprite;
-=======
-import no.kjelli.generic.Collision;
-import no.kjelli.generic.gameobjects.AbstractCollidable;
-import no.kjelli.generic.gameobjects.AbstractGameObject;
-import no.kjelli.generic.gfx.Draw;
-import no.kjelli.generic.gfx.Sprite;
-import no.kjelli.generic.gfx.textures.TextureAtlas;
->>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
+
 
 public class Floor extends AbstractGameObject {
 	public static final int base_x = 16, base_y = 0;
@@ -30,11 +22,7 @@ public class Floor extends AbstractGameObject {
 				* BombermanOnline.block_size, 0, 16, 16);
 		if (blownForth)
 			growTimer = GROW_TIMER_MAX;
-<<<<<<< HEAD
 		sprite = new Sprite(BombermanOnline.partybombs, 0, base_y, SPRITE_WIDTH,
-=======
-		sprite = new Sprite(TextureAtlas.partybombs, 0, base_y, SPRITE_WIDTH,
->>>>>>> parent of 1023d03... Refactor and removal of other projects unrelated to pong
 				SPRITE_HEIGHT);
 	}
 
