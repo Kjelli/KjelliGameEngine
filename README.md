@@ -82,8 +82,14 @@ Classic bomberman remake with powerups, levels and also a LAN/Internet feature. 
 
 
 ![Example game: Bomberman](http://i.imgur.com/jXQBCOR.png "Example game: Bomberman")
+![Example game: Bomberman](http://i.imgur.com/GJHmhob.png "Example game: Bomberman")
 
-(!TODO add more screenshots)
+### MathMania
+Eight-directional game where you traverse the level by solving simple arithmetic problems. The faster you solve them, and the more you solve in a row increases the score you get!
+
+![Example game: MathMania](http://i.imgur.com/BOBqcf4.png "Example game: MathMania")
+
+
 
 ## DISCLAIMER
 The content in this repository is severely unfinished. The game-engine is only meant for two-dimensional games.
